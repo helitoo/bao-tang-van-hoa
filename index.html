@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảo tàng Văn hóa Việt Nam - 越南文化博物馆</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,500;0,700;0,800;1,200;1,500;1,700;1,800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'viet-red': '#b91c1c',
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        'display': ['Montserrat', 'sans-serif'],
+                    },
+                    fontWeight: {
+                        'extralight': 200,
+                        'medium': 500,
+                        'bold': 700,
+                        'extrabold': 800,
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500; /* Medium 500 as default */
+            background-color: #f7f3e9; /* Light mode cream */
+            background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+            transition: background-color 0.3s ease;
+        }
+        .dark body {
+            background-color: #1c1917; /* Dark mode stone-900 */
+            background-image: url('https://www.transparenttextures.com/patterns/dark-matter.png');
+            color: #e7e5e4;
+        }
+        h1, h2 {
+            font-weight: 800; /* ExtraBold 800 */
+        }
+        h3, h4 {
+            font-weight: 700; /* Bold 700 */
+        }
+        .viet-red { color: #b91c1c; }
+        .bg-viet-red { background-color: #b91c1c; }
+        .border-viet-red { border-color: #b91c1c; }
+        
+        /* Halftone pattern effect */
+        .halftone-bg {
+            background-image: radial-gradient(#b91c1c 1px, transparent 0);
+            background-size: 4px 4px;
+            opacity: 0.1;
+        }
+        .dark .halftone-bg {
+            opacity: 0.05;
+            background-image: radial-gradient(#ef4444 1px, transparent 0);
+        }
+
+        /* Custom scrollbar for dark mode */
+        .dark ::-webkit-scrollbar-track { background: #292524; }
+        .dark ::-webkit-scrollbar-thumb { background: #44403c; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="text-stone-900 transition-colors duration-300 font-medium">
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
