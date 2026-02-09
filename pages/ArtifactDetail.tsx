@@ -115,6 +115,12 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
     [artifacts, id],
   );
 
+  useEffect(() => {
+    if (item) {
+      document.title = `${item.name} | Bảo tàng văn hóa Việt Nam`;
+    }
+  }, [item]);
+
   const similarArtifacts = useMemo(() => {
     if (!item || !artifacts) return [];
     const currentNameSet = getWordSet(item.name);
