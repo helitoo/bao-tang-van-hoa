@@ -168,7 +168,7 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
       <section className="relative h-[500px] overflow-hidden bg-stone-900 flex items-center justify-center">
         <div className="absolute inset-0">
           <img
-            src="../assets/background.webp"
+            src="background.webp"
             alt="Khuê văn các"
             className="w-full h-full object-cover opacity-60"
           />
