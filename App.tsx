@@ -7,7 +7,7 @@ import React, {
 } from "react";
 // Fix: Use namespace import for react-router-dom to resolve export issues
 import * as ReactRouterDOM from "react-router-dom";
-const { HashRouter, Routes, Route, Link, useNavigate, useLocation } =
+const { BrowserRouter, Routes, Route, Link, useNavigate, useLocation } =
   ReactRouterDOM;
 import Home from "./pages/Home";
 import Search from "./pages/Search";
@@ -500,7 +500,7 @@ export default function App() {
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       <LanguageContext.Provider value={{ locale, setLocale, t }}>
-        <HashRouter>
+        <BrowserRouter>
           <ScrollToTop />
           <Layout artifacts={artifacts}>
             <Routes>
@@ -518,7 +518,7 @@ export default function App() {
               <Route path="/references" element={<References />} />
             </Routes>
           </Layout>
-        </HashRouter>
+        </BrowserRouter>
       </LanguageContext.Provider>
     </ThemeContext.Provider>
   );
