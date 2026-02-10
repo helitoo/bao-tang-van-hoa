@@ -83,12 +83,12 @@ const ArtifactCard: React.FC<ArtifactCardProps> = ({
       </div>
       <div className="p-3 flex-1 border-t border-stone-100 dark:border-stone-800 flex flex-col">
         <h4
-          className={`${compact ? "text-xs" : "text-sm"} font-bold group-hover:text-viet-red dark:text-stone-100 dark:group-hover:text-viet-red transition-colors mb-1 leading-tight line-clamp-2`}
+          className={`font-semibold group-hover:text-viet-red dark:text-stone-100 dark:group-hover:text-viet-red transition-colors mb-1 leading-tight line-clamp-2`}
         >
           {item.name}
         </h4>
-        <p className="text-stone-500 dark:text-stone-400 text-[9px] line-clamp-1 leading-relaxed italic opacity-80 font-medium mt-auto">
-          {item.short_description || "..."}
+        <p className="text-stone-500 dark:text-stone-400 text-[9px] line-clamp-1 leading-relaxed italic opacity-80 font-medium mt-auto leading-tight line-clamp-2">
+          {item.short_description}
         </p>
       </div>
     </Link>

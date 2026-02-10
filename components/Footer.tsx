@@ -71,18 +71,18 @@ const Footer: React.FC<FooterProps> = ({ isSidebar = false }) => {
             </li>
             <li>
               <Link
-                to="/timeline"
-                className="text-stone-500 dark:text-stone-400 hover:text-viet-red transition-colors"
-              >
-                {t("nav_timeline")}
-              </Link>
-            </li>
-            <li>
-              <Link
                 to="/saved"
                 className="text-stone-500 dark:text-stone-400 hover:text-viet-red transition-colors"
               >
                 {t("nav_saved")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/timeline"
+                className="text-stone-500 dark:text-stone-400 hover:text-viet-red transition-colors"
+              >
+                {t("nav_timeline")}
               </Link>
             </li>
             <li>

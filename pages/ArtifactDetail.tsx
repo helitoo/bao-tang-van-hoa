@@ -1,5 +1,4 @@
-import React, { useMemo, useEffect, useState, useRef } from "react";
-// Fix: Use namespace import for react-router-dom to resolve export issues
+import React, { useMemo, useEffect, useState } from "react";
 import * as ReactRouterDOM from "react-router-dom";
 const { useParams, Link } = ReactRouterDOM;
 import { Artifact } from "../types";
@@ -10,7 +9,6 @@ import ArtifactCard, {
   getLh3Url,
 } from "../components/ArtifactCard";
 import ReferenceItem from "../components/ReferenceItem";
-import Footer from "../components/Footer";
 
 interface ArtifactDetailProps {
   artifacts: Artifact[];
@@ -62,31 +60,18 @@ const getWordSet = (text: string): Set<string> => {
 const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
   const { t, locale } = useLanguage();
   const { id } = useParams<{ id: string }>();
-  const sidebarRef = useRef<HTMLElement>(null);
 
   const [isSaved, setIsSaved] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (sidebarRef.current) sidebarRef.current.scrollTop = 0;
-
     const saved = localStorage.getItem("saved_artifacts");
     if (saved && id) {
       const ids = JSON.parse(saved) as string[];
       setIsSaved(ids.includes(id));
     }
-
-    const handleScrollLock = () => {
-      if (window.innerWidth >= 768) document.body.style.overflow = "hidden";
-      else document.body.style.overflow = "auto";
-    };
-    handleScrollLock();
-    window.addEventListener("resize", handleScrollLock);
-    return () => {
-      document.body.style.overflow = "auto";
-      window.removeEventListener("resize", handleScrollLock);
-    };
   }, [id]);
 
   const toggleSave = () => {
@@ -146,7 +131,7 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
         return { ...a, similarityScore: nameScore + descScore + catScore };
       })
       .sort((a, b) => b.similarityScore - a.similarityScore)
-      .slice(0, 8);
+      .slice(0, 12);
   }, [item, artifacts]);
 
   if (!item)
@@ -171,29 +156,10 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
       : val;
 
   return (
-    <div className="flex flex-col md:flex-row h-auto md:h-[calc(100vh-5rem)] bg-white dark:bg-stone-900 transition-colors duration-300 md:overflow-hidden relative z-10">
-      <div className="w-full h-[calc(100vh-5rem)] md:flex-1 relative bg-stone-100 dark:bg-stone-950 flex items-stretch justify-center overflow-hidden">
-        {driveId ? (
-          <iframe
-            src={`https://drive.google.com/file/d/${driveId}/preview`}
-            className="w-full h-full border-none bg-stone-200 dark:bg-stone-800"
-            allow="autoplay"
-            title={item.name}
-          ></iframe>
-        ) : (
-          <div className="flex items-center justify-center w-full px-4 h-full bg-stone-50 dark:bg-stone-900/20">
-            <img
-              src={getLh3Url(item.main_image)}
-              alt={item.name}
-              className="max-w-full max-h-[90%] object-contain shadow-2xl"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-              }}
-            />
-          </div>
-        )}
-
-        <div className="absolute top-4 left-4 z-40 flex items-center space-x-2 bg-white/80 dark:bg-stone-900/80 backdrop-blur-md px-4 py-2 border border-stone-200 dark:border-stone-700 shadow-lg rounded-sm text-[10px] font-extrabold uppercase tracking-widest text-stone-500 dark:text-stone-400">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-900 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Breadcrumbs */}
+        <nav className="flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-stone-500 mb-6">
           <Link to="/" className="hover:text-viet-red transition-colors">
             {t("nav_home")}
           </Link>
@@ -201,64 +167,249 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
           <Link to="/search" className="hover:text-viet-red transition-colors">
             {t("nav_search")}
           </Link>
+        </nav>
+
+        {/* Main Section */}
+        <div className="flex flex-col md:flex-row gap-8 lg:gap-12 mb-16">
+          {/* Left: Image */}
+          <div className="w-full md:w-1/2 lg:w-3/5">
+            <div
+              className="bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 shadow-xl relative overflow-hidden aspect-square flex items-center justify-center p-2 cursor-pointer"
+              onClick={() => setIsModalOpen(true)}
+            >
+              <div className="absolute inset-0 bg-stone-100 dark:bg-stone-900/50 -z-10 halftone-bg opacity-10"></div>
+              <img
+                src={getLh3Url(item.main_image)}
+                alt={item.name}
+                className="max-w-full max-h-full object-contain"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
+                }}
+              />
+
+              {/* Enlarge Button - Moved to top right, no hover effects */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsModalOpen(true);
+                }}
+                className="absolute top-4 right-4 bg-white/95 dark:bg-stone-900/95 p-3 rounded-full shadow-lg border border-stone-200 dark:border-stone-700 text-viet-red z-20"
+                aria-label="Enlarge"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H9"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Right: Info */}
+          <div className="w-full md:w-1/2 lg:w-2/5 space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-2xl lg:text-3xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight leading-tight">
+                {item.name}
+              </h1>
+              <div className="flex flex-wrap gap-2">
+                {(item.categories || []).map((catId) => {
+                  const name = getCategoryName(catId);
+                  return (
+                    name && (
+                      <span
+                        key={catId}
+                        className="text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 px-2 py-1 border border-stone-200 dark:border-stone-700"
+                      >
+                        {name}
+                      </span>
+                    )
+                  );
+                })}
+              </div>
+              <p className="text-stone-500 dark:text-stone-400 font-medium italic border-l-4 border-viet-red pl-6 py-2 leading-relaxed bg-stone-100/50 dark:bg-stone-800/30">
+                {renderOrPlaceholder(item.short_description)}
+              </p>
+            </div>
+
+            {/* Buttons Row - Fixed Size */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={toggleSave}
+                className={`w-40 h-10 flex items-center justify-center space-x-2 rounded-sm tracking-widest border transition-all shrink-0 ${isSaved ? "bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-viet-red" : "bg-viet-red text-white border-viet-red hover:bg-red-800"}`}
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill={isSaved ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
+                  />
+                </svg>
+                <span className="whitespace-nowrap text-sm">
+                  {isSaved ? t("btn_saved") : t("btn_save")}
+                </span>
+              </button>
+              <button
+                onClick={shareArtifact}
+                className="w-40 h-10 flex items-center justify-center space-x-2 rounded-sm tracking-widest bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-viet-red hover:text-viet-red transition-all shrink-0"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                  />
+                </svg>
+                <span className="whitespace-nowrap text-sm">
+                  {copySuccess ? t("btn_share_copied") : t("btn_share")}
+                </span>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-xl font-extrabold border-b-2 border-stone-200 dark:border-stone-800 pb-2 dark:text-stone-100 flex items-center uppercase tracking-tight">
+                <span className="w-3 h-3 bg-viet-red mr-3 shadow-sm"></span>
+                {t("artifact_desc")}
+              </h3>
+              <div className="text-stone-700 dark:text-stone-400 leading-relaxed whitespace-pre-wrap font-medium text-base text-justify">
+                {renderOrPlaceholder(item.description)}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-[13px] bg-white dark:bg-stone-800/50 p-6 border border-stone-200 dark:border-stone-700 shadow-sm">
+              <div className="space-y-1">
+                <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
+                  {t("artifact_date")}
+                  <TooltipIcon text={t("tooltip_date")} />
+                </span>
+                <span className="font-bold text-stone-800 dark:text-stone-200 leading-tight block">
+                  {renderOrPlaceholder(item.artifact_date)}
+                </span>
+              </div>
+              <div className="space-y-1">
+                <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
+                  {t("artifact_location")}
+                  <TooltipIcon text={t("tooltip_location")} />
+                </span>
+                <span className="font-bold text-stone-800 dark:text-stone-200 leading-tight block">
+                  {renderOrPlaceholder(item.location)}
+                </span>
+              </div>
+              <div className="space-y-1">
+                <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
+                  {t("artifact_author")}
+                  <TooltipIcon text={t("tooltip_author")} />
+                </span>
+                <span className="font-bold text-stone-800 dark:text-stone-200 leading-tight block">
+                  {renderOrPlaceholder(item.author)}
+                </span>
+              </div>
+              <div className="space-y-1">
+                <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
+                  {t("artifact_contributor")}
+                  <TooltipIcon text={t("tooltip_contributor")} />
+                </span>
+                <span className="font-bold text-stone-800 dark:text-stone-200 leading-tight block">
+                  {renderOrPlaceholder(item.contributor)}
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-xl font-extrabold border-b-2 border-stone-200 dark:border-stone-800 pb-2 dark:text-stone-100 flex items-center uppercase tracking-tight">
+                <span className="w-2 h-2 bg-stone-300 dark:bg-stone-600 mr-3"></span>
+                {t("artifact_related")}
+              </h3>
+              {(item.supporting_images || []).length > 0 ? (
+                <div className="grid grid-cols-1 gap-3">
+                  {(item.supporting_images || []).map((url, idx) => (
+                    <ReferenceItem key={idx} url={url} />
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xs italic text-stone-400 font-medium">
+                  {t("placeholder_none")}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Suggested Section - Full Width Below */}
+        <div className="pt-16 border-t-2 border-stone-200 dark:border-stone-800 mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-extrabold text-stone-900 dark:text-stone-100 uppercase tracking-tighter">
+              {t("artifact_suggested")}
+            </h3>
+            <Link
+              to="/search"
+              className="text-[11px] font-extrabold uppercase tracking-widest text-viet-red hover:underline decoration-2 underline-offset-4"
+            >
+              {t("see_all")}
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6">
+            {similarArtifacts.map((sim) => (
+              <ArtifactCard key={sim.id} item={sim} />
+            ))}
+          </div>
         </div>
       </div>
 
-      <aside
-        ref={sidebarRef}
-        className="w-full md:w-[400px] lg:w-[450px] bg-white dark:bg-stone-900 md:border-l border-stone-200 dark:border-stone-800 flex flex-col h-auto md:h-full md:overflow-y-auto scroll-smooth transition-all duration-300"
-      >
-        <div className="p-8 space-y-10 flex-grow">
-          <div className="space-y-4">
-            <h1 className="text-3xl md:text-4xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight leading-tight">
-              {item.name}
-            </h1>
-            <div className="flex flex-wrap gap-2">
-              {(item.categories || []).map((catId) => {
-                const name = getCategoryName(catId);
-                return (
-                  name && (
-                    <span
-                      key={catId}
-                      className="text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 px-2 py-1 border border-stone-200 dark:border-stone-700"
-                    >
-                      {name}
-                    </span>
-                  )
-                );
-              })}
-            </div>
-            <p className="text-stone-500 dark:text-stone-400 font-medium italic text-sm border-l-2 border-stone-200 dark:border-stone-700 pl-4 py-1 leading-relaxed">
-              {renderOrPlaceholder(item.short_description)}
-            </p>
-          </div>
+      {/* Popup Modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
 
-          <div className="flex items-center gap-3">
+          <div
+            className="relative w-full max-w-6xl h-full max-h-[90vh] bg-stone-950 shadow-2xl rounded-sm overflow-hidden flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {driveId ? (
+              <iframe
+                src={`https://drive.google.com/file/d/${driveId}/preview`}
+                className="w-full h-full border-none"
+                allow="autoplay"
+                title={item.name}
+              ></iframe>
+            ) : (
+              <img
+                src={getLh3Url(item.main_image)}
+                alt={item.name}
+                className="max-w-full max-h-full object-contain"
+              />
+            )}
+
+            {/* Close Button at Middle Right Edge */}
             <button
-              onClick={toggleSave}
-              className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-sm text-[10px] font-extrabold uppercase tracking-widest border transition-all ${isSaved ? "bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-viet-red" : "bg-viet-red text-white border-viet-red hover:bg-red-800"}`}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-0 md:mr-4 bg-viet-red hover:bg-red-800 text-white p-3 rounded-full shadow-2xl z-[110]"
+              aria-label="Close"
             >
               <svg
-                className="w-4 h-4"
-                fill={isSaved ? "currentColor" : "none"}
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-                />
-              </svg>
-              <span>{isSaved ? t("btn_saved") : t("btn_save")}</span>
-            </button>
-            <button
-              onClick={shareArtifact}
-              className="flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-sm text-[10px] font-extrabold uppercase tracking-widest bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-viet-red hover:text-viet-red transition-all relative"
-            >
-              <svg
-                className="w-4 h-4"
+                className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -267,111 +418,13 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
-                  d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                  d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
-              <span>
-                {copySuccess ? t("btn_share_copied") : t("btn_share")}
-              </span>
             </button>
           </div>
-
-          <div className="space-y-4">
-            <h3 className="text-lg font-extrabold border-b border-stone-200 dark:border-stone-800 pb-2 dark:text-stone-200 flex items-center uppercase">
-              <span className="w-2 h-2 bg-viet-red mr-3"></span>
-              {t("artifact_desc")}
-            </h3>
-            <div className="text-stone-700 dark:text-stone-400 leading-relaxed whitespace-pre-wrap font-medium italic text-base text-justify">
-              {renderOrPlaceholder(item.description)}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-x-4 gap-y-4 text-[13px] bg-stone-50 dark:bg-stone-800/40 p-5 border border-stone-100 dark:border-stone-800">
-            <div className="space-y-1">
-              <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
-                {t("artifact_date")}
-                <TooltipIcon text={t("tooltip_date")} />
-              </span>
-              <span className="font-extrabold text-stone-800 dark:text-stone-200 leading-tight block">
-                {renderOrPlaceholder(item.artifact_date)}
-              </span>
-            </div>
-            <div className="space-y-1">
-              <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
-                {t("artifact_location")}
-                <TooltipIcon text={t("tooltip_location")} />
-              </span>
-              <span className="font-extrabold text-stone-800 dark:text-stone-200 leading-tight block">
-                {renderOrPlaceholder(item.location)}
-              </span>
-            </div>
-            <div className="space-y-1">
-              <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
-                {t("artifact_author")}
-                <TooltipIcon text={t("tooltip_author")} />
-              </span>
-              <span className="font-extrabold text-stone-800 dark:text-stone-200 leading-tight block">
-                {renderOrPlaceholder(item.author)}
-              </span>
-            </div>
-            <div className="space-y-1">
-              <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest">
-                {t("artifact_contributor")}
-                <TooltipIcon text={t("tooltip_contributor")} />
-              </span>
-              <span className="font-extrabold text-stone-800 dark:text-stone-200 leading-tight block">
-                {renderOrPlaceholder(item.contributor)}
-              </span>
-            </div>
-            <div className="col-span-2 pt-3 border-t border-stone-200 dark:border-stone-700 mt-1">
-              <span className="block text-stone-400 dark:text-stone-500 font-extralight uppercase text-[9px] tracking-widest mb-1">
-                {t("artifact_public_date")}
-              </span>
-              <span className="text-stone-600 dark:text-stone-400 text-[11px] font-medium italic">
-                {renderOrPlaceholder(item.public_date)}
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            <h3 className="text-lg font-extrabold border-b border-stone-200 dark:border-stone-800 pb-2 dark:text-stone-200 flex items-center uppercase">
-              <span className="w-1.5 h-1.5 bg-stone-300 dark:bg-stone-600 mr-3"></span>
-              {t("artifact_related")}
-            </h3>
-            {(item.supporting_images || []).length > 0 ? (
-              <div className="space-y-3">
-                {(item.supporting_images || []).map((url, idx) => (
-                  <ReferenceItem key={idx} url={url} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-xs italic text-stone-400 font-medium">
-                {t("placeholder_none")}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-6 pt-6 border-t border-stone-100 dark:border-stone-800">
-            <div className="flex items-center justify-between">
-              <h3 className="text-xl font-extrabold text-stone-900 dark:text-stone-100 italic uppercase">
-                {t("artifact_suggested")}
-              </h3>
-              <Link
-                to="/search"
-                className="text-[10px] font-extrabold uppercase tracking-widest text-viet-red hover:underline"
-              >
-                {t("see_all")}
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {similarArtifacts.map((sim) => (
-                <ArtifactCard key={sim.id} item={sim} compact />
-              ))}
-            </div>
-          </div>
         </div>
-        <Footer isSidebar />
-      </aside>
+      )}
     </div>
   );
 };
