@@ -9,6 +9,7 @@ import ArtifactCard, {
   getLh3Url,
 } from "../components/ArtifactCard";
 import ReferenceItem from "../components/ReferenceItem";
+import Footer from "../components/Footer";
 
 interface ArtifactDetailProps {
   artifacts: Artifact[];
@@ -99,12 +100,6 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
     () => artifacts.find((a) => a.id === id),
     [artifacts, id],
   );
-
-  useEffect(() => {
-    if (item) {
-      document.title = `${item.name} | Bảo tàng văn hóa Việt Nam`;
-    }
-  }, [item]);
 
   const similarArtifacts = useMemo(() => {
     if (!item || !artifacts) return [];
@@ -373,6 +368,8 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
             ))}
           </div>
         </div>
+
+        <Footer />
       </div>
 
       {/* Popup Modal */}
