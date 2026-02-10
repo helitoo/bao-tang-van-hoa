@@ -10,10 +10,6 @@ const References: React.FC = () => {
 
   const referenceLinks = [
     {
-      name: "Cục Di sản văn hóa",
-      url: "https://dsvh.gov.vn/thong-tu-quy-dinh-ve-noi-dung-ho-so-khoa-hoc-de-xep-hang-di-tich-lich-su-van-hoa-va-danh-lam-thang-canh-1688",
-    },
-    {
       name: "Hoa văn Đại Việt",
       url: "https://hoavandaiviet.vn/",
     },
@@ -28,6 +24,14 @@ const References: React.FC = () => {
     {
       name: "Lược sử tộc Việt",
       url: "https://www.facebook.com/lstvfanpage",
+    },
+    {
+      name: "Đại Việt phong hoa",
+      url: "https://www.facebook.com/Daivietphonghoa",
+    },
+    {
+      name: "Đại Việt thần thoại",
+      url: "https://www.facebook.com/profile.php?id=61571214249611",
     },
     {
       name: "Made in Vietnam",
@@ -46,8 +50,16 @@ const References: React.FC = () => {
       url: "https://www.facebook.com/groups/462469104898861",
     },
     {
-      name: "Đại Việt thần thoại",
-      url: "https://www.facebook.com/profile.php?id=61571214249611",
+      name: "Hoa văn cổ",
+      url: "https://www.facebook.com/groups/24094649860154804",
+    },
+    {
+      name: "Bửu liên - Đi cùng di sản",
+      url: "https://www.tiktok.com/@buulien.dicungdisan",
+    },
+    {
+      name: "Địa phương chí",
+      url: "https://www.tiktok.com/@diaphuongchi",
     },
   ];
 
