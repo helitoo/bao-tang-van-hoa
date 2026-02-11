@@ -100,23 +100,22 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
     return artifacts
       .filter((a) => a.id !== item.id)
       .map((a) => {
-        const nameScore = simalarityScore(item.name, a.name) * 0.5;
+        const nameScore = simalarityScore(item.name, a.name);
 
-        const descScore =
-          simalarityScore(
-            (item.short_description || "") + " " + (item.description || ""),
-            (a.short_description || "") + " " + (a.description || ""),
-          ) * 0.3;
+        const descScore = simalarityScore(
+          (item.short_description || "") + " " + (item.description || ""),
+          (a.short_description || "") + " " + (a.description || ""),
+        );
 
-        const catScore =
-          simalarityScore(
-            currCatNames,
-            (a.categories || [])
-              .map((id) => categoryMap.get(id) || "")
-              .join(" "),
-          ) * 0.2;
+        const catScore = simalarityScore(
+          currCatNames,
+          (a.categories || []).map((id) => categoryMap.get(id) || "").join(" "),
+        );
 
-        return { ...a, similarityScore: nameScore + descScore + catScore };
+        return {
+          ...a,
+          similarityScore: nameScore * 0.5 + descScore * 0.4 + catScore * 0.1,
+        };
       })
       .sort((a, b) => b.similarityScore - a.similarityScore)
       .slice(0, 12);
