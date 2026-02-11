@@ -6,6 +6,7 @@ import { Artifact } from "../types";
 import { CATEGORY_GROUPS } from "../constants";
 import { useLanguage } from "../App";
 import ArtifactCard from "../components/ArtifactCard";
+import { calculateJaccard, getWordSet } from "../fuzzy-searching";
 
 interface SearchProps {
   artifacts: Artifact[];
@@ -76,79 +77,56 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     }
 
     // 2. Filter and rank by text similarity
-    const lowerQuery = filterText.toLowerCase().trim();
-    if (lowerQuery) {
-      results = results
-        .filter((artifact) => {
-          // Helper to get category names for search
-          const catNames = (artifact.categories || [])
-            .map((catId) => {
-              for (const group of CATEGORY_GROUPS) {
-                const found = group.options.find((opt) => opt.id === catId);
-                if (found) return found.name[locale];
-              }
-              return "";
-            })
-            .join(" ");
+    if (!filterText) return results;
 
-          const searchContent = [
-            artifact.name,
-            artifact.short_description,
-            artifact.description,
-            catNames,
-            artifact.author,
-            artifact.contributor,
-            artifact.artifact_date,
-            artifact.location,
-          ]
-            .filter(Boolean)
-            .join(" ")
-            .toLowerCase();
+    const querySet = getWordSet(filterText);
 
-          return searchContent.includes(lowerQuery);
-        })
-        .map((artifact) => {
-          let score = 0;
-          const q = lowerQuery;
-
-          const name = (artifact.name || "").toLowerCase();
-          const shortDesc = (artifact.short_description || "").toLowerCase();
-          const desc = (artifact.description || "").toLowerCase();
-          const author = (artifact.author || "").toLowerCase();
-          const contributor = (artifact.contributor || "").toLowerCase();
-          const date = (artifact.artifact_date || "").toLowerCase();
-          const location = (artifact.location || "").toLowerCase();
-
-          // Get category names for scoring
-          const catNames = (artifact.categories || [])
-            .map((catId) => {
-              for (const group of CATEGORY_GROUPS) {
-                const found = group.options.find((opt) => opt.id === catId);
-                if (found) return found.name[locale];
-              }
-              return "";
-            })
-            .join(" ")
-            .toLowerCase();
-
-          // Apply weighted scoring
-          if (name.includes(q)) score += 20;
-          if (shortDesc.includes(q)) score += 10;
-          if (catNames.includes(q)) score += 8;
-          if (desc.includes(q)) score += 5;
-          if (author.includes(q)) score += 5;
-          if (date.includes(q)) score += 5;
-          if (location.includes(q)) score += 5;
-          if (contributor.includes(q)) score += 3;
-
-          return { ...artifact, searchScore: score };
-        })
-        .sort((a: any, b: any) => b.searchScore - a.searchScore);
-    } else {
-      results = [...results].sort((a, b) =>
-        (b.id || "").localeCompare(a.id || ""),
-      );
+    const categoryMap = new Map<string, string>();
+    for (const group of CATEGORY_GROUPS) {
+      for (const opt of group.options) {
+        categoryMap.set(opt.id, opt.name[locale]);
+      }
     }
+
+    results = results
+      .map((artifact) => {
+        // Get categories' name
+        const catNames = (artifact.categories || [])
+          .map((id) => categoryMap.get(id) || "")
+          .join(" ");
+
+        // name + short_description: 50%
+        const group1Text = [artifact.name, artifact.short_description, catNames]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        // description + location: 30%
+        const group2Text = [artifact.description, artifact.location]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        // others: 20%
+        const group3Text = [
+          artifact.author,
+          artifact.contributor,
+          artifact.artifact_date,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
+
+        const score1 = calculateJaccard(querySet, getWordSet(group1Text));
+        const score2 = calculateJaccard(querySet, getWordSet(group2Text));
+        const score3 = calculateJaccard(querySet, getWordSet(group3Text));
+
+        const searchScore = score1 * 0.8 + score2 * 0.15 + score3 * 0.05;
+
+        return { ...artifact, searchScore };
+      })
+      .filter((a) => a.searchScore > 0)
+      .sort((a, b) => b.searchScore - a.searchScore);
 
     return results;
   }, [artifacts, filterText, selectedCats, locale]);
