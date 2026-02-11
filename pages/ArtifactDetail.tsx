@@ -4,7 +4,7 @@ const { useParams, Link } = ReactRouterDOM;
 import { Artifact } from "../types";
 import { CATEGORY_GROUPS } from "../constants";
 import { useLanguage } from "../App";
-import { calculateJaccard, getWordSet } from "../fuzzy-searching";
+import simalarityScore from "../fuzzy-searching";
 import ArtifactCard, {
   getDriveId,
   getLh3Url,
@@ -86,26 +86,36 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
 
   const similarArtifacts = useMemo(() => {
     if (!item || !artifacts) return [];
-    const currentNameSet = getWordSet(item.name);
-    const currentDescSet = getWordSet(
-      (item.short_description || "") + " " + (item.description || ""),
-    );
-    const currentCatSet = new Set(item.categories || []);
+
+    const categoryMap = new Map<string, string>();
+    for (const group of CATEGORY_GROUPS) {
+      for (const opt of group.options) {
+        categoryMap.set(opt.id, opt.name[locale]);
+      }
+    }
+    const currCatNames = (item.categories || [])
+      .map((id) => categoryMap.get(id) || "")
+      .join(" ");
 
     return artifacts
       .filter((a) => a.id !== item.id)
       .map((a) => {
-        const nameScore =
-          calculateJaccard(currentNameSet, getWordSet(a.name)) * 50;
+        const nameScore = simalarityScore(item.name, a.name) * 0.5;
+
         const descScore =
-          calculateJaccard(
-            currentDescSet,
-            getWordSet(
-              (a.short_description || "") + " " + (a.description || ""),
-            ),
-          ) * 30;
+          simalarityScore(
+            (item.short_description || "") + " " + (item.description || ""),
+            (a.short_description || "") + " " + (a.description || ""),
+          ) * 0.3;
+
         const catScore =
-          calculateJaccard(currentCatSet, new Set(a.categories || [])) * 20;
+          simalarityScore(
+            currCatNames,
+            (a.categories || [])
+              .map((id) => categoryMap.get(id) || "")
+              .join(" "),
+          ) * 0.2;
+
         return { ...a, similarityScore: nameScore + descScore + catScore };
       })
       .sort((a, b) => b.similarityScore - a.similarityScore)

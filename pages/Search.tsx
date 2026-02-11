@@ -6,7 +6,7 @@ import { Artifact } from "../types";
 import { CATEGORY_GROUPS } from "../constants";
 import { useLanguage } from "../App";
 import ArtifactCard from "../components/ArtifactCard";
-import { calculateJaccard, getWordSet } from "../fuzzy-searching";
+import simalarityScore from "../fuzzy-searching";
 
 interface SearchProps {
   artifacts: Artifact[];
@@ -77,9 +77,9 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     }
 
     // 2. Filter and rank by text similarity
-    if (!filterText) return results;
+    const query = filterText.trim().toLowerCase();
 
-    const querySet = getWordSet(filterText);
+    if (!query) return results;
 
     const categoryMap = new Map<string, string>();
     for (const group of CATEGORY_GROUPS) {
@@ -95,20 +95,16 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
           .map((id) => categoryMap.get(id) || "")
           .join(" ");
 
-        // name + short_description: 50%
-        const group1Text = [artifact.name, artifact.short_description, catNames]
+        // name + short_description
+        const text1 = [artifact.name, artifact.short_description]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
 
-        // description + location: 30%
-        const group2Text = [artifact.description, artifact.location]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        // others: 20%
-        const group3Text = [
+        const text2 = [
+          catNames,
+          artifact.description,
+          artifact.location,
           artifact.author,
           artifact.contributor,
           artifact.artifact_date,
@@ -117,11 +113,9 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
           .join(" ")
           .toLowerCase();
 
-        const score1 = calculateJaccard(querySet, getWordSet(group1Text));
-        const score2 = calculateJaccard(querySet, getWordSet(group2Text));
-        const score3 = calculateJaccard(querySet, getWordSet(group3Text));
-
-        const searchScore = score1 * 0.8 + score2 * 0.15 + score3 * 0.05;
+        const searchScore =
+          simalarityScore(query, text1) * 0.8 +
+          simalarityScore(query, text2) * 0.2;
 
         return { ...artifact, searchScore };
       })
