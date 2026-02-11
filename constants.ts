@@ -217,7 +217,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "cp",
+        id: "champa",
         name: {
           vi: "Champa",
           en: "Champa",
@@ -395,18 +395,6 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
           zh: "高地民族",
           ja: "山岳民族",
           ko: "산악 민족",
-        },
-        groupId: "region",
-      },
-      // Fixed: removed extra comma from the end of the line below
-      {
-        id: "ngoai_quoc",
-        name: {
-          vi: "Ngoại quốc",
-          en: "Foreign",
-          zh: "外国",
-          ja: "外国",
-          ko: "외국",
         },
         groupId: "region",
       },
