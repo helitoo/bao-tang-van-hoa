@@ -150,45 +150,44 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
         {/* Main Section */}
         <div className="flex flex-col md:flex-row gap-8 lg:gap-12 mb-16">
           {/* Left: Image */}
-          <div className="w-full md:w-1/2 lg:w-3/5">
-            <div
-              className="bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 shadow-xl relative overflow-hidden aspect-square flex items-center justify-center p-2 cursor-pointer"
-              onClick={() => setIsModalOpen(true)}
-            >
-              <div className="absolute inset-0 bg-stone-100 dark:bg-stone-900/50 -z-10 halftone-bg opacity-10"></div>
-              <img
-                src={getLh3Url(item.main_image)}
-                alt={item.name}
-                className="max-w-full max-h-full object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-                }}
-              />
+          <div className="relative w-full md:w-1/2 lg:w-3/5">
+            <img
+              src={getLh3Url(item.main_image)}
+              alt={item.name}
+              className="max-w-full max-h-full object-contain cursor-pointer shadow"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsModalOpen(true);
+              }}
+            />
 
-              {/* Enlarge Button - Moved to top right, no hover effects */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsModalOpen(true);
-                }}
-                className="absolute top-4 right-4 bg-white/95 dark:bg-stone-900/95 p-3 rounded-full shadow-lg border border-stone-200 dark:border-stone-700 text-viet-red z-20"
-                aria-label="Enlarge"
+            {/* Enlarge Button - Moved to top right, no hover effects */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsModalOpen(true);
+              }}
+              className="absolute top-4 right-4 p-2 rounded-full shadow-lg z-20 bg-black/70 hover:bg-black/50 text-stone-300"
+              aria-label="Enlarge"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H9"
-                  />
-                </svg>
-              </button>
-            </div>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6"
+                />
+              </svg>
+            </button>
           </div>
 
           {/* Right: Info */}
@@ -384,8 +383,11 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
 
             {/* Close Button at Middle Right Edge */}
             <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-0 md:mr-4 bg-viet-red hover:bg-red-800 text-white p-3 rounded-full shadow-2xl z-[110]"
+              onClick={() => {
+                setIsModalOpen(false);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-0 mr-9 md:mr-4 bg-black/70 hover:bg-black/50 text-stone-300 p-2 rounded-full shadow-2xl z-[110]"
               aria-label="Close"
             >
               <svg

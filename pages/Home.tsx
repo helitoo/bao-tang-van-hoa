@@ -186,7 +186,7 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
           </div>
           <Link
             to="/search"
-            className="bg-viet-red hover:bg-red-800 text-white px-12 py-4 rounded-sm transition-all transform hover:scale-105 inline-block text-sm font-extrabold uppercase tracking-widest shadow-2xl border border-red-700/50"
+            className="bg-viet-red hover:bg-red-800 text-white p-3 rounded-sm transition-all transform inline-block text-sm font-extrabold uppercase tracking-widest shadow-2xl border border-red-700/50"
           >
             {t("hero_btn")}
           </Link>
@@ -208,11 +208,15 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
           <div className="relative z-10">
             <div className="flex justify-center mb-6">
               <svg
+                viewBox="0 0 5 5"
                 className="w-10 h-10 text-viet-red opacity-80"
                 fill="currentColor"
-                viewBox="0 0 24 24"
               >
-                <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 18z" />
+                <path d="M1 0h1v1h-1z M3 0h1v1h-1z" />
+                <path d="M0 1h5v1h-5z" />
+                <path d="M1 2h3v1h-3z" />
+                <path d="M1 3h1v1h-1z M3 3h1v1h-1z" />
+                <path d="M1 4h1v1h-1z M3 4h1v1h-1z" />
               </svg>
             </div>
             <p className="text-2xl md:text-3xl font-extrabold text-stone-800 dark:text-stone-200 mb-4 leading-relaxed px-4">
@@ -299,26 +303,9 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
           <div className="halftone-bg absolute inset-0 opacity-[0.05]"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
             <div className="flex-1 space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-viet-red flex items-center justify-center rounded-full">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase">
-                  {t("ai_search_title")}
-                </h3>
-              </div>
+              <h3 className="text-3xl md:text-4xl font-extrabold tracking-tight uppercase">
+                {t("ai_search_title")}
+              </h3>
               <p className="text-stone-400 text-lg leading-relaxed max-w-2xl font-medium">
                 {t("ai_search_desc")}
               </p>
@@ -329,7 +316,7 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
             <div className="flex-shrink-0">
               <button
                 onClick={handleDownloadAIFile}
-                className="bg-viet-red hover:bg-red-800 text-white px-10 py-5 rounded-sm transition-all transform hover:scale-105 active:scale-95 font-extrabold uppercase tracking-widest text-sm shadow-xl flex items-center space-x-3 group"
+                className="bg-viet-red hover:bg-red-800 text-white p-3 rounded-sm transition-all transform active:scale-95 tracking-widest text-sm shadow-xl flex items-center space-x-3 group"
               >
                 <svg
                   className="w-5 h-5 group-hover:translate-y-1 transition-transform"
