@@ -359,9 +359,9 @@ const ArtifactDetail: React.FC<ArtifactDetailProps> = ({ artifacts }) => {
             ))}
           </div>
         </div>
-
-        <Footer />
       </div>
+
+      <Footer />
 
       {/* Popup Modal */}
       {isModalOpen && (

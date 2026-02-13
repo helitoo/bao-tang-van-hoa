@@ -102,6 +102,56 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     ],
   },
   {
+    id: "region",
+    title: { vi: "Khu vực", en: "Region", zh: "地区", ja: "地域", ko: "지역" },
+    options: [
+      {
+        id: "mbac",
+        name: {
+          vi: "Miền Bắc",
+          en: "Northern region",
+          zh: "北部",
+          ja: "北部",
+          ko: "북부",
+        },
+        groupId: "region",
+      },
+      {
+        id: "mtrung",
+        name: {
+          vi: "Miền Trung",
+          en: "Central region",
+          zh: "中部",
+          ja: "中部",
+          ko: "중부",
+        },
+        groupId: "region",
+      },
+      {
+        id: "manm",
+        name: {
+          vi: "Miền Nam",
+          en: "Southern region",
+          zh: "南部",
+          ja: "南部",
+          ko: "남부",
+        },
+        groupId: "region",
+      },
+      {
+        id: "mnui",
+        name: {
+          vi: "Các dân tộc miền núi",
+          en: "Highland ethnicities",
+          zh: "高地民族",
+          ja: "山岳民族",
+          ko: "산악 민족",
+        },
+        groupId: "region",
+      },
+    ],
+  },
+  {
     id: "genre",
     title: {
       vi: "Thể loại",
@@ -391,56 +441,6 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
           ko: "프랑스 속함",
         },
         groupId: "era",
-      },
-    ],
-  },
-  {
-    id: "region",
-    title: { vi: "Khu vực", en: "Region", zh: "地区", ja: "地域", ko: "지역" },
-    options: [
-      {
-        id: "mbac",
-        name: {
-          vi: "Miền Bắc",
-          en: "Northern region",
-          zh: "北部",
-          ja: "北部",
-          ko: "북부",
-        },
-        groupId: "region",
-      },
-      {
-        id: "mtrung",
-        name: {
-          vi: "Miền Trung",
-          en: "Central region",
-          zh: "中部",
-          ja: "中部",
-          ko: "중부",
-        },
-        groupId: "region",
-      },
-      {
-        id: "manm",
-        name: {
-          vi: "Miền Nam",
-          en: "Southern region",
-          zh: "南部",
-          ja: "南部",
-          ko: "남부",
-        },
-        groupId: "region",
-      },
-      {
-        id: "mnui",
-        name: {
-          vi: "Các dân tộc miền núi",
-          en: "Highland ethnicities",
-          zh: "高地民族",
-          ja: "山岳民族",
-          ko: "산악 민족",
-        },
-        groupId: "region",
       },
     ],
   },

@@ -12,12 +12,12 @@ interface SearchProps {
   artifacts: Artifact[];
 }
 
-const ITEMS_PER_PAGE = 18;
+const ITEMS_PER_PAGE = 50;
 
 const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
   const { t, locale } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showFilters, setShowFilters] = useState(true);
 
   const query = searchParams.get("q") || "";
   const catIdsParam = searchParams.get("cats") || "";
@@ -27,10 +27,6 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     catIdsParam ? catIdsParam.split(",").filter(Boolean) : [],
   );
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [query, catIdsParam]);
 
   useEffect(() => {
     setFilterText(query);
@@ -138,12 +134,9 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     setSearchParams(params);
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearchSubmit = () => {
     updateURL(filterText, selectedCats);
     setCurrentPage(1);
-    setShowMobileFilters(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const toggleCategory = (id: string) => {
@@ -161,8 +154,6 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     setSelectedCats([]);
     setSearchParams({});
     setCurrentPage(1);
-    setShowMobileFilters(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const getPageNumbers = () => {
@@ -194,67 +185,133 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12 flex flex-col lg:flex-row gap-8">
-      <button
-        onClick={() => setShowMobileFilters(!showMobileFilters)}
-        className="lg:hidden flex items-center justify-center space-x-2 bg-stone-900 dark:bg-stone-800 text-white py-3 px-4 rounded-sm font-extrabold uppercase tracking-widest text-[10px] shadow-md transition-all active:scale-95"
-      >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-          />
-        </svg>
-        <span>{showMobileFilters ? t("filter_clear") : t("filter_title")}</span>
-      </button>
-
-      <aside
-        className={`w-full lg:w-72 flex-shrink-0 ${showMobileFilters ? "block" : "hidden lg:block"}`}
-      >
-        <div className="bg-white dark:bg-stone-900 p-6 border border-stone-200 dark:border-stone-800 shadow-sm lg:sticky lg:top-24 transition-colors duration-300">
-          <div className="flex justify-between items-center mb-6 border-b-2 border-viet-red pb-2">
-            <h3 className="text-xl font-extrabold dark:text-stone-100 uppercase">
+    <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12 flex flex-col gap-8">
+      <aside className="w-full flex-shrink-0">
+        <div className="bg-white dark:bg-stone-900 p-6 border border-stone-200 dark:border-stone-800 transition-colors duration-300">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold dark:text-stone-100 uppercase">
               {t("filter_title")}
             </h3>
-            <button
-              onClick={clearAllFilters}
-              className="text-[10px] font-extrabold uppercase tracking-widest text-stone-400 hover:text-viet-red transition-colors"
-            >
-              {t("filter_clear")}
-            </button>
+            <div className="flex gap-3 md:gap-5">
+              {/* Clear filters button */}
+              <button
+                onClick={clearAllFilters}
+                className="text-[10px] text-stone-400 hover:text-viet-red transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="21"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-eraser-icon lucide-eraser"
+                >
+                  <path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21" />
+                  <path d="m5.082 11.09 8.828 8.828" />
+                </svg>
+              </button>
+
+              {/* Hidden button */}
+              <button
+                onClick={() => setShowFilters((prev) => !prev)}
+                className="text-[10px] text-stone-400 hover:text-viet-red transition-colors"
+              >
+                {showFilters ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-eye-closed-icon lucide-eye-closed"
+                  >
+                    <path d="m15 18-.722-3.25" />
+                    <path d="M2 8a10.645 10.645 0 0 0 20 0" />
+                    <path d="m20 15-1.726-2.05" />
+                    <path d="m4 15 1.726-2.05" />
+                    <path d="m9 18 .722-3.25" />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-eye-icon lucide-eye"
+                  >
+                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
 
-          <form onSubmit={handleSearchSubmit} className="space-y-8">
-            <div>
-              <label className="block text-sm font-extrabold text-stone-700 dark:text-stone-300 mb-2 uppercase tracking-wide">
-                {t("filter_keyword")}
-              </label>
+          {/* Body */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearchSubmit();
+            }}
+            className={`${showFilters ? "block" : "hidden"}`}
+          >
+            {/* Search Box */}
+            <div className="mt-3 flex-1 w-full relative flex items-center">
               <input
                 type="text"
+                placeholder={t("nav_placeholder")}
                 value={filterText}
                 onChange={(e) => setFilterText(e.target.value)}
-                placeholder="..."
-                className="w-full border-2 border-stone-200 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-100 rounded-sm px-4 py-2 focus:border-viet-red focus:ring-0 outline-none transition-colors shadow-inner text-sm font-medium"
+                onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
+                className="w-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 rounded-sm px-4 py-1.5 focus:outline-none focus:border-viet-red transition-colors text-sm shadow-sm font-medium"
               />
+              <button
+                type="button"
+                onClick={handleSearchSubmit}
+                className="absolute right-3 text-stone-400 hover:text-viet-red flex items-center"
+                aria-label="Search"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="21"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-search-icon lucide-search"
+                >
+                  <path d="m21 21-4.34-4.34" />
+                  <circle cx="11" cy="11" r="8" />
+                </svg>
+              </button>
             </div>
 
-            <div className="space-y-6">
-              <label className="block text-sm font-extrabold text-stone-700 dark:text-stone-300 uppercase tracking-wide">
-                {t("filter_cats")}
-              </label>
+            {/* Categories */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {CATEGORY_GROUPS.map((group) => (
-                <div key={group.id} className="space-y-2">
-                  <h4 className="text-[10px] font-extralight text-stone-400 dark:text-stone-500 uppercase tracking-widest border-b border-stone-100 dark:border-stone-800 pb-1">
+                <div key={group.id} className="mt-3">
+                  <h4 className="text-[9px] md:text-[10px] font-extralight uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3 border-b border-stone-100 dark:border-stone-800 pb-2 flex items-center flex-shrink-0">
+                    <span className="w-1 h-1 bg-viet-red mr-2"></span>
                     {group.title[locale]}
                   </h4>
-                  <div className="grid grid-cols-1 gap-1 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
+                  <div className="grid grid-cols-1 gap-1 pr-2">
                     {group.options.map((opt) => (
                       <label
                         key={opt.id}
@@ -280,7 +337,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
 
             <button
               type="submit"
-              className="w-full bg-stone-900 dark:bg-stone-700 text-white py-3 hover:bg-viet-red dark:hover:bg-viet-red transition-all transform active:scale-95 font-extrabold uppercase tracking-widest text-[10px] shadow-md"
+              className="mt-3 w-full bg-stone-900 dark:bg-stone-700 text-white py-3 hover:bg-viet-red dark:hover:bg-viet-red transition-all transform active:scale-95 font-extrabold uppercase tracking-widest text-[10px] shadow-md"
             >
               {t("filter_btn")}
             </button>
@@ -295,16 +352,10 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
           </span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4">
-          {paginatedResults.length > 0 ? (
-            paginatedResults.map((item) => (
-              <ArtifactCard key={item.id} item={item} />
-            ))
-          ) : (
-            <div className="col-span-full py-20 text-center text-stone-400 italic text-sm font-medium">
-              Không tìm thấy hiện vật nào phù hợp với bộ lọc.
-            </div>
-          )}
+        <div className="grid grid-cols-4 sm:grid-cols-5 xl:grid-cols-6 gap-4">
+          {paginatedResults.map((item) => (
+            <ArtifactCard key={item.id} item={item} />
+          ))}
         </div>
 
         {totalPages > 1 && (

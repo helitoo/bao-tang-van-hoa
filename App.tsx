@@ -77,47 +77,59 @@ const ThemeSwitcher = () => {
   const icons = {
     light: (
       <svg
-        className="w-4 h-4"
+        xmlns="http://www.w3.org/2000/svg"
+        width="21"
+        height="21"
+        viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-sun-icon lucide-sun"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"
-        />
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
       </svg>
     ),
     dark: (
       <svg
-        className="w-4 h-4"
+        xmlns="http://www.w3.org/2000/svg"
+        width="21"
+        height="21"
+        viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-moon-icon lucide-moon"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
-        />
+        <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
       </svg>
     ),
     system: (
       <svg
-        className="w-4 h-4"
+        xmlns="http://www.w3.org/2000/svg"
+        width="21"
+        height="21"
+        viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-laptop-icon lucide-laptop"
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2-2v10a2 2 0 002 2z"
-        />
+        <path d="M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z" />
+        <path d="M20.054 15.987H3.946" />
       </svg>
     ),
   };
@@ -129,7 +141,7 @@ const ThemeSwitcher = () => {
   return (
     <button
       onClick={() => setTheme(nextTheme[theme])}
-      className="p-2 rounded-sm bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 text-stone-600 dark:text-stone-300 hover:text-viet-red transition-all shadow-sm"
+      className="size-10 rounded-full hover:bg-stone-200/50 flex justify-center items-center text-stone-600 dark:text-stone-300 hover:text-viet-red transition-all"
       aria-label="Switch Theme"
     >
       {icons[theme]}
@@ -155,21 +167,26 @@ const RandomArtifactButton = ({ artifacts }: { artifacts: Artifact[] }) => {
       </div>
       <button
         onClick={pickRandom}
-        className="bg-viet-red hover:bg-red-800 text-white p-3 rounded-full shadow-2xl transition-all transform hover:scale-110 active:scale-95 border-2 border-white/20"
+        className="bg-viet-red hover:bg-red-800 text-white p-3 rounded-full transition-transform duration-200 hover:-translate-y-2 active:scale-95"
       >
         <svg
-          className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          strokeWidth="2"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-dices-icon lucide-dices"
         >
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"></circle>
-          <circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"></circle>
-          <circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"></circle>
-          <circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"></circle>
-          <circle cx="12" cy="12" r="1.5" fill="currentColor"></circle>
+          <rect width="12" height="12" x="2" y="10" rx="2" ry="2" />
+          <path d="m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6" />
+          <path d="M6 18h.01" />
+          <path d="M10 14h.01" />
+          <path d="M15 6h.01" />
+          <path d="M18 9h.01" />
         </svg>
       </button>
     </div>
@@ -178,17 +195,11 @@ const RandomArtifactButton = ({ artifacts }: { artifacts: Artifact[] }) => {
 
 const Navbar = () => {
   const { locale, t, setLocale } = useLanguage();
-  const [searchValue, setSearchValue] = useState("");
   const [isLangOpen, setIsLangOpen] = useState(false);
-  const navigate = useNavigate();
+  const [isLinkOpen, setIsLinkOpen] = useState(false);
   const location = useLocation();
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const handleSearch = () => {
-    if (searchValue.trim())
-      navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
-    else navigate("/search");
-  };
+  const langDropdownRef = useRef<HTMLDivElement>(null);
+  const linkDropdownRef = useRef<HTMLDivElement>(null);
 
   const languages: { code: Locale; label: string; fullName: string }[] = [
     { code: "vi", label: "VN", fullName: "Tiếng Việt" },
@@ -199,13 +210,36 @@ const Navbar = () => {
   ];
   const currentLang = languages.find((l) => l.code === locale) || languages[0];
 
+  const links: { url: string; labelId: string }[] = [
+    {
+      url: "/timeline",
+      labelId: "nav_timeline",
+    },
+    {
+      url: "/references",
+      labelId: "nav_references",
+    },
+  ];
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        langDropdownRef.current &&
+        !langDropdownRef.current.contains(event.target as Node)
       )
         setIsLangOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        linkDropdownRef.current &&
+        !linkDropdownRef.current.contains(event.target as Node)
+      )
+        setIsLinkOpen(false);
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -227,116 +261,153 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* Search Box */}
-        <div className="flex-1 max-w-xl relative flex items-center">
-          <input
-            type="text"
-            placeholder={t("nav_placeholder")}
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            className="w-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 rounded-sm px-4 py-1.5 focus:outline-none focus:border-viet-red transition-colors text-sm shadow-sm font-medium"
-          />
-          <button
-            type="button"
-            onClick={handleSearch}
-            className="absolute right-3 text-stone-400 hover:text-viet-red flex items-center"
-            aria-label="Search"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-        </div>
-
         {/* Actions Section */}
         <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+          {/* Search button */}
+          <Link
+            to="/search"
+            title={t("nav_search")}
+            className={`flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${location.pathname === "/saved" ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 24 24"
+              fill={location.pathname === "/search" ? "currentColor" : "none"}
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-search-icon lucide-search"
+            >
+              <path d="m21 21-4.34-4.34" />
+              <circle cx="11" cy="11" r="8" />
+            </svg>
+            <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
+              {t("nav_search")}
+            </span>
+          </Link>
+
+          {/* Contribute */}
           <button
             title={t("nav_contribute")}
             className="flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent transition-all"
           >
             <svg
-              className="w-6 h-6 md:w-4 md:h-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-arrow-up-from-line-icon lucide-arrow-up-from-line"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+              <path d="m18 9-6-6-6 6" />
+              <path d="M12 3v14" />
+              <path d="M5 21h14" />
             </svg>
             <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
               {t("nav_contribute")}
             </span>
           </button>
 
+          {/* Save button*/}
           <Link
             to="/saved"
             title={t("nav_saved")}
             className={`flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${location.pathname === "/saved" ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
           >
             <svg
-              className="w-6 h-6 md:w-4 md:h-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 24 24"
               fill={location.pathname === "/saved" ? "currentColor" : "none"}
               stroke="currentColor"
-              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-bookmark-icon lucide-bookmark"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"
-              />
+              <path d="M17 3a2 2 0 0 1 2 2v15a1 1 0 0 1-1.496.868l-4.512-2.578a2 2 0 0 0-1.984 0l-4.512 2.578A1 1 0 0 1 5 20V5a2 2 0 0 1 2-2z" />
             </svg>
             <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
               {t("nav_saved")}
             </span>
           </Link>
 
-          {/* Additional Elements - Only shown on md and up */}
-          <div className="hidden md:flex items-center gap-2">
-            <ThemeSwitcher />
+          {/* ThemeSwitcher*/}
+          <ThemeSwitcher />
 
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center space-x-2 bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 px-3 py-1.5 rounded-sm shadow-sm hover:border-viet-red transition-all"
-              >
-                <span className="text-[10px] font-extrabold text-stone-700 dark:text-stone-300 uppercase">
-                  {currentLang.label}
-                </span>
-              </button>
-              {isLangOpen && (
-                <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => {
-                        setLocale(lang.code);
-                        setIsLangOpen(false);
-                      }}
-                      className={`w-full text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${locale === lang.code ? "text-viet-red bg-stone-50 dark:bg-stone-700 font-extrabold" : "text-stone-600 dark:text-stone-300"}`}
-                    >
-                      <span>{lang.fullName}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* Language dropdown */}
+          <div className="relative" ref={langDropdownRef}>
+            <button
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className="size-10 rounded-full hover:bg-stone-200/50 flex justify-center items-center text-stone-600 dark:text-stone-300 transition-all hover:text-viet-red!"
+            >
+              <span className="text-[10px] font-extrabold text-stone-700 dark:text-stone-300 uppercase hover:text-viet-red!">
+                {currentLang.label}
+              </span>
+            </button>
+            {isLangOpen && (
+              <div className="absolute right-0 mt-2 w-36 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50">
+                {languages.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => {
+                      setLocale(lang.code);
+                      setIsLangOpen(false);
+                    }}
+                    className={`w-full text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${locale === lang.code ? "text-viet-red bg-stone-50 dark:bg-stone-700 font-extrabold" : "text-stone-600 dark:text-stone-300"}`}
+                  >
+                    <span>{lang.fullName}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
+
+          {/* Link dropdown */}
+          <div className="relative" ref={linkDropdownRef}>
+            <button
+              onClick={() => setIsLinkOpen(!isLinkOpen)}
+              className="size-10 rounded-full hover:bg-stone-200/50 flex justify-center items-center text-stone-600 dark:text-stone-300 transition-all hover:text-viet-red!"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="21"
+                height="21"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical hover:text-viet-red"
+              >
+                <circle cx="12" cy="12" r="1" />
+                <circle cx="12" cy="5" r="1" />
+                <circle cx="12" cy="19" r="1" />
+              </svg>
+            </button>
+            {isLinkOpen && (
+              <div className="absolute inline-block min-w-max right-0 mt-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50">
+                {links.map((link) => (
+                  <Link
+                    to={link.url}
+                    className={`whitespace-nowrap text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${window.location.pathname.includes(link.url) ? "text-viet-red bg-stone-50 dark:bg-stone-700 font-extrabold" : "text-stone-600 dark:text-stone-300"}`}
+                  >
+                    {t(link.labelId)}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+          {/*  */}
         </div>
       </div>
     </nav>
