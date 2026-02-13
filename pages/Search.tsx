@@ -12,7 +12,7 @@ interface SearchProps {
   artifacts: Artifact[];
 }
 
-const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_PAGE = 30;
 
 const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
   const { t, locale } = useLanguage();
@@ -27,6 +27,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     catIdsParam ? catIdsParam.split(",").filter(Boolean) : [],
   );
   const [currentPage, setCurrentPage] = useState(1);
+  const [filteredResults, setFilteredResults] = useState<Artifact[]>([]);
 
   useEffect(() => {
     setFilterText(query);
@@ -38,15 +39,15 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     setCurrentPage(1);
   }, [catIdsParam]);
 
-  const filteredResults = useMemo(() => {
+  const calculateFilteredResults = (text: string, cats: string[]) => {
     if (!artifacts || !Array.isArray(artifacts)) return [];
 
     let results = [...artifacts];
 
     // 1. Filter by hard category selections (from sidebar)
-    if (selectedCats.length > 0) {
+    if (cats.length > 0) {
       const selectedByGroup: Record<string, string[]> = {};
-      selectedCats.forEach((catId) => {
+      cats.forEach((catId) => {
         for (const group of CATEGORY_GROUPS) {
           if (!group || !group.options) continue;
           if (group.options.find((o) => o && o.id === catId)) {
@@ -73,7 +74,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     }
 
     // 2. Filter and rank by text similarity
-    const query = filterText.trim().toLowerCase();
+    const query = text.trim().toLowerCase();
 
     if (!query) return results;
 
@@ -119,7 +120,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
       .sort((a, b) => b.searchScore - a.searchScore);
 
     return results;
-  }, [artifacts, filterText, selectedCats, locale]);
+  };
 
   const totalPages = Math.ceil(filteredResults.length / ITEMS_PER_PAGE);
   const paginatedResults = filteredResults.slice(
@@ -135,6 +136,8 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
   };
 
   const handleSearchSubmit = () => {
+    const results = calculateFilteredResults(filterText, selectedCats);
+    setFilteredResults(results);
     updateURL(filterText, selectedCats);
     setCurrentPage(1);
   };
@@ -146,6 +149,8 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
 
     setSelectedCats(nextCats);
     setCurrentPage(1);
+    const results = calculateFilteredResults(filterText, nextCats);
+    setFilteredResults(results);
     updateURL(filterText, nextCats);
   };
 
@@ -153,6 +158,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     setFilterText("");
     setSelectedCats([]);
     setSearchParams({});
+    setFilteredResults([]);
     setCurrentPage(1);
   };
 
@@ -352,7 +358,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
           </span>
         </div>
 
-        <div className="grid grid-cols-4 sm:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-4">
           {paginatedResults.map((item) => (
             <ArtifactCard key={item.id} item={item} />
           ))}
