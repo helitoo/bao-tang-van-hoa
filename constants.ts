@@ -55,6 +55,50 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         },
         groupId: "religion",
       },
+      {
+        id: "nv",
+        name: {
+          vi: "Nhân vật",
+          en: "Characters",
+          zh: "人物",
+          ja: "人物",
+          ko: "인물",
+        },
+        groupId: "religion",
+      },
+      {
+        id: "lv",
+        name: {
+          vi: "Linh vật",
+          en: "Mythical Creatures",
+          zh: "神兽",
+          ja: "霊獣",
+          ko: "영물",
+        },
+        groupId: "religion",
+      },
+      {
+        id: "tt",
+        name: {
+          vi: "Thần thánh",
+          en: "Deities",
+          zh: "神",
+          ja: "神々",
+          ko: "신",
+        },
+        groupId: "religion",
+      },
+      {
+        id: "mq",
+        name: {
+          vi: "Ma quỷ",
+          en: "Demons & Ghosts",
+          zh: "妖魔鬼怪",
+          ja: "魔物 / 幽霊",
+          ko: "마귀 / 귀신",
+        },
+        groupId: "religion",
+      },
     ],
   },
   {
@@ -123,13 +167,13 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "nc",
+        id: "an",
         name: {
-          vi: "Nhạc cụ",
-          en: "Instrument",
-          zh: "乐器",
-          ja: "楽器",
-          ko: "악기",
+          vi: "Âm nhạc",
+          en: "Music",
+          zh: "音乐",
+          ja: "音楽",
+          ko: "음악",
         },
         groupId: "genre",
       },
@@ -272,7 +316,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "le_so",
+        id: "leso",
         name: {
           vi: "Nhà Lê sơ",
           en: "Early Lê Dynasty",
@@ -294,7 +338,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "le_th",
+        id: "leth",
         name: {
           vi: "Nhà Lê trung hưng",
           en: "Revival Lê Dynasty",
@@ -305,7 +349,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "tay_son",
+        id: "ts",
         name: {
           vi: "Nhà Tây sơn",
           en: "Tây-sơn Dynasty",
@@ -355,7 +399,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     title: { vi: "Khu vực", en: "Region", zh: "地区", ja: "地域", ko: "지역" },
     options: [
       {
-        id: "m_bac",
+        id: "mbac",
         name: {
           vi: "Miền Bắc",
           en: "Northern region",
@@ -366,7 +410,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "m_trung",
+        id: "mtrung",
         name: {
           vi: "Miền Trung",
           en: "Central region",
@@ -377,7 +421,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "m_nam",
+        id: "manm",
         name: {
           vi: "Miền Nam",
           en: "Southern region",
@@ -388,7 +432,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "m_nui",
+        id: "mnui",
         name: {
           vi: "Các dân tộc miền núi",
           en: "Highland ethnicities",

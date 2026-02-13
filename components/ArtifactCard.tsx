@@ -73,7 +73,7 @@ const ArtifactCard: React.FC<ArtifactCardProps> = ({
             {badges.map((badge) => (
               <span
                 key={badge?.id}
-                className={`text-[8px] font-extrabold tracking-tighter px-1.5 py-0.5 rounded-sm shadow-sm backdrop-blur-md border ${badge?.id === "bvqg" ? "bg-amber-500/90 text-white border-amber-400" : "bg-viet-red/90 text-white border-red-400"}`}
+                className={`text-[8px] font-bold tracking-tighter px-1.5 py-0.5 rounded-sm shadow-sm backdrop-blur-md text-white ${badge?.id === "bvqg" ? "bg-amber-500/60" : badge?.id === "dstg" ? "bg-sky-400/60" : "bg-viet-red/60"}`}
               >
                 {badge?.name}
               </span>
