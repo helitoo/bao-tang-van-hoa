@@ -20,24 +20,19 @@ const Footer: React.FC<FooterProps> = () => {
   return (
     <footer
       // className={`bg-stone-100 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 transition-colors duration-300 p-5 px-2`}
-      className={`pt-10 pb-5 px-2 bg-repeat-x bg-[length:auto_100%] bg-[url('/tile.svg')]`}
+      className="p-10 pt-20 bg-repeat-x bg-[length:auto_100%] bg-[url('/tile.svg')] flex items-center justify-center"
     >
-      <div className="flex justify-center items-center gap-5">
-        {/* Logo and slogan */}
-        <div>
-          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-            {/* Logo */}
-            <Logo className="w-10 h-10 text-stone-50 text-shadow-sm" />
-            {/* Slogan */}
-            <div className="hidden sm:flex flex-col">
-              <span className="text-lg font-extrabold leading-none text-stone-50 transition-colors uppercase tracking-tight text-shadow-sm">
-                {t("museum_name")}
-              </span>
-              <span className="text-[9px] text-stone-50 font-light tracking-widest uppercase mt-0.5 text-shadow-sm">
-                {t("footer_desc")}
-              </span>
-            </div>
-          </div>
+      <div className="flex items-center justify-between gap-4">
+        {/* Logo */}
+        <Logo className="size-7 sm:size-10 text-stone-50 text-shadow-sm" />
+        {/* Slogan */}
+        <div className="flex flex-col">
+          <span className="text-[10px] sm:text-lg font-extrabold leading-none text-stone-50 transition-colors uppercase tracking-tight text-shadow-sm">
+            {t("museum_name")}
+          </span>
+          <span className="text-[6px] sm:text-[9px] text-stone-50 font-light tracking-widest uppercase text-shadow-sm">
+            {t("footer_desc")}
+          </span>
         </div>
       </div>
     </footer>
