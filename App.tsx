@@ -310,9 +310,13 @@ const Navbar = () => {
               <path d="M12 3v14" />
               <path d="M5 21h14" />
             </svg>
-            <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
+            <a
+              href="https://forms.gle/dmjtuKRCcX9WN9h8A"
+              target="_blank"
+              className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider"
+            >
               {t("nav_contribute")}
-            </span>
+            </a>
           </button>
 
           {/* Save button*/}
