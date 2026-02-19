@@ -27,12 +27,36 @@ const Footer: React.FC<FooterProps> = () => {
         <Logo className="size-7 sm:size-10 text-stone-50 text-shadow-sm" />
         {/* Slogan */}
         <div className="flex flex-col">
+          {/* Name */}
           <span className="text-[10px] sm:text-lg font-extrabold leading-none text-stone-50 transition-colors uppercase tracking-tight text-shadow-sm">
             {t("museum_name")}
           </span>
+          {/* Slogan */}
           <span className="text-[6px] sm:text-[9px] text-stone-50 font-light tracking-widest uppercase text-shadow-sm">
             {t("footer_desc")}
           </span>
+          {/* Suporting button */}
+          <div className="flex flex-col md:flex-row justify-evenly gap-0.5 mt-2">
+            <button className="w-auto text-[6px] sm:text-[9px] bg-viet-red text-white px-1 py-0.5 transition-transform duration-300 hover:-translate-y-1">
+              <a href="https://forms.gle/dmjtuKRCcX9WN9h8A" target="_blank">
+                Đóng góp
+              </a>
+            </button>
+
+            <button className="w-auto text-[6px] sm:text-[9px] bg-viet-red text-white px-1 py-0.5 transition-transform duration-300 hover:-translate-y-1">
+              <a
+                href="mailto:bao162006@gmail.com?subject=%5BBTVH%5D%20B%C3%81O%20C%C3%81O%20N%E1%BB%98I%20DUNG"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Báo cáo nội dung
+              </a>
+            </button>
+
+            <div className="w-auto text-[6px] sm:text-[9px] bg-viet-red text-white px-1 py-0.5">
+              Admin: bao162006@gmail.com
+            </div>
+          </div>
         </div>
       </div>
     </footer>
