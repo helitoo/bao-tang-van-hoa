@@ -149,6 +149,17 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         },
         groupId: "region",
       },
+      {
+        id: "nq",
+        name: {
+          vi: "Ngoại quốc",
+          en: "Foreign",
+          zh: "外国",
+          ja: "外国",
+          ko: "외국",
+        },
+        groupId: "region",
+      },
     ],
   },
   {
