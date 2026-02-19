@@ -128,7 +128,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "manm",
+        id: "mnam",
         name: {
           vi: "Miền Nam",
           en: "Southern region",
