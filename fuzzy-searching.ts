@@ -55,5 +55,5 @@ export default function simalarityScore(query: string, text: string) {
   );
 
   // Trọng số có thể chỉnh
-  return subScore * 0.6 + jaccardScore * 0.2 + ngramScore * 0.2;
+  return subScore * 0.5 + jaccardScore * 0.25 + ngramScore * 0.25;
 }

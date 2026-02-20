@@ -27,7 +27,7 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
     catIdsParam ? catIdsParam.split(",").filter(Boolean) : [],
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const [filteredResults, setFilteredResults] = useState<Artifact[]>([]);
+  const [filteredResults, setFilteredResults] = useState<Artifact[]>(artifacts);
 
   useEffect(() => {
     setFilterText(query);
@@ -93,26 +93,27 @@ const Search: React.FC<SearchProps> = ({ artifacts = [] }) => {
           .join(" ");
 
         // name + short_description
-        const text1 = [artifact.name, artifact.short_description]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        const text2 = [
+        const text = [
+          artifact.name,
+          artifact.short_description,
           catNames,
           artifact.description,
           artifact.location,
           artifact.author,
-          artifact.contributor,
           artifact.artifact_date,
         ]
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
 
-        const searchScore =
-          simalarityScore(query, text1) * 0.8 +
-          simalarityScore(query, text2) * 0.2;
+        // const text2 = [
+
+        // ]
+        //   .filter(Boolean)
+        //   .join(" ")
+        //   .toLowerCase();
+
+        const searchScore = simalarityScore(query, text);
 
         return { ...artifact, searchScore };
       })
