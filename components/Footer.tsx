@@ -39,7 +39,7 @@ const Footer: React.FC<FooterProps> = () => {
           <div className="flex flex-col md:flex-row justify-evenly gap-0.5 mt-2">
             <button className="w-auto text-[6px] sm:text-[9px] bg-viet-red text-white px-1 py-0.5 transition-transform duration-300 hover:-translate-y-1">
               <a href="https://forms.gle/dmjtuKRCcX9WN9h8A" target="_blank">
-                Đóng góp
+                {t("nav_contribute")}
               </a>
             </button>
 
@@ -49,7 +49,7 @@ const Footer: React.FC<FooterProps> = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Báo cáo nội dung
+                {t("nav_report")}
               </a>
             </button>
 

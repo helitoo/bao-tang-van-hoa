@@ -9,6 +9,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     nav_contribute: "Đóng góp",
     nav_references: "Tài liệu tham khảo",
     nav_download: "Tải dữ liệu xuống",
+    nav_report: "Báo cáo nội dung",
     download_desc:
       "Bạn có thể sử dụng dữ liệu này để tìm kiếm nâng cao như Google Notebook LM, Gemini (kết hợp với các tài nguyên được nhắc đến trong mục Tài liệu tham khảo để đạt hiệu quả tìm kiếm cao nhất),... hoặc dùng để thống kê,...",
     nav_placeholder: "Tra cứu tên hiện vật, niên đại...",
@@ -71,17 +72,12 @@ export const translations: Record<Locale, Record<string, string>> = {
     stats_genre: "Phân loại Thể loại",
     stats_era: "Phân loại Thời đại",
     stats_region: "Phân loại Khu vực",
-    ai_search_title: "Tìm kiếm nâng cao bằng AI",
-    ai_search_desc:
-      "Hãy tải file sau về thiết bị của bạn và upload lên bất kỳ generative AI nào (Gemini, ChatGPT, Claude...), sau đó hãy nhập prompt như sau:",
-    ai_search_prompt:
-      "Tôi vừa cung cấp cho bạn thông tin các hiện vật, công trình kiến trúc,... tiêu biểu của Việt Nam. Hãy [...]. Hiển thị kết quả trả về dưới dạng bảng.",
-    ai_search_btn: "Tải về dữ liệu (.csv)",
     home_update_note: "Dữ liệu được cập nhật thường xuyên",
   },
   en: {
     nav_references: "References",
     nav_download: "Download data",
+    nav_report: "Report Content",
     download_desc:
       "You can use this data for advanced searches with tools like Google NotebookLM or Gemini (combined with the sources mentioned in the References section for maximum efficiency), or for statistical purposes...",
     nav_timeline: "Tour Map",
@@ -150,17 +146,12 @@ export const translations: Record<Locale, Record<string, string>> = {
     stats_genre: "Genre Distribution",
     stats_era: "Era Distribution",
     stats_region: "Region Distribution",
-    ai_search_title: "Advanced AI Search",
-    ai_search_desc:
-      "Download the following file to your device and upload it to any generative AI (Gemini, ChatGPT, Claude...), then enter the prompt as follows:",
-    ai_search_prompt:
-      "I have provided you with information on typical Vietnamese artifacts, architectural works, etc. Please [...]. Display the returned results in a table.",
-    ai_search_btn: "Download Data (.csv)",
     home_update_note: "Data is updated regularly",
   },
   zh: {
     nav_references: "参考资料",
     nav_download: "下载数据",
+    nav_report: "举报内容",
     download_desc:
       "您可以将此数据用于 Google NotebookLM、Gemini 等高级搜索（结合“参考文献”部分提到的资源以获得最佳搜索效果），或用于数据统计等...",
     nav_timeline: "参观图",
@@ -227,17 +218,12 @@ export const translations: Record<Locale, Record<string, string>> = {
     stats_genre: "类型分布",
     stats_era: "时代分布",
     stats_region: "地区分布",
-    ai_search_title: "AI 进阶搜索",
-    ai_search_desc:
-      "下载文件并将其上传到任何生成式 AI（Gemini, ChatGPT, Claude...），然后输入以下提示词：",
-    ai_search_prompt:
-      "我为您提供了有关典型越南文物、建筑工程等的信息。请 [...]. 以表格形式显示返回的结果。",
-    ai_search_btn: "下载数据 (.csv)",
     home_update_note: "数据定期更新",
   },
   ja: {
     nav_references: "参考文献",
     nav_download: "データをダウンロードする",
+    nav_report: "コンテンツを報告する",
     download_desc:
       "このデータは、Google NotebookLMやGeminiなどの高度な検索（最大の検索効率を得るために「参考文献」セクションのリソースと組み合わせることを推奨）、または統計分析などに活用いただけます。",
     nav_timeline: "見学マップ",
@@ -304,17 +290,12 @@ export const translations: Record<Locale, Record<string, string>> = {
     stats_genre: "ジャンル分布",
     stats_era: "時代分布",
     stats_region: "地域分布",
-    ai_search_title: "AI高度な検索",
-    ai_search_desc:
-      "ファイルをダウンロードして任意の生成AI（Gemini, ChatGPT, Claude...）にアップロードし、次のプロンプトを入力してください：",
-    ai_search_prompt:
-      "典型的なベトナムの遺物や建築作品などの情報を提供しました。 [...] してください。 結果をテーブル形式で表示してください。",
-    ai_search_btn: "データをダウンロード (.csv)",
     home_update_note: "データは定期的に更新されます",
   },
   ko: {
     nav_references: "참고 문헌",
     nav_download: "데이터 다운로드",
+    nav_report: "콘텐츠 신고",
     download_desc:
       "본 데이터를 Google NotebookLM, Gemini와 같은 고급 검색에 활용하거나(최고의 검색 효율을 위해 ‘참고 문헌’ 섹션에 언급된 리소스와 결합 권장), 통계 작업 등에 사용할 수 있습니다.",
     nav_timeline: "관람 안내도",
@@ -382,12 +363,6 @@ export const translations: Record<Locale, Record<string, string>> = {
     stats_genre: "장르 분포",
     stats_era: "시대 분포",
     stats_region: "지역 분포",
-    ai_search_title: "AI 고급 검색",
-    ai_search_desc:
-      "파일을 다운로드하여 생성형 AI(Gemini, ChatGPT, Claude...)에 업로드한 후 다음과 같이 프롬프트를 입력하세요.",
-    ai_search_prompt:
-      "베트남의 대표적인 유물, 건축물 등에 대한 정보를 제공해 드렸습니다. [...] 해주세요. 결과를 표 형식으로 표시하세요.",
-    ai_search_btn: "데이터 다운로드 (.csv)",
     home_update_note: "데이터는 정기적으로 업데이트됩니다",
   },
 };
