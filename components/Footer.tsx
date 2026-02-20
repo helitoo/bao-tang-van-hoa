@@ -53,7 +53,7 @@ const Footer: React.FC<FooterProps> = () => {
               </a>
             </button>
 
-            <div className="w-auto text-[6px] sm:text-[9px] bg-viet-red text-white px-1 py-0.5">
+            <div className="w-auto text-[6px] sm:text-[9px] text-viet-red px-1 py-0.5">
               Admin: bao162006@gmail.com
             </div>
           </div>
