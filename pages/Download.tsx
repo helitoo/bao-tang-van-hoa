@@ -18,12 +18,22 @@ const fullHeaders = [
   { key: "categories", label: "Categories" },
   { key: "main_image", label: "Main Image URL" },
   { key: "supporting_images", label: "Supporting Images" },
-  { key: "sources", label: "Sources" },
   { key: "author", label: "Author" },
   { key: "contributor", label: "Contributor" },
   { key: "artifact_date", label: "Artifact Era" },
   { key: "public_date", label: "Public Date" },
   { key: "location", label: "Location" },
+];
+
+const defaultCheckedHeaders = [
+  "id",
+  "name",
+  "short_description",
+  "description",
+  "categories",
+  "author",
+  "artifact_date",
+  "location",
 ];
 
 const DownloadIcon: React.FC = () => {
@@ -55,7 +65,7 @@ const Download: React.FC<Props> = ({ artifacts }) => {
   const [checkedState, setCheckedState] = useState(
     fullHeaders.reduce(
       (acc, { key }) => {
-        acc[key] = true;
+        acc[key] = defaultCheckedHeaders.includes(key);
         return acc;
       },
       {} as Record<string, boolean>,
@@ -107,7 +117,6 @@ const Download: React.FC<Props> = ({ artifacts }) => {
       categories: (a) => getCatNames(a.categories),
       main_image: (a) => a.main_image,
       supporting_images: (a) => (a.supporting_images || []).join("; "),
-      sources: (a) => (a.sources || []).join("; "),
       author: (a) => a.author,
       contributor: (a) => a.contributor,
       artifact_date: (a) => a.artifact_date,
@@ -156,7 +165,7 @@ const Download: React.FC<Props> = ({ artifacts }) => {
         </h1>
         <div className="h-1 w-24 bg-viet-red shadow-lg mb-6"></div>
         <div className="relative">
-          <p>{t("download_desc")}</p>
+          <p className="text-justify">{t("download_desc")}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 mt-5 md:px-10">
             {/* Header checker */}
             <div className="grid grid-cols-2 md:grid-cols-1 gap-2 text-left justify-items-start">
@@ -175,7 +184,7 @@ const Download: React.FC<Props> = ({ artifacts }) => {
             {/* Download */}
             <ol className="mt-5 md:mt-0">
               <li
-                className="grid grid-cols-2 gap-2 text-left transition-transform duration-300 hover:-translate-y-1 hover:text-viet-red cursor-pointer"
+                className="flex justify-between hover:text-viet-red hover:bg-stone-500/25 p-1 px-2 cursor-pointer"
                 onClick={() =>
                   handleDownloadData(
                     `btvh-${maxPublicDate}.csv`,
@@ -187,7 +196,7 @@ const Download: React.FC<Props> = ({ artifacts }) => {
                 <DownloadIcon />{" "}
               </li>
               <li
-                className="grid grid-cols-2 gap-2 text-left transition-transform duration-300 hover:-translate-y-1 hover:text-viet-red cursor-pointer"
+                className="flex justify-between hover:text-viet-red hover:bg-stone-500/25 p-1 px-2 cursor-pointer"
                 onClick={() =>
                   handleDownloadData(
                     `btvh-${maxPublicDate}.txt`,
