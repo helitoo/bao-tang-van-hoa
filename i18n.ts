@@ -8,6 +8,9 @@ export const translations: Record<Locale, Record<string, string>> = {
     nav_timeline: "Sơ đồ tham quan",
     nav_contribute: "Đóng góp",
     nav_references: "Tài liệu tham khảo",
+    nav_download: "Tải dữ liệu xuống",
+    download_desc:
+      "Bạn có thể sử dụng dữ liệu này để tìm kiếm nâng cao như Google Notebook LM, Gemini (kết hợp với các tài nguyên được nhắc đến trong mục Tài liệu tham khảo để đạt hiệu quả tìm kiếm cao nhất),... hoặc dùng để thống kê,...",
     nav_placeholder: "Tra cứu tên hiện vật, niên đại...",
     hero_title: "GÌN GIỮ TINH HOA",
     hero_subtitle: "Văn hóa Việt Nam",
@@ -78,6 +81,9 @@ export const translations: Record<Locale, Record<string, string>> = {
   },
   en: {
     nav_references: "References",
+    nav_download: "Download data",
+    download_desc:
+      "You can use this data for advanced searches with tools like Google NotebookLM or Gemini (combined with the sources mentioned in the References section for maximum efficiency), or for statistical purposes...",
     nav_timeline: "Tour Map",
     timeline_title: "Vietnam History Timeline",
     timeline_nation: "Nation Name",
@@ -154,6 +160,9 @@ export const translations: Record<Locale, Record<string, string>> = {
   },
   zh: {
     nav_references: "参考资料",
+    nav_download: "下载数据",
+    download_desc:
+      "您可以将此数据用于 Google NotebookLM、Gemini 等高级搜索（结合“参考文献”部分提到的资源以获得最佳搜索效果），或用于数据统计等...",
     nav_timeline: "参观图",
     timeline_title: "越南历史年表",
     timeline_nation: "国号",
@@ -228,6 +237,9 @@ export const translations: Record<Locale, Record<string, string>> = {
   },
   ja: {
     nav_references: "参考文献",
+    nav_download: "データをダウンロードする",
+    download_desc:
+      "このデータは、Google NotebookLMやGeminiなどの高度な検索（最大の検索効率を得るために「参考文献」セクションのリソースと組み合わせることを推奨）、または統計分析などに活用いただけます。",
     nav_timeline: "見学マップ",
     timeline_title: "ベトナム歴史年表",
     timeline_nation: "国号",
@@ -302,6 +314,9 @@ export const translations: Record<Locale, Record<string, string>> = {
   },
   ko: {
     nav_references: "참고 문헌",
+    nav_download: "데이터 다운로드",
+    download_desc:
+      "본 데이터를 Google NotebookLM, Gemini와 같은 고급 검색에 활용하거나(최고의 검색 효율을 위해 ‘참고 문헌’ 섹션에 언급된 리소스와 결합 권장), 통계 작업 등에 사용할 수 있습니다.",
     nav_timeline: "관람 안내도",
     timeline_title: "베트남 역사 연대기",
     timeline_nation: "국호",

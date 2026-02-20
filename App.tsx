@@ -15,6 +15,7 @@ import Saved from "./pages/Saved";
 import Timeline from "./pages/Timeline";
 import ArtifactDetail from "./pages/ArtifactDetail";
 import References from "./pages/References";
+import Download from "./pages/Download";
 import Footer from "./components/Footer";
 import { Artifact, Locale } from "./types";
 import { translations } from "./i18n";
@@ -218,6 +219,10 @@ const Navbar = () => {
     {
       url: "/references",
       labelId: "nav_references",
+    },
+    {
+      url: "/download",
+      labelId: "nav_download",
     },
   ];
 
@@ -591,6 +596,10 @@ export default function App() {
                 element={<ArtifactDetail artifacts={artifacts} />}
               />
               <Route path="/references" element={<References />} />
+              <Route
+                path="/download"
+                element={<Download artifacts={artifacts} />}
+              />
             </Routes>
           </Layout>
         </BrowserRouter>

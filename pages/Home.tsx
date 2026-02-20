@@ -91,78 +91,6 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
     };
   }, [artifacts, locale]);
 
-  const handleDownloadAIFile = () => {
-    if (!artifacts || artifacts.length === 0) return;
-
-    const getCatNames = (ids: string[]) => {
-      return (ids || [])
-        .map((id) => {
-          for (const group of CATEGORY_GROUPS) {
-            const found = group.options.find((opt) => id === opt.id);
-            if (found) return found.name[locale];
-          }
-          return id;
-        })
-        .join("; ");
-    };
-
-    const escapeCSV = (val: any) => {
-      if (val === null || val === undefined) return '""';
-      let str = String(val);
-      str = str.replace(/"/g, '""');
-      return `"${str}"`;
-    };
-
-    const headers = [
-      "ID",
-      "Name",
-      "Short Description",
-      "Description",
-      "Categories",
-      "Main Image URL",
-      "Supporting Images",
-      "Sources",
-      "Author",
-      "Contributor",
-      "Artifact Date/Era",
-      "Public Date",
-      "Location",
-    ];
-
-    const rows = artifacts.map((a) => [
-      escapeCSV(a.id),
-      escapeCSV(a.name),
-      escapeCSV(a.short_description),
-      escapeCSV(a.description),
-      escapeCSV(getCatNames(a.categories)),
-      escapeCSV(a.main_image),
-      escapeCSV((a.supporting_images || []).join("; ")),
-      escapeCSV((a.sources || []).join("; ")),
-      escapeCSV(a.author),
-      escapeCSV(a.contributor),
-      escapeCSV(a.artifact_date),
-      escapeCSV(a.public_date),
-      escapeCSV(a.location),
-    ]);
-
-    const csvContent = [
-      headers.join(","),
-      ...rows.map((r) => r.join(",")),
-    ].join("\n");
-    const blob = new Blob(["\uFEFF" + csvContent], {
-      type: "text/csv;charset=utf-8;",
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    const now = new Date();
-    const dateStr = `${now.getDate()}-${now.getMonth() + 1}-${now.getFullYear()}`;
-    link.href = url;
-    link.setAttribute("download", `btvh-hienvat-${dateStr}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <div className="space-y-16">
       <section className="relative h-[500px] overflow-hidden bg-stone-900 flex items-center justify-center">
@@ -298,7 +226,7 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
       </section>
 
       {/* AI Advanced Search Section */}
-      <section className="max-w-7xl mx-auto px-4">
+      {/* <section className="max-w-7xl mx-auto px-4">
         <div className="bg-stone-900 dark:bg-stone-800 text-stone-100 p-8 md:p-12 border-4 border-viet-red relative overflow-hidden group shadow-2xl">
           <div className="halftone-bg absolute inset-0 opacity-[0.05]"></div>
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-10">
@@ -336,7 +264,7 @@ const Home: React.FC<HomeProps> = ({ artifacts }) => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <section className="max-w-7xl mx-auto px-4 pb-24">
         <div className="flex items-center justify-between mb-8 border-b-2 border-stone-200 dark:border-stone-800 pb-4">
