@@ -1,0 +1,51 @@
+import Link from "next/link";
+import { getLangDict } from "@/lib/lang";
+import {
+  FanpageIcon,
+  GroupIcon,
+  ResIcon,
+  BookIcon,
+  refFanpages,
+  refGroups,
+  refRes,
+  refBooks,
+} from "@/app/[locale]/references/refs";
+import ReferenceSection from "@/app/[locale]/references/ReferenceSection";
+
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const dict = await getLangDict(locale);
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-16 min-h-[calc(100vh-5rem)]">
+      <div className="flex flex-col items-center mb-16 text-center">
+        <nav className="flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-stone-400 mb-4">
+          <Link
+            href={`/${locale}/`}
+            hrefLang={locale}
+            className="hover:text-viet-red transition-colors"
+          >
+            {dict.nav_home}
+          </Link>
+          <span>/</span>
+          <span className="text-viet-red">{dict.nav_references}</span>
+        </nav>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-stone-900 dark:text-stone-100 uppercase tracking-tight mb-4">
+          {dict.nav_references}
+        </h1>
+        <div className="h-1 w-24 bg-viet-red shadow-lg mb-6"></div>
+      </div>
+
+      <div className="relative">
+        <ReferenceSection label={<FanpageIcon />} refs={refFanpages} />
+        <ReferenceSection label={<GroupIcon />} refs={refGroups} />
+        <ReferenceSection label={<ResIcon />} refs={refRes} />
+        <ReferenceSection label={<BookIcon />} refs={refBooks} />
+      </div>
+    </div>
+  );
+}

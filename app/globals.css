@@ -1,0 +1,99 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-viet-red: #b91c1c;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500; /* Medium 500 as default */
+  background-color: #f7f3e9; /* Light mode cream */
+  background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  transition: background-color 0.3s ease;
+}
+.dark body {
+  background-color: #1c1917; /* Dark mode stone-900 */
+  background-image: url("https://www.transparenttextures.com/patterns/dark-matter.png");
+  color: #e7e5e4;
+}
+h1,
+h2 {
+  font-weight: 800; /* ExtraBold 800 */
+}
+h3,
+h4 {
+  font-weight: 700; /* Bold 700 */
+}
+.viet-red {
+  color: #b91c1c;
+}
+
+/* Halftone pattern effect */
+.halftone-bg {
+  background-image: radial-gradient(#b91c1c 0.5px, transparent 0);
+  background-size: 10px 10px;
+}
+.dark .halftone-bg {
+  background-image: radial-gradient(#b91c1c 0.5px, transparent 0);
+  background-size: 10px 10px;
+}
+
+/* Custom scrollbar for dark mode */
+.dark ::-webkit-scrollbar-track {
+  background: #292524;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #44403c;
+}
+
+/* Selection background color*/
+::selection {
+  background-color: #b91c1c;
+  color: white;
+}
+
+/* Skeleton */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #e5e7eb;
+  border-radius: 6px;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.btn {
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(95%); /* giảm 5% độ sáng */
+}
+
+.btn:active {
+  transform: translateY(-2px) scale(0.99);
+  filter: brightness(75%);
+}
