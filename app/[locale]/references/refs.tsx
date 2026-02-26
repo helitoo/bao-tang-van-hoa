@@ -87,12 +87,16 @@ export const refFanpages: Ref[] = [
     url: "https://www.facebook.com/hoavandaiviet",
   },
   {
-    name: "Đại Việt phong hoa",
+    name: "Đại Việt phong hoa - 大越豐華",
     url: "https://www.facebook.com/Daivietphonghoa",
   },
   {
-    name: "Bác văn ước lễ",
+    name: "Bác văn ước lễ - 博文約禮",
     url: "https://www.facebook.com/bacvanuocle",
+  },
+  {
+    name: "Huyền tinh tác đấu - 懸星作枓",
+    url: "https://www.facebook.com/huyentinhtacdau",
   },
   {
     name: "Lược sử tộc Việt",
@@ -107,12 +111,16 @@ export const refFanpages: Ref[] = [
     url: "https://www.facebook.com/madeinvietnam2024",
   },
   {
-    name: "Bửu liên - Đi cùng di sản",
-    url: "https://www.tiktok.com/@buulien.dicungdisan",
+    name: "Tòn lon ton",
+    url: "https://www.tiktok.com/@tonlonton92",
   },
   {
     name: "Địa phương chí",
     url: "https://www.tiktok.com/@diaphuongchi",
+  },
+  {
+    name: "Bửu liên - Đi cùng di sản",
+    url: "https://www.tiktok.com/@buulien.dicungdisan",
   },
 ];
 
@@ -138,22 +146,18 @@ export const refGroups: Ref[] = [
 export const refRes: Ref[] = [
   {
     name: "Hoa văn Đại Việt",
-    desc: "Hoa văn cổ Việt Nam",
     url: "https://hoavandaiviet.vn/",
   },
   {
     name: "Đại Nam hoa văn mạn lục",
-    desc: "Hoa văn nhà Nguyễn",
     url: "https://drive.google.com/drive/folders/1EWKhUWLbnvn9UmI-2ZGx7NnSZkqrymtm?usp=sharing",
   },
   {
     name: "Thi viện",
-    desc: "Hệ thống văn thơ Việt Nam",
     url: "https://www.thivien.net/",
   },
   {
     name: "Từ điển Hán Nôm",
-    desc: "Tra cứu từ vựng Hán, Nôm",
     url: "https://hvdic.thivien.net/",
   },
 ];
@@ -161,27 +165,29 @@ export const refRes: Ref[] = [
 export const refBooks: Ref[] = [
   {
     name: "嶺南摭怪 - Lĩnh Nam chích quái",
-    desc: "Sách ghi chép những chuyện thần thánh, ma quỷ kỳ dị ở nước ta.",
+    desc: "Những chuyện thần thánh, ma quỷ kỳ dị ở nước ta.",
   },
   {
     name: "越甸幽靈集 - Việt điện u linh tập (Lý Tế Xuyên, 1329)",
-    desc: "Sách ghi chép những thần tích ở nước ta.",
+    desc: "Những thần tích ở nước ta.",
   },
   {
     name: "A Description of the Kingdom of Tonqueen - Mô tả vương quốc Đàng Ngoài (Samuel Baron, 1685)",
     desc: "Ghi chép tổng hợp về phong tục, tập quán, trang phục,... ở vùng Bắc bộ thời Lê Trung hưng.",
   },
   {
-    name: "Les symboles, les emblèmes et les accessoires du culte chez các Annamites - Biểu tượng, phù hiệu và đồ thờ của người An Nam (Gustave Dumoutier, 1891)",
+    name: "Les symboles, les emblèmes et les accessoires du culte chez les Annamites - Biểu tượng, phù hiệu và đồ thờ của người An Nam (Gustave Dumoutier, 1891)",
     desc: "Mỹ thuật cổ trong các vật phẩm tâm linh truyền thống Việt Nam.",
+    url: "https://archive.org/details/MN40218ucmf_6/mode/1up",
   },
   {
-    name: "Psychologie du peuple annamite - Tâm lý người An Nam (Paul Giran, 1904)",
+    name: "Psychologie du peuple Annamites - Tâm lý người An Nam (Paul Giran, 1904)",
     desc: "Tính cách dân tộc, tiến trình lịch sử, tri thức, xã hội và chính trị.",
   },
   {
-    name: "Le Deuil et les rites funéraires chez les Annamites - Tang lễ của người An Nam (Gustave Dumoutier, 1904)",
+    name: "Le rituel funéraire des Annamites - Tang lễ của người An Nam (Gustave Dumoutier, 1904)",
     desc: "Nghiên cứu dân tộc học về tín ngưỡng cổ truyền.",
+    url: "https://archive.org/details/lerituelfunerair00dumo/mode/1up",
   },
   {
     name: "Technique du peuple Annamite - Kỹ thuật của người An Nam (Henri Oger, 1909)",
