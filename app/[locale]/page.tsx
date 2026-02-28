@@ -36,7 +36,7 @@ export default async function Page({
             <div className="h-1 w-24 bg-viet-red shadow-lg"></div>
           </div>
           <Link
-            href="/search"
+            href={`/${locale}/search`}
             className="bg-viet-red hover:bg-red-800 text-white p-3 rounded-sm transition-all transform inline-block text-sm font-extrabold uppercase tracking-widest shadow-2xl border border-red-700/50"
           >
             {dict.hero_btn}
