@@ -12,6 +12,8 @@ function parseCSV(text: string): Artifact[] {
   let currentField = "";
   let inQuotes = false;
   const cleanText = text.replace(/^\uFEFF/, "");
+
+  // First parse
   for (let i = 0; i < cleanText.length; i++) {
     const char = cleanText[i];
     const nextChar = cleanText[i + 1];
@@ -35,8 +37,14 @@ function parseCSV(text: string): Artifact[] {
     currentRow.push(currentField);
     rows.push(currentRow);
   }
+
+  // Check data
   if (rows.length < 2) return [];
+
+  // Get header
   const headers = rows[0].map((h) => h.trim());
+
+  // Get result
   const results: Artifact[] = [];
   for (let i = 1; i < rows.length; i++) {
     const data = rows[i];
@@ -44,13 +52,16 @@ function parseCSV(text: string): Artifact[] {
     const artifact: any = {};
     headers.forEach((header, index) => {
       const value = (data[index] || "").trim();
+      // If header = categories -> Split by \s
       if (header === "categories") {
         artifact[header] = value
           .split(/[\s,]+/)
           .filter(Boolean)
           .map((v) => v.trim());
       } else if (header === "supporting_images" || header === "sources") {
+        // If supporting_images is iframe -> keep the origin
         if (value.includes("<iframe")) artifact[header] = [value];
+        // Else -> split by \s or \n ; ,
         else
           artifact[header] = value
             .split(/[ \n;,]+/)
@@ -58,7 +69,10 @@ function parseCSV(text: string): Artifact[] {
             .filter(Boolean);
       } else artifact[header] = value;
     });
-    if (!artifact.id) artifact.id = String(i);
+
+    // Only get row if there is exists id and main_image
+    if (!artifact.id || !artifact.main_image || !artifact.categories.length)
+      continue;
     results.push(artifact as Artifact);
   }
   return results;
