@@ -31,7 +31,7 @@ export default async function Page({
         <div className="h-1 w-24 bg-viet-red shadow-lg mb-6"></div>
         <div className="relative">
           <p className="text-justify">{dict.download_desc}</p>
-          <Download locale={locale as Locale} />
+          <Download />
         </div>
       </div>
     </div>

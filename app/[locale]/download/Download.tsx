@@ -4,22 +4,10 @@ import { useState, useEffect } from "react";
 
 import { useArtifact } from "@/contexts/artifact";
 import { Locale } from "@/lib/lang";
-import { CATEGORY_GROUPS } from "@/lib/consts/categories";
+import { FULL_HEADERS } from "@/lib/exportData/dataMetadata";
 
-const fullHeaders: { key: string; label: string }[] = [
-  { key: "id", label: "ID" },
-  { key: "name", label: "Name" },
-  { key: "short_description", label: "Short Description" },
-  { key: "description", label: "Description" },
-  { key: "categories", label: "Categories" },
-  { key: "main_image", label: "Main Image URL" },
-  { key: "supporting_images", label: "Supporting Images" },
-  { key: "author", label: "Author" },
-  { key: "contributor", label: "Contributor" },
-  { key: "artifact_date", label: "Artifact Era" },
-  { key: "public_date", label: "Public Date" },
-  { key: "location", label: "Location" },
-];
+import { getCsvContent } from "@/lib/exportData/getCsvContent";
+import { getTxtContent } from "@/lib/exportData/getTxtContent";
 
 const defaultCheckedHeaders: string[] = [
   "id",
@@ -53,13 +41,13 @@ const DownloadIcon: React.FC = () => {
   );
 };
 
-export default function Download({ locale }: { locale: Locale }) {
+export default function Download() {
   // Load artifacts
   const { artifacts } = useArtifact();
 
   // Checker handle
   const [checkedState, setCheckedState] = useState(
-    fullHeaders.reduce(
+    FULL_HEADERS.reduce(
       (acc, { key }) => {
         acc[key] = defaultCheckedHeaders.includes(key);
         return acc;
@@ -93,57 +81,14 @@ export default function Download({ locale }: { locale: Locale }) {
   ) => {
     if (!artifacts || artifacts.length === 0) return;
 
-    const getCatNames = (ids: string[]) => {
-      return (ids || [])
-        .map((id) => {
-          for (const group of CATEGORY_GROUPS) {
-            const found = group.options.find((opt) => id === opt.id);
-            if (found) return found.name[locale];
-          }
-          return id;
-        })
-        .join("; ");
-    };
+    const selectedHeaders = FULL_HEADERS.filter(({ key }) => checkedState[key]);
 
-    const escapeCSV = (val: any) => {
-      if (val === null || val === undefined) return '""';
-      let str = String(val);
-      str = str.replace(/"/g, '""');
-      return `"${str}"`;
-    };
+    const content =
+      fileType === "text/csv;charset=utf-8"
+        ? getCsvContent(artifacts, selectedHeaders)
+        : getTxtContent(artifacts, selectedHeaders);
 
-    const fieldMap = {
-      id: (a: any) => a.id,
-      name: (a: any) => a.name,
-      short_description: (a: any) => a.short_description,
-      description: (a: any) => a.description,
-      categories: (a: any) => getCatNames(a.categories),
-      main_image: (a: any) => a.main_image,
-      supporting_images: (a: any) => (a.supporting_images || []).join("; "),
-      author: (a: any) => a.author,
-      contributor: (a: any) => a.contributor,
-      artifact_date: (a: any) => a.artifact_date,
-      public_date: (a: any) => a.public_date,
-      location: (a: any) => a.location,
-    };
-
-    // Get selected cols
-    const selectedHeaders = fullHeaders.filter(({ key }) => checkedState[key]);
-
-    // Create rows with selected cols
-    const rows = artifacts.map((a) =>
-      selectedHeaders.map(({ key }) => {
-        const typedKey = key as keyof typeof fieldMap;
-        return escapeCSV(fieldMap[typedKey](a) ?? "");
-      }),
-    );
-
-    const csvContent = [
-      selectedHeaders.map((h) => escapeCSV(h.label)).join(","),
-      ...rows.map((r) => r.join(",")),
-    ].join("\n");
-
-    const blob = new Blob(["\uFEFF" + csvContent], {
+    const blob = new Blob(["\uFEFF" + content], {
       type: fileType,
     });
     const url = URL.createObjectURL(blob);
@@ -160,7 +105,7 @@ export default function Download({ locale }: { locale: Locale }) {
     <div className="grid grid-cols-1 md:grid-cols-2 mt-5 md:px-10">
       {/* Header checker */}
       <div className="grid grid-cols-2 md:grid-cols-1 gap-2 text-left justify-items-start">
-        {fullHeaders.map(({ key, label }) => (
+        {FULL_HEADERS.map(({ key, label }) => (
           <label key={key} style={{ cursor: "pointer" }}>
             <input
               type="checkbox"
