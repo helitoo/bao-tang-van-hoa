@@ -13,6 +13,7 @@ const links = [
   { url: "timeline", labelId: "nav_timeline" },
   { url: "references", labelId: "nav_references" },
   { url: "download", labelId: "nav_download" },
+  { url: "badge", labelId: "nav_badge" },
 ];
 
 export default function Navbar({

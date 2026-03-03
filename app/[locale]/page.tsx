@@ -5,6 +5,7 @@ import { getLangDict, Locale } from "@/lib/lang";
 import Statistics from "@/components/homepage/Statistics";
 import NewestArtifacts from "@/components/homepage/NewestArtifacts";
 import Logo from "@/components/Logo";
+import BadgeSection from "@/components/homepage/BadgeSection";
 
 export default async function Page({
   params,
@@ -37,7 +38,7 @@ export default async function Page({
           </div>
           <Link
             href={`/${locale}/search`}
-            className="bg-viet-red hover:bg-red-800 text-white p-3 rounded-sm transition-all transform inline-block text-sm font-extrabold uppercase tracking-widest shadow-2xl border border-red-700/50"
+            className="btn bg-viet-red text-white p-3 rounded-sm transition-all transform inline-block text-sm font-extrabold uppercase tracking-widest"
           >
             {dict.hero_btn}
           </Link>
@@ -73,6 +74,8 @@ export default async function Page({
 
       {/* Rigid Dashboard: Adapted for Mobile & Desktop */}
       <Statistics locale={locale as Locale} dict={dict} />
+
+      <BadgeSection locale={locale as Locale} dict={dict} />
 
       {/* Newest artifacts */}
       <NewestArtifacts locale={locale as Locale} dict={dict} />

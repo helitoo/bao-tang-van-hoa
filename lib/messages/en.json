@@ -68,5 +68,9 @@
   "stats_era": "Era Distribution",
   "stats_region": "Region Distribution",
   "home_update_note": "Data is updated regularly",
-  "not_found": "Artifact not found.\nDouble-check the ID or report it."
+  "not_found": "Artifact not found.\nDouble-check the ID or report it.",
+  "nav_badge": "My Badges",
+  "badge_desc": "Every time you view an artifact, you'll earn 1 point! Once you reach certain milestones, you'll unlock a special badge. The system handles all the math automatically, but the exact milestones are a secret—so just keep exploring and enjoying the artifacts, hehe!",
+  "new_badge_cong": "Congratulations! You've earned the ",
+  "not_found_badge": "No badges yet! Continue your museum journey to earn your first one."
 }

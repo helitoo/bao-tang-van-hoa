@@ -68,5 +68,9 @@
   "stats_era": "Phân loại Thời đại",
   "stats_region": "Phân loại Khu vực",
   "home_update_note": "Dữ liệu được cập nhật thường xuyên",
-  "not_found": "Không tìm thấy hiện vật này.\nHãy kiểm tra lại ID hoặc báo cáo nội dung"
+  "not_found": "Không tìm thấy hiện vật này.\nHãy kiểm tra lại ID hoặc báo cáo nội dung",
+  "nav_badge": "Huy hiệu của tôi",
+  "badge_desc": "Khi bạn xem 1 hiện vật, bạn sẽ được cộng 1 điểm. Với mốc điểm, bạn sẽ nhận được một huy hiệu tương ứng. Quá trình này do hệ thống tự động tính toán, các mốc này là bí mật, bạn chỉ có thể xem và xem hiện vật thôi, hehe!",
+  "new_badge_cong": "Chúc mừng bạn đã nhận được huy hiệu ",
+  "not_found_badge": "Bạn chưa nhận được huy hiệu nào, hãy tiếp tục khám phá Bảo tàng hơn nữa."
 }

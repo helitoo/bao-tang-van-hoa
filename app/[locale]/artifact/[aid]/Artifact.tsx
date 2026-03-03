@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+
+import { ToastContainer, toast, Bounce } from "react-toastify";
 
 import type { Locale } from "@/lib/lang";
 import similarityScore from "@/lib/fuzzySearching";
@@ -15,6 +17,8 @@ import ArtifactCard from "@/components/ArtifactCard";
 
 import TooltipIcon from "@/app/[locale]/artifact/[aid]/TooltipIcon";
 import ReferenceItem from "@/app/[locale]/artifact/[aid]/ReferenceItem";
+
+import { setInfo } from "@/lib/badgeManager";
 
 export default function Artifact({
   locale,
@@ -140,8 +144,36 @@ export default function Artifact({
   // Popup window state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Badge infor processing
+  const hasRun = useRef(false);
+
+  useEffect(() => {
+    if (hasRun.current) return;
+    hasRun.current = true;
+
+    async function handle() {
+      const maxBadge = await setInfo();
+      if (maxBadge) {
+        toast.success(`${dict.new_badge_cong}${maxBadge.name}!!`, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    }
+
+    handle();
+  }, []);
+
   return (
     <>
+      <ToastContainer />
       {notFound ? (
         <div className="mt-25 flex items-center justify-center">
           <div className="flex flex-col items-center">

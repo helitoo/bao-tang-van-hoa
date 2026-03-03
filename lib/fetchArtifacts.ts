@@ -81,7 +81,6 @@ function parseCSV(text: string): Artifact[] {
 export async function fetchArtifacts() {
   try {
     const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}&range=${SHEET_RANGE}`;
-    // console.log(url);
     const response = await fetch(url);
     if (!response.ok) throw new Error("Fetch failed");
     const text = await response.text();
@@ -90,7 +89,6 @@ export async function fetchArtifacts() {
 
     return parseCSV(text);
   } catch (err: any) {
-    // console.log(err);
     return undefined;
   }
 }

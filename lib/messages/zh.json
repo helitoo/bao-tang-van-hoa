@@ -68,5 +68,9 @@
   "stats_era": "时代分布",
   "stats_region": "地区分布",
   "home_update_note": "数据定期更新",
-  "not_found": "未找到该项目。\n请检查ID或举报该内容。"
+  "not_found": "未找到该项目。\n请检查ID或举报该内容。",
+  "nav_badge": "我的徽章",
+  "badge_desc": "每查看一个项目，你就能获得1分。累积到指定分数后，系统会自动为你颁发相应的勋章。这些分数线都是秘密哦，系统会自动帮你计算，你只管专心欣赏这些作品就好啦，嘿嘿！",
+  "new_badge_cong": "Congratulations! You've earned the ",
+  "not_found_badge": "您还没有获得勋章，快去继续探索博物馆吧！"
 }
