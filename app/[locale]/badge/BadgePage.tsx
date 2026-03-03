@@ -11,16 +11,16 @@ export default function BadgePage({ dict }: { dict: any }) {
   return (
     <div className="mb-12 font-sans text-gray-800">
       {badges && badges.length ? (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {badges.map((item, index) => (
             <div
               key={index}
-              className="flex flex-col items-center group m-5 mx-10 pb-2"
+              className="flex flex-col items-center group m-5 md:mx-10 pb-2"
             >
               <img
                 src={item.url}
                 alt={item.name}
-                className="h-50 w-auto"
+                className="h-40 md:h-50 w-auto object-contain"
                 draggable={false}
               />
 
