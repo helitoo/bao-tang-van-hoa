@@ -263,12 +263,13 @@ export default function Artifact({
                         const name = getCategoryName(cataid, locale);
                         return (
                           name && (
-                            <span
+                            <Link
+                              href={`/${locale}/search?cats=${cataid}`}
                               key={cataid}
-                              className="text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 px-2 py-1 border border-stone-200 dark:border-stone-700"
+                              className="btn text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 px-2 py-1 border border-stone-200 dark:border-stone-700"
                             >
                               {name}
-                            </span>
+                            </Link>
                           )
                         );
                       })}

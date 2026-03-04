@@ -475,14 +475,14 @@ const CATEGORY_MAP: Record<string, Category> = Object.fromEntries(
   ),
 );
 
-export function getCategoryNames(categories: string[], locale: Locale): string {
+export function getCategoryNames(categories: string[], locale: Locale) {
   return categories
-    .map((id) => CATEGORY_MAP[id]?.name[locale] ?? "(?)")
+    .map((id) => CATEGORY_MAP[id]?.name[locale] ?? undefined)
     .join(", ");
 }
 
-export function getCategoryName(categoryId: string, locale: Locale): string {
+export function getCategoryName(categoryId: string, locale: Locale) {
   const category = CATEGORY_MAP[categoryId];
 
-  return category?.name[locale] ?? "(?)";
+  return category?.name[locale] ?? undefined;
 }
