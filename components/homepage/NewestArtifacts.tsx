@@ -17,7 +17,7 @@ export default function NewestArtifacts({
   const { artifacts } = useArtifact();
 
   return (
-    <section className="max-w-7xl mx-auto px-4 pb-24">
+    <section className="max-w-7xl mx-auto px-4">
       <div className="flex items-center justify-between mb-8 border-b-2 border-stone-200 dark:border-stone-800 pb-4">
         <h3 className="text-3xl font-extrabold text-stone-900 dark:text-stone-100 uppercase">
           {dict.featured_title}

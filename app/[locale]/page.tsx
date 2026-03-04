@@ -2,10 +2,12 @@ import Link from "next/link";
 
 import { getLangDict, Locale } from "@/lib/lang";
 
+import Logo from "@/components/Logo";
+
 import Statistics from "@/components/homepage/Statistics";
 import NewestArtifacts from "@/components/homepage/NewestArtifacts";
-import Logo from "@/components/Logo";
 import BadgeSection from "@/components/homepage/BadgeSection";
+import Donate from "@/components/homepage/Donate";
 
 export default async function Page({
   params,
@@ -79,6 +81,8 @@ export default async function Page({
 
       {/* Newest artifacts */}
       <NewestArtifacts locale={locale as Locale} dict={dict} />
+
+      <Donate />
     </div>
   );
 }
