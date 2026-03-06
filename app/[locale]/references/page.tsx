@@ -2,10 +2,12 @@ import Link from "next/link";
 import { getLangDict } from "@/lib/lang";
 import {
   FanpageIcon,
+  MuseumIcon,
   GroupIcon,
   ResIcon,
   BookIcon,
   refFanpages,
+  museums,
   refGroups,
   refRes,
   refBooks,
@@ -42,6 +44,7 @@ export default async function Page({
 
       <div className="relative">
         <ReferenceSection label={<FanpageIcon />} refs={refFanpages} />
+        <ReferenceSection label={<MuseumIcon />} refs={museums} />
         <ReferenceSection label={<GroupIcon />} refs={refGroups} />
         <ReferenceSection label={<ResIcon />} refs={refRes} />
         <ReferenceSection label={<BookIcon />} refs={refBooks} />

@@ -81,6 +81,28 @@ export const BookIcon = () => (
   </svg>
 );
 
+export const MuseumIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="lucide lucide-landmark-icon lucide-landmark"
+  >
+    <path d="M10 18v-7" />
+    <path d="M11.12 2.198a2 2 0 0 1 1.76.006l7.866 3.847c.476.233.31.949-.22.949H3.474c-.53 0-.695-.716-.22-.949z" />
+    <path d="M14 18v-7" />
+    <path d="M18 18v-7" />
+    <path d="M3 22h18" />
+    <path d="M6 18v-7" />
+  </svg>
+);
+
 export const refFanpages: Ref[] = [
   {
     name: "Hoa văn Đại Việt",
@@ -221,5 +243,32 @@ export const refBooks: Ref[] = [
   {
     name: "Thần Long Kích Thủy (Đông Nguyễn, Kaovjets Ngujens, Đỗ Thái Bình - Trần Trọng Dương (hiệu đính))",
     desc: "Lịch sử thuyền chiến Việt Nam.",
+  },
+];
+
+export const museums: Ref[] = [
+  {
+    name: "Musée du Quai Branly - Jacques Chirac",
+    url: "https://collections.quaibranly.fr",
+  },
+  {
+    name: "École Française d'extrême-orient (Viện Viễn đông bác cổ)",
+    url: "https://www.efeo.fr/",
+  },
+  {
+    name: "Bảo tàng Mỹ thuật Việt Nam",
+    url: "https://www.facebook.com/baotangmythuat",
+  },
+  {
+    name: "Bảo tàng Lịch sử Thành phố Hồ Chí Minh",
+    url: "https://www.facebook.com/baotanglichsu",
+  },
+  {
+    name: "Bảo tàng Lịch sử Quốc gia",
+    url: "https://www.facebook.com/BTLSQG.VNMH",
+  },
+  {
+    name: "Trung tâm Bảo tồn Di tích Cố đô Huế",
+    url: "https://www.facebook.com/hueworldheritage.org.vn",
   },
 ];
