@@ -42,8 +42,8 @@ function getNGrams(text: string, n = 2): Set<string> {
 }
 
 export default function similarityScore(query: string, text: string) {
-  // query = query.toLowerCase();
-  // text = text.toLowerCase();
+  query = query.toLowerCase();
+  text = text.toLowerCase();
 
   const subScore = substringScore(query, text);
 
@@ -55,5 +55,5 @@ export default function similarityScore(query: string, text: string) {
   );
 
   // Trọng số có thể chỉnh
-  return subScore * 0.5 + jaccardScore * 0.25 + ngramScore * 0.25;
+  return subScore * 0.7 + jaccardScore * 0.2 + ngramScore * 0.1;
 }

@@ -51,13 +51,11 @@ export function getFilteredArtifacts(
 
   results = results
     .map((artifact) => {
-      // Get categories' name
-      const catNames = getCategoryNames(artifact.categories, locale);
       // name + short_description
       const text = [
         artifact.name,
         artifact.short_description,
-        catNames,
+        getCategoryNames(artifact.categories, locale),
         artifact.description,
         artifact.location,
         artifact.author,
