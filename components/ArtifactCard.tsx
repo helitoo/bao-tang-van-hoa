@@ -30,6 +30,7 @@ export default function ArtifactCard({
   return (
     <Link
       href={`/${locale}/artifact/${item.id}`}
+      target="_blank"
       className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col h-full"
     >
       <div className="overflow-hidden relative bg-stone-100 dark:bg-stone-800 flex items-center justify-center aspect-square">
