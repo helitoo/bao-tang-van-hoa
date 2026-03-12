@@ -30,6 +30,12 @@ export default function refserenceSection({
               {item.name}
             </h3>
 
+            {item.sptName && (
+              <h4 className="text-sm font-normal! tracking-tight text-stone-900 dark:text-stone-100">
+                {item.sptName}
+              </h4>
+            )}
+
             {item.desc && (
               <p className="mt-1 text-sm text-stone-500 leading-relaxed">
                 {item.desc}

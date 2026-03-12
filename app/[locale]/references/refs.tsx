@@ -1,5 +1,6 @@
 export type Ref = {
   name: string;
+  sptName?: string;
   desc?: string;
   url?: string;
 };
@@ -186,37 +187,45 @@ export const refRes: Ref[] = [
 
 export const refBooks: Ref[] = [
   {
-    name: "嶺南摭怪 - Lĩnh Nam chích quái",
+    name: "嶺南摭怪",
+    sptName: "Lĩnh Nam chích quái",
     desc: "Những chuyện thần thánh, ma quỷ kỳ dị ở nước ta.",
   },
   {
-    name: "越甸幽靈集 - Việt điện u linh tập (Lý Tế Xuyên, 1329)",
+    name: "越甸幽靈集 (Lý Tế Xuyên, 1329)",
+    sptName: "Việt điện u linh tập",
     desc: "Những thần tích ở nước ta.",
   },
   {
-    name: "A Description of the Kingdom of Tonqueen - Mô tả vương quốc Đàng Ngoài (Samuel Baron, 1685)",
+    name: "A Description of the Kingdom of Tonqueen (Samuel Baron, 1685)",
+    sptName: "Mô tả vương quốc Đàng Ngoài",
     desc: "Ghi chép tổng hợp về phong tục, tập quán, trang phục,... ở vùng Bắc bộ thời Lê Trung hưng.",
   },
   {
-    name: "Les symboles, les emblèmes et les accessoires du culte chez les Annamites - Biểu tượng, phù hiệu và đồ thờ của người An Nam (Gustave Dumoutier, 1891)",
+    name: "Les symboles, les emblèmes et les accessoires du culte chez les Annamites (Gustave Dumoutier, 1891)",
+    sptName: "Biểu tượng, phù hiệu và đồ thờ của người An Nam",
     desc: "Mỹ thuật cổ trong các vật phẩm tâm linh truyền thống Việt Nam.",
     url: "https://archive.org/details/MN40218ucmf_6/mode/1up",
   },
   {
-    name: "Psychologie du peuple Annamites - Tâm lý người An Nam (Paul Giran, 1904)",
+    name: "Psychologie du peuple Annamites (Paul Giran, 1904)",
+    sptName: "Tâm lý người An Nam",
     desc: "Tính cách dân tộc, tiến trình lịch sử, tri thức, xã hội và chính trị.",
   },
   {
-    name: "Le rituel funéraire des Annamites - Tang lễ của người An Nam (Gustave Dumoutier, 1904)",
+    name: "Le rituel funéraire des Annamites (Gustave Dumoutier, 1904)",
+    sptName: "Tang lễ của người An Nam",
     desc: "Nghiên cứu dân tộc học về tín ngưỡng cổ truyền.",
     url: "https://archive.org/details/lerituelfunerair00dumo/mode/1up",
   },
   {
-    name: "Technique du peuple Annamite - Kỹ thuật của người An Nam (Henri Oger, 1909)",
+    name: "Technique du peuple Annamite (Henri Oger, 1909)",
+    sptName: "Kỹ thuật của người An Nam",
     desc: "Ghi chép tổng hợp về phong tục, tập quán, trang phục,... ở vùng Bắc bộ thời Pháp thuộc.",
   },
   {
-    name: "Magie & religion annamites - Phù thuật & Tín ngưỡng An Nam (Paul Giran, 1912)",
+    name: "Magie & religion annamites (Paul Giran, 1912)",
+    sptName: "Phù thuật & Tín ngưỡng An Nam",
     desc: "Nhập môn triết học văn minh của người An Nam.",
   },
   {
@@ -224,11 +233,18 @@ export const refBooks: Ref[] = [
     desc: "Sách ghi chép những phong tục ở nước ta.",
   },
   {
+    name: "Historique du musée, Sélection d'objets d'art et meubles conserves au musée Khai-Dinh et notices les concernant (P.Jabouille - J.H. Peyssonnaux, 1931)",
+    sptName: "Lược sử Bảo tàng, Tuyển tập hiện vật tại bảo tàng Khải Định",
+    desc: "Tuyển tập hiện vật ở Bảo tàng Khải Định",
+    url: "https://humazur.univ-cotedazur.fr/files/original/b5bd6b7ef65d74311255ea42f2d2e0134e6a6058.pdf",
+  },
+  {
     name: "Ngàn năm áo mũ (Trần Quang Đức, 2013)",
     desc: "Lịch sử trang phục Việt Nam giai đoạn 1009 - 1945.",
   },
   {
-    name: "Bulletin des Amis du Vieux Hué - Hội Những người bạn Cố đô Huế (BAVH) (Léopold Cadière, 1914 - 1944)",
+    name: "Bulletin des Amis du Vieux Hué (BAVH) (Léopold Cadière, 1914 - 1944)",
+    sptName: "Hội Những người bạn Cố đô Huế",
     desc: "Ghi chép tổng hợp về phong tục, tập quán, trang phục,... ở Huế thời Pháp thuộc.",
   },
 
