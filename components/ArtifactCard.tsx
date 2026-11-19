@@ -20,7 +20,14 @@ export default function ArtifactCard({
     .map((id) => {
       for (const group of CATEGORY_GROUPS) {
         const found = group.options.find((opt) => opt.id === id);
-        if (found) return { id, name: found.name[locale as Locale] };
+        if (found)
+          return {
+            id,
+            name:
+              found.name[locale as Locale] ||
+              found.name.en ||
+              found.name.vi,
+          };
       }
       return null;
     })

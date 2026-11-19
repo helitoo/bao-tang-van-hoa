@@ -207,7 +207,7 @@ export default function Timeline({
                       textAnchor="start"
                       dominantBaseline="middle"
                     >
-                      {item.name[locale]}
+                      {item.name[locale] || item.name.en || item.name.vi}
                     </text>
                   </g>
                 </g>

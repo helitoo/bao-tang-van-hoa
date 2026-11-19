@@ -1,12 +1,12 @@
 import type { Locale } from "@/lib/lang";
 
 export interface HistoryPeriod {
-  name: Record<Locale, string>;
+  name: Partial<Record<Locale, string>> & Record<"vi" | "en", string>;
   start: string;
   end: string;
-  capital?: Record<Locale, string>;
-  nation_name?: Record<Locale, string>;
-  desc?: Record<Locale, string>;
+  capital?: Partial<Record<Locale, string>> & Record<"vi" | "en", string>;
+  nation_name?: Partial<Record<Locale, string>> & Record<"vi" | "en", string>;
+  desc?: Partial<Record<Locale, string>> & Record<"vi" | "en", string>;
   type: "independence" | "occupation" | "war";
 }
 
@@ -15,6 +15,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Văn Lang",
       en: "Văn Lang",
+      fr: "Văn Lang",
       zh: "文郎",
       ja: "バンラン",
       ko: "반랑",
@@ -27,6 +28,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Âu Lạc",
       en: "Âu Lạc",
+      fr: "Âu Lạc",
       zh: "瓯雒",
       ja: "アウラック",
       ko: "어울락",
@@ -39,6 +41,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Triệu",
       en: "Triệu Dynasty",
+      fr: "Dynastie des Triệu",
       zh: "赵朝",
       ja: "趙朝",
       ko: "조 왕조",
@@ -51,6 +54,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Bắc thuộc lần I",
       en: "First Chinese Domination",
+      fr: "1re domination chinoise",
       zh: "第一次北属",
       ja: "第一次北属期",
       ko: "제1차 북속기",
@@ -63,8 +67,9 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Hai Bà Trưng",
       en: "Trưng sisters",
+      fr: "Sœurs Trưng",
       zh: "二征夫人",
-      ja: "하이・バー・チュン",
+      ja: "ハイ・バー・チュン",
       ko: "하이 바 쯩",
     },
     start: "40",
@@ -75,6 +80,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Bắc thuộc lần II",
       en: "Second Chinese Domination",
+      fr: "2e domination chinoise",
       zh: "第二次北属",
       ja: "第二次北属期",
       ko: "제2차 북속기",
@@ -87,6 +93,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà (Tiền) Lý",
       en: "Early Lý Dynasty",
+      fr: "Dynastie des Lý antérieurs",
       zh: "前李朝",
       ja: "前李朝",
       ko: "전 리 왕조",
@@ -99,6 +106,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Bắc thuộc lần III",
       en: "Third Chinese Domination",
+      fr: "3e domination chinoise",
       zh: "第三次北属",
       ja: "第三次北属期",
       ko: "제3차 북속기",
@@ -111,6 +119,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Ngô",
       en: "Ngô Dynasty",
+      fr: "Dynastie des Ngô",
       zh: "吴朝",
       ja: "呉朝",
       ko: "응오 왕조",
@@ -123,6 +132,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Loạn 12 sứ quân",
       en: "Anarchy of the 12 Warlords",
+      fr: "Anarchie des 12 seigneurs de guerre",
       zh: "十二使君之亂",
       ja: "十二使君의 란",
       ko: "십이사군의 난",
@@ -135,6 +145,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Đinh",
       en: "Đinh Dynasty",
+      fr: "Dynastie des Đinh",
       zh: "丁朝",
       ja: "丁朝",
       ko: "딘 왕조",
@@ -147,6 +158,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Tống I",
       en: "First resistance war against the Song",
+      fr: "1re guerre contre les Song",
       zh: "第一次宋越战争",
       ja: "第一次宋越戦争",
       ko: "제1차 송-대월 전쟁",
@@ -159,6 +171,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà (Tiền) Lê",
       en: "Early Lê Dynasty",
+      fr: "Dynastie des Lê antérieurs",
       zh: "前黎朝",
       ja: "前黎朝",
       ko: "전 레 왕조",
@@ -171,6 +184,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Lý",
       en: "Lý Dynasty",
+      fr: "Dynastie des Lý",
       zh: "李朝",
       ja: "李朝",
       ko: "리 왕조",
@@ -183,6 +197,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Tống II",
       en: "Second resistance war against the Song",
+      fr: "2e guerre contre les Song",
       zh: "第二次宋越战争",
       ja: "第二次宋越戦争",
       ko: "제2차 송-대월 전쟁",
@@ -195,6 +210,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Trần",
       en: "Trần Dynasty",
+      fr: "Dynastie des Trần",
       zh: "陈朝",
       ja: "陳朝",
       ko: "쩐 왕조",
@@ -207,6 +223,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Mông - Nguyên I",
       en: "First resistance war against the Mongol and Yuan",
+      fr: "1re invasion mongole",
       zh: "第一次蒙越战争",
       ja: "第一次元越戦争",
       ko: "제1차 대월-몽골 전쟁",
@@ -219,6 +236,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Mông - Nguyên II",
       en: "Second resistance war against the Mongol and Yuan",
+      fr: "2e invasion mongole",
       zh: "第二次蒙越战争",
       ja: "第二次元越戦争",
       ko: "제2차 대월-몽골 전쟁",
@@ -231,6 +249,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Mông - Nguyên III",
       en: "Third resistance war against the Mongol and Yuan",
+      fr: "3e invasion mongole",
       zh: "第三次蒙越战争",
       ja: "第三次元越戦争",
       ko: "제3차 대월-몽골 전쟁",
@@ -243,6 +262,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Hồ",
       en: "Hồ Dynasty",
+      fr: "Dynastie des Hồ",
       zh: "胡朝",
       ja: "胡朝",
       ko: "호 왕조",
@@ -255,6 +275,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Bắc thuộc lần IV",
       en: "Fourth Chinese Domination",
+      fr: "4e domination chinoise (Ming)",
       zh: "第四次北属",
       ja: "第四次北属期",
       ko: "제4차 북속기",
@@ -267,6 +288,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Khởi nghĩa Lam Sơn",
       en: "Lam-Sơn uprising",
+      fr: "Soulèvement de Lam Sơn",
       zh: "蓝山起义",
       ja: "藍山蜂起",
       ko: "람선 봉기",
@@ -279,6 +301,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Lê (sơ)",
       en: "Early Later Lê Dynasty",
+      fr: "Dynastie des Lê postérieurs (Lê sơ)",
       zh: "黎初朝",
       ja: "黎初朝",
       ko: "레 왕조 (초기)",
@@ -291,6 +314,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Mạc",
       en: "Mạc Dynasty",
+      fr: "Dynastie des Mạc",
       zh: "莫朝",
       ja: "莫朝",
       ko: "막 왕조",
@@ -303,6 +327,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nam - Bắc triều",
       en: "Northern and Southern dynasties",
+      fr: "Guerre des dynasties Nord-Sud",
       zh: "南北朝",
       ja: "南北朝",
       ko: "남북조 시대",
@@ -315,6 +340,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Lê Trung hưng - Đàng Ngoài",
       en: "Restored Lê Dynasty - Outer Realm",
+      fr: "Lê restaurés - Đàng Ngoài",
       zh: "黎中兴朝 - 北河",
       ja: "黎中興朝 - 北河",
       ko: "레 왕조 (중흥) - 당 응아이",
@@ -327,6 +353,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Đàng Trong",
       en: "Inner Realm (Nguyễn Lords)",
+      fr: "Đàng Trong (Seigneurs Nguyễn)",
       zh: "南河 (阮主)",
       ja: "広南国 (阮主)",
       ko: "당 쫑 (응우옌 주)",
@@ -339,6 +366,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Thanh",
       en: "Resistance War against the Qing",
+      fr: "Guerre contre les Qing",
       zh: "清越战争",
       ja: "清越戦争",
       ko: "청-베트남 전쟁",
@@ -351,6 +379,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Xiêm",
       en: "Resistance war against the Siamese",
+      fr: "Guerre contre le Siam",
       zh: "暹越战争",
       ja: "暹越戦争",
       ko: "시암-베트남 전쟁",
@@ -363,6 +392,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Tây Sơn",
       en: "Tây-Sơn Dynasty",
+      fr: "Dynastie des Tây Sơn",
       zh: "西山朝",
       ja: "西山朝",
       ko: "떠이선 왕조",
@@ -375,6 +405,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Nhà Nguyễn",
       en: "Nguyễn Dynasty",
+      fr: "Dynastie des Nguyễn",
       zh: "阮朝",
       ja: "阮朝",
       ko: "응우옌 왕조",
@@ -387,6 +418,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Pháp thuộc",
       en: "French Protectorate",
+      fr: "Protectorat français",
       zh: "法属时期",
       ja: "フランス植民地時代",
       ko: "프랑스 식민지 시대",
@@ -399,6 +431,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Việt Nam Dân chủ Cộng hòa",
       en: "Democratic Republic of Vietnam",
+      fr: "République démocratique du Viêt Nam",
       zh: "越南民主共和国",
       ja: "베트남民主共和国",
       ko: "베트남 민주 공화국",
@@ -411,6 +444,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Pháp",
       en: "Resistance War against the French",
+      fr: "Guerre d'Indochine (contre la France)",
       zh: "抗法战争",
       ja: "抗仏戦争",
       ko: "항프 전쟁",
@@ -423,6 +457,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Kháng chiến chống Mỹ",
       en: "Resistance War against the Americans",
+      fr: "Guerre du Viêt Nam (contre les États-Unis)",
       zh: "抗美战争",
       ja: "ベトナム戦争",
       ko: "베트남 전쟁",
@@ -435,6 +470,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Chiến tranh biên giới Tây Nam",
       en: "Cambodian - Vietnamese War",
+      fr: "Guerre frontalière du Sud-Ouest",
       zh: "柬越戰爭",
       ja: "カンボジア・ベトナム戦争",
       ko: "베트남-캄보디아 전쟁",
@@ -447,6 +483,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Chiến tranh biên giới",
       en: "Sino - Vietnamese War",
+      fr: "Guerre sino-vietnamienne",
       zh: "中越战争",
       ja: "中越戦争",
       ko: "중국-베트남 전쟁",
@@ -459,6 +496,7 @@ export const HISTORY_DATA: HistoryPeriod[] = [
     name: {
       vi: "Cộng hòa Xã hội chủ nghĩa Việt Nam",
       en: "Socialist Republic of Vietnam",
+      fr: "République socialiste du Viêt Nam",
       zh: "越南社会主义共和国",
       ja: "베트남社会主義共和国",
       ko: "베트남 사회주의 공화국",

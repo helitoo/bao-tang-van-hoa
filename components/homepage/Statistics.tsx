@@ -35,7 +35,7 @@ export default function Statistics({
 
       return group.options
         .map((opt) => ({
-          label: opt.name[locale],
+          label: opt.name[locale] || opt.name.en || opt.name.vi,
           count: counts[opt.id] || 0,
         }))
         .sort((a, b) => b.count - a.count);

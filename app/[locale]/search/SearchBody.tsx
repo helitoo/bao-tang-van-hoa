@@ -77,7 +77,7 @@ export default function SearchBody({
           <div key={group.id} className="mt-3">
             <h4 className="text-[9px] md:text-[10px] font-extralight uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3 border-b border-stone-100 dark:border-stone-800 pb-2 flex items-center flex-shrink-0">
               <span className="w-1 h-1 bg-viet-red mr-2"></span>
-              {group.title[locale]}
+              {group.title[locale] || group.title.en || group.title.vi}
             </h4>
             <div className="grid grid-cols-1 gap-1 pr-2">
               {group.options.map((opt) => (
@@ -94,7 +94,7 @@ export default function SearchBody({
                   <span
                     className={`text-xs transition-colors font-medium ${cats.includes(opt.id) ? "text-viet-red font-extrabold" : "text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100"}`}
                   >
-                    {opt.name[locale]}
+                    {opt.name[locale] || opt.name.en || opt.name.vi}
                   </span>
                 </label>
               ))}

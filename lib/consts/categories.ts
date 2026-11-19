@@ -18,6 +18,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     title: {
       vi: "Phong tục & Tôn giáo",
       en: "Customs & Religion",
+      fr: "Coutumes & Religions",
       zh: "习俗 & 宗教",
       ja: "風習と宗教",
       ko: "풍습 및 종교",
@@ -28,6 +29,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Phật giáo",
           en: "Buddhism",
+          fr: "Bouddhisme",
           zh: "佛教",
           ja: "仏教",
           ko: "불교",
@@ -39,6 +41,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Tôn giáo khác",
           en: "Other religions",
+          fr: "Autres religions",
           zh: "其他宗教",
           ja: "その他の宗教",
           ko: "기타 종교",
@@ -50,6 +53,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Phong tục",
           en: "Customs",
+          fr: "Coutumes",
           zh: "风俗",
           ja: "風習",
           ko: "풍습",
@@ -61,6 +65,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Tín ngưỡng",
           en: "Beliefs",
+          fr: "Croyances",
           zh: "信仰",
           ja: "信仰",
           ko: "신앙",
@@ -72,6 +77,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhân vật",
           en: "Characters",
+          fr: "Personnages",
           zh: "人物",
           ja: "人物",
           ko: "인물",
@@ -83,6 +89,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Linh vật",
           en: "Mythical Creatures",
+          fr: "Créatures mythiques",
           zh: "神兽",
           ja: "霊獣",
           ko: "영물",
@@ -94,6 +101,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Thần thánh",
           en: "Deities",
+          fr: "Divinités",
           zh: "神",
           ja: "神々",
           ko: "신",
@@ -105,6 +113,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Ma quỷ",
           en: "Demons & Ghosts",
+          fr: "Démons & Esprits",
           zh: "妖魔鬼怪",
           ja: "魔物 / 幽霊",
           ko: "마귀 / 귀신",
@@ -115,13 +124,21 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
   },
   {
     id: "region",
-    title: { vi: "Khu vực", en: "Region", zh: "地区", ja: "地域", ko: "지역" },
+    title: {
+      vi: "Khu vực",
+      en: "Region",
+      fr: "Région",
+      zh: "地区",
+      ja: "地域",
+      ko: "지역",
+    },
     options: [
       {
         id: "mbac",
         name: {
           vi: "Miền Bắc",
           en: "Northern region",
+          fr: "Région du Nord",
           zh: "北部",
           ja: "北部",
           ko: "북부",
@@ -133,6 +150,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Miền Trung",
           en: "Central region",
+          fr: "Région du Centre",
           zh: "中部",
           ja: "中部",
           ko: "중부",
@@ -144,6 +162,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Miền Nam",
           en: "Southern region",
+          fr: "Région du Sud",
           zh: "南部",
           ja: "南部",
           ko: "남부",
@@ -155,6 +174,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Các dân tộc miền núi",
           en: "Highland ethnicities",
+          fr: "Ethnies montagnardes",
           zh: "高地民族",
           ja: "山岳民族",
           ko: "산악 민족",
@@ -166,6 +186,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Ngoại quốc",
           en: "Foreign",
+          fr: "Étranger",
           zh: "外国",
           ja: "外国",
           ko: "외국",
@@ -179,6 +200,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     title: {
       vi: "Thể loại",
       en: "Genre",
+      fr: "Genre",
       zh: "类型",
       ja: "ジャンル",
       ko: "장르",
@@ -189,6 +211,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Kiến trúc",
           en: "Architecture",
+          fr: "Architecture",
           zh: "建筑",
           ja: "建築",
           ko: "건축",
@@ -200,6 +223,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Trang phục",
           en: "Clothing",
+          fr: "Costumes",
           zh: "服装",
           ja: "衣装",
           ko: "의상",
@@ -211,6 +235,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Hoa văn",
           en: "Patterns",
+          fr: "Motifs",
           zh: "图案",
           ja: "文様",
           ko: "문양",
@@ -222,6 +247,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Văn thư",
           en: "Records",
+          fr: "Écrits & Archives",
           zh: "文书",
           ja: "文書",
           ko: "문서",
@@ -233,6 +259,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Quân sự",
           en: "Military",
+          fr: "Militaire",
           zh: "军事",
           ja: "軍事",
           ko: "군사",
@@ -244,6 +271,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Âm nhạc",
           en: "Music",
+          fr: "Musique",
           zh: "音乐",
           ja: "音楽",
           ko: "음악",
@@ -255,6 +283,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Dụng cụ",
           en: "Utensils",
+          fr: "Ustensiles",
           zh: "器具",
           ja: "器具",
           ko: "기구",
@@ -266,6 +295,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Điêu khắc",
           en: "Sculpture",
+          fr: "Sculpture",
           zh: "雕塑",
           ja: "彫刻",
           ko: "조각",
@@ -277,6 +307,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Bảo vật quốc gia",
           en: "National treasure",
+          fr: "Trésor national",
           zh: "国宝",
           ja: "国宝",
           ko: "국보",
@@ -288,6 +319,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Di tích quốc gia",
           en: "National site",
+          fr: "Monument national",
           zh: "国家古迹",
           ja: "国家指定史跡",
           ko: "국가 지정 문화재",
@@ -299,6 +331,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Di tích quốc gia đặc biệt",
           en: "Special national site",
+          fr: "Monument national spécial",
           zh: "全国重点文物保护单位",
           ja: "特別史跡",
           ko: "국가지정문화재",
@@ -310,6 +343,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Di sản thế giới",
           en: "World heritage",
+          fr: "Patrimoine mondial",
           zh: "世界遗产",
           ja: "世界遺産",
           ko: "세계 유산",
@@ -320,13 +354,21 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
   },
   {
     id: "era",
-    title: { vi: "Thời đại", en: "Era", zh: "时代", ja: "時代", ko: "시대" },
+    title: {
+      vi: "Thời đại",
+      en: "Era",
+      fr: "Époque",
+      zh: "时代",
+      ja: "時代",
+      ko: "시대",
+    },
     options: [
       {
         id: "cd",
         name: {
           vi: "Cổ đại",
           en: "Antiquity",
+          fr: "Antiquité",
           zh: "古代",
           ja: "古代",
           ko: "고대",
@@ -338,6 +380,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Champa",
           en: "Champa",
+          fr: "Champa",
           zh: "占婆",
           ja: "チャンパ",
           ko: "참파",
@@ -349,6 +392,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Thời kỳ độc lập sau Bắc thuộc",
           en: "Post-Chinese rule",
+          fr: "Période d'indépendance",
           zh: "越南独立时期",
           ja: "北属期後の独立時期",
           ko: "북속기 이후의 독립기",
@@ -360,6 +404,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Lý",
           en: "Lý Dynasty",
+          fr: "Dynastie des Lý",
           zh: "李朝",
           ja: "李朝",
           ko: "리 왕조",
@@ -371,6 +416,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Trần",
           en: "Trần Dynasty",
+          fr: "Dynastie des Trần",
           zh: "陈朝",
           ja: "陳朝",
           ko: "쩐 왕조",
@@ -382,6 +428,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Hồ",
           en: "Hồ Dynasty",
+          fr: "Dynastie des Hồ",
           zh: "胡朝",
           ja: "胡朝",
           ko: "호 왕조",
@@ -393,6 +440,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Lê sơ",
           en: "Early Lê Dynasty",
+          fr: "Dynastie des Lê postérieurs (Lê sơ)",
           zh: "黎初朝",
           ja: "黎朝",
           ko: "레 왕조",
@@ -404,6 +452,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Mạc",
           en: "Mạc Dynasty",
+          fr: "Dynastie des Mạc",
           zh: "莫朝",
           ja: "莫朝",
           ko: "막 왕조",
@@ -415,6 +464,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Lê trung hưng",
           en: "Revival Lê Dynasty",
+          fr: "Dynastie des Lê restaurés (Lê trung hưng)",
           zh: "黎中興朝",
           ja: "黎中興朝",
           ko: "후기 레 왕조",
@@ -426,6 +476,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Tây sơn",
           en: "Tây-sơn Dynasty",
+          fr: "Dynastie des Tây Sơn",
           zh: "西山朝",
           ja: "西山朝",
           ko: "떠이선 왕조",
@@ -437,6 +488,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Nhà Nguyễn",
           en: "Nguyễn Dynasty",
+          fr: "Dynastie des Nguyễn",
           zh: "阮朝",
           ja: "阮朝",
           ko: "응우옌 왕조",
@@ -448,6 +500,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Bắc thuộc",
           en: "Under Chinese rule",
+          fr: "Domination chinoise",
           zh: "時北屬",
           ja: "時北屬",
           ko: "북에 속함",
@@ -459,6 +512,7 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         name: {
           vi: "Pháp thuộc",
           en: "Under French rule",
+          fr: "Période coloniale française",
           zh: "時法國屬",
           ja: "時法國屬",
           ko: "프랑스 속함",
@@ -477,12 +531,22 @@ const CATEGORY_MAP: Record<string, Category> = Object.fromEntries(
 
 export function getCategoryNames(categories: string[], locale: Locale) {
   return categories
-    .map((id) => CATEGORY_MAP[id]?.name[locale] ?? undefined)
+    .map(
+      (id) =>
+        CATEGORY_MAP[id]?.name[locale] ??
+        CATEGORY_MAP[id]?.name.en ??
+        CATEGORY_MAP[id]?.name.vi
+    )
+    .filter(Boolean)
     .join(", ");
 }
 
 export function getCategoryName(categoryId: string, locale: Locale) {
   const category = CATEGORY_MAP[categoryId];
-
-  return category?.name[locale] ?? undefined;
+  return (
+    category?.name[locale] ??
+    category?.name.en ??
+    category?.name.vi ??
+    undefined
+  );
 }

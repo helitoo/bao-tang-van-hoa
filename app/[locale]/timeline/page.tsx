@@ -17,7 +17,7 @@ export default async function Page({
         <div className="flex flex-col items-center mb-16 text-center">
           <nav className="flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-stone-400 mb-4">
             <Link
-              href={`${locale}/`}
+              href={`/${locale}`}
               className="hover:text-viet-red transition-colors"
             >
               {dict.nav_home}
