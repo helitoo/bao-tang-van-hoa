@@ -10,6 +10,7 @@ import ThemeSwitcher from "@/components/ThemeSwitcher";
 import { langLabels } from "@/lib/lang";
 
 const links = [
+  { url: "map", labelId: "nav_map" },
   { url: "timeline", labelId: "nav_timeline" },
   { url: "references", labelId: "nav_references" },
   { url: "download", labelId: "nav_download" },
@@ -91,7 +92,7 @@ export default function Navbar({
             href={`/${locale}/search`}
             hrefLang={locale}
             title={dict.nav_search}
-            className={`btn flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${pathname.includes("saved") ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
+            className={`btn flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${pathname.includes("search") ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -110,6 +111,34 @@ export default function Navbar({
             </svg>
             <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
               {dict.nav_search}
+            </span>
+          </Link>
+
+          {/* Map */}
+          <Link
+            href={`/${locale}/map`}
+            hrefLang={locale}
+            title={dict.nav_map}
+            className={`btn flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${pathname.includes("map") ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-map"
+            >
+              <path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z" />
+              <path d="M15 5.764v15" />
+              <path d="M9 3.236v15" />
+            </svg>
+            <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
+              {dict.nav_map}
             </span>
           </Link>
 
