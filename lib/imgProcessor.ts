@@ -9,7 +9,7 @@ export function getDriveId(url: string) {
   return match ? match[1] : null;
 }
 
-export function getImgUrl(content: string) {
+export function getImgUrl(content: string, width?: number) {
   if (!content) return FALLBACK_IMAGE;
   let url = String(content).trim();
   if (url.toLowerCase().startsWith("<iframe")) {
@@ -18,6 +18,12 @@ export function getImgUrl(content: string) {
     else return FALLBACK_IMAGE;
   }
   const driveId = getDriveId(url);
-  if (driveId) return `https://lh3.googleusercontent.com/d/${driveId}`;
+  if (driveId) {
+    const base = `https://lh3.googleusercontent.com/d/${driveId}`;
+    return width ? `${base}=w${width}` : base;
+  }
+  if (url.includes("googleusercontent.com") && width) {
+    return `${url}=w${width}`;
+  }
   return url;
 }

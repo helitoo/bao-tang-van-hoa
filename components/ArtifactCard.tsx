@@ -35,7 +35,7 @@ export default function ArtifactCard({
     >
       <div className="overflow-hidden relative bg-stone-100 dark:bg-stone-800 flex items-center justify-center aspect-square">
         <img
-          src={`${getImgUrl(item.main_image)}=w500`}
+          src={getImgUrl(item.main_image, 500)}
           alt={item.name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           onError={(e) => {
