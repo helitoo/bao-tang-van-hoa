@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useArtifact, type Artifact } from "@/contexts/artifact";
 import { parseExplicitCoords, geocodeArtifactDynamic } from "@/lib/geoCoords";
 import { getImgUrl } from "@/lib/imgProcessor";
@@ -294,9 +295,11 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
         {/* Left Action Buttons */}
         <div className="flex items-center gap-1.5 sm:gap-2 pointer-events-auto">
           {/* Toggle Sidebar Button with Chevron */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => setIsSidebarOpen((prev) => !prev)}
-            className="btn h-9 px-3 bg-white/95 dark:bg-stone-900/95 text-stone-700 dark:text-stone-200 rounded-lg shadow-md border border-stone-200/80 dark:border-stone-800 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md hover:text-viet-red transition-all"
+            className="btn h-9 px-3 bg-white/95 dark:bg-stone-900/95 text-stone-700 dark:text-stone-200 rounded-lg shadow-md border border-stone-200/80 dark:border-stone-800 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md hover:text-viet-red transition-all cursor-pointer"
             title={
               isSidebarOpen
                 ? dict.map_collapse || "Thu gọn danh sách"
@@ -343,12 +346,14 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
               )}
               <span>{filteredList.length}</span>
             </span>
-          </button>
+          </motion.button>
 
           {/* Reset Overview Button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleResetView}
-            className="btn h-9 px-3 bg-white/95 dark:bg-stone-900/95 text-stone-700 dark:text-stone-200 rounded-lg shadow-md border border-stone-200/80 dark:border-stone-800 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md hover:text-viet-red transition-all"
+            className="btn h-9 px-3 bg-white/95 dark:bg-stone-900/95 text-stone-700 dark:text-stone-200 rounded-lg shadow-md border border-stone-200/80 dark:border-stone-800 text-xs font-bold flex items-center gap-1.5 backdrop-blur-md hover:text-viet-red transition-all cursor-pointer"
             title={dict.map_overview || "Toàn cảnh"}
           >
             <svg
@@ -368,15 +373,17 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
             <span className="hidden sm:inline">
               {dict.map_overview || "Toàn cảnh"}
             </span>
-          </button>
+          </motion.button>
         </div>
 
         {/* Right Action Buttons: Zoom & Map Mode */}
         <div className="flex items-center gap-1 sm:gap-1.5 pointer-events-auto bg-white/95 dark:bg-stone-900/95 p-1 rounded-lg shadow-md border border-stone-200/80 dark:border-stone-800 backdrop-blur-md">
           {/* Zoom In Button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
             onClick={handleZoomIn}
-            className="btn p-2 text-stone-700 dark:text-stone-200 hover:text-viet-red hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md transition-all"
+            className="btn p-2 text-stone-700 dark:text-stone-200 hover:text-viet-red hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md transition-all cursor-pointer"
             title="Zoom In"
           >
             <svg
@@ -395,12 +402,14 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
               <line x1="11" x2="11" y1="8" y2="14" />
               <line x1="8" x2="14" y1="11" y2="11" />
             </svg>
-          </button>
+          </motion.button>
 
           {/* Zoom Out Button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
             onClick={handleZoomOut}
-            className="btn p-2 text-stone-700 dark:text-stone-200 hover:text-viet-red hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md transition-all"
+            className="btn p-2 text-stone-700 dark:text-stone-200 hover:text-viet-red hover:bg-stone-100 dark:hover:bg-stone-800 rounded-md transition-all cursor-pointer"
             title="Zoom Out"
           >
             <svg
@@ -418,14 +427,16 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
               <line x1="21" x2="16.65" y1="21" y2="16.65" />
               <line x1="8" x2="14" y1="11" y2="11" />
             </svg>
-          </button>
+          </motion.button>
 
           <div className="h-4 w-px bg-stone-200 dark:bg-stone-700 mx-0.5" />
 
           {/* Toggle Globe / Earth Button */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.95 }}
             onClick={toggleMapMode}
-            className={`btn px-2.5 py-1.5 rounded-md transition-all flex items-center gap-1.5 text-xs font-bold ${
+            className={`btn px-2.5 py-1.5 rounded-md transition-all flex items-center gap-1.5 text-xs font-bold cursor-pointer ${
               mapMode === "satellite"
                 ? "bg-viet-red text-white hover:bg-viet-red/90"
                 : "text-stone-700 dark:text-stone-200 hover:text-viet-red hover:bg-stone-100 dark:hover:bg-stone-800"
@@ -456,7 +467,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
                 ? dict.map_mode_map || "Bản đồ"
                 : dict.map_mode_satellite || "Ảnh vệ tinh"}
             </span>
-          </button>
+          </motion.button>
         </div>
       </div>
 
@@ -550,8 +561,10 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
             filteredList.map(({ item, coords }) => {
               const isSelected = selectedId === item.id;
               return (
-                <div
+                <motion.div
                   key={item.id}
+                  whileHover={{ x: 4 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => handleSelectArtifact(item, coords)}
                   className={`p-3 flex items-start gap-3 cursor-pointer transition-colors ${
                     isSelected
@@ -581,7 +594,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
                       </span>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })
           )}

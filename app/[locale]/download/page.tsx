@@ -13,7 +13,7 @@ export default async function Page({
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16 min-h-[calc(100vh-5rem)]">
-      <div className="flex flex-col items-center mb-16 text-center">
+      <div className="flex flex-col items-center mb-10 text-center">
         <nav className="flex items-center space-x-2 text-[10px] font-extrabold uppercase tracking-widest text-stone-400 mb-4">
           <Link
             href={`/${locale}/`}
@@ -29,11 +29,12 @@ export default async function Page({
           {dict.nav_download}
         </h1>
         <div className="h-1 w-24 bg-viet-red shadow-lg mb-6"></div>
-        <div className="relative">
-          <p className="text-justify">{dict.download_desc}</p>
-          <Download />
-        </div>
+        <p className="text-stone-600 dark:text-stone-300 text-sm max-w-2xl leading-relaxed text-justify md:text-center">
+          {dict.download_desc}
+        </p>
       </div>
+
+      <Download />
     </div>
   );
 }

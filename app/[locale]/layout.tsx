@@ -17,63 +17,84 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["200", "500", "700", "800"],
   style: ["normal", "italic"],
-  variable: "--font-montserrat", // dùng cho Tailwind
+  variable: "--font-montserrat",
   display: "swap",
 });
 
-// Metadata
+// Root Metadata
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-
   const dict = await getLangDict(locale);
 
+  const languageAlternates: Record<string, string> = {
+    "x-default": "https://btvh.vercel.app/vi",
+  };
+  locales.forEach((l) => {
+    languageAlternates[l] = `https://btvh.vercel.app/${l}`;
+  });
+
   return {
+    metadataBase: new URL("https://btvh.vercel.app"),
     title: {
       default: dict.museum_name,
       template: `%s | ${dict.museum_name}`,
     },
     description: dict.footer_desc,
+    applicationName: dict.museum_name,
+    authors: [{ name: "Bảo tàng Văn hóa Việt Nam" }],
+    creator: "Bảo tàng Văn hóa Việt Nam",
+    publisher: "Bảo tàng Văn hóa Việt Nam",
+    keywords: [
+      "Bảo tàng văn hóa Việt Nam",
+      "Di sản văn hóa Việt Nam",
+      "Cổ vật Việt Nam",
+      "Kho lưu trữ di sản số",
+      "Lịch sử Việt Nam",
+      "Bảo vật quốc gia",
+    ],
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    alternates: {
+      canonical: `https://btvh.vercel.app/${locale}`,
+      languages: languageAlternates,
+    },
     openGraph: {
       title: dict.museum_name,
       description: dict.footer_desc,
+      url: `https://btvh.vercel.app/${locale}`,
+      siteName: dict.museum_name,
+      locale: locale === "vi" ? "vi_VN" : locale,
+      type: "website",
+      images: [
+        {
+          url: "https://btvh.vercel.app/background.webp",
+          width: 1200,
+          height: 630,
+          alt: dict.museum_name,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: dict.museum_name,
+      description: dict.footer_desc,
+      images: ["https://btvh.vercel.app/background.webp"],
     },
   };
 }
-
-// Schemas
-
-const websiteSchema = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Museum of Vietnamese Culture",
-  url: "https://btvh.vercel.app/vi/",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: "https://btvh.vercel.app/vi/search?query={search_term_string}",
-    "query-input": "required name=search_term_string",
-  },
-};
-
-const organizationSchema = {
-  "@context": "https://schema.org",
-  "@type": "NonProfit",
-  name: "Museum of Vietnamese Culture",
-  url: "https://btvh.vercel.app/vi/",
-  logo: "https://btvh.vercel.app/vi/logo.png",
-  // sameAs: [
-  //   "https://facebook.com/yourcommunity",
-  //   "https://github.com/yourcommunity"
-  // ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "community support",
-    email: "bao162006@gmail.com",
-  },
-};
 
 // Root layout component
 export default async function Layout({
@@ -91,6 +112,36 @@ export default async function Layout({
 
   const dict = await getLangDict(locale);
 
+  // Dynamic Schemas
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: dict.museum_name,
+    url: `https://btvh.vercel.app/${locale}`,
+    inLanguage: locale,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `https://btvh.vercel.app/${locale}/search?query={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+
+  const museumSchema = {
+    "@context": "https://schema.org",
+    "@type": "Museum",
+    name: dict.museum_name,
+    alternateName: dict.museum_sub,
+    url: `https://btvh.vercel.app/${locale}`,
+    logo: "https://btvh.vercel.app/icon.png",
+    image: "https://btvh.vercel.app/background.webp",
+    description: dict.mission_desc || dict.footer_desc,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "community support",
+      email: "bao162006@gmail.com",
+    },
+  };
+
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={montserrat.variable}>
@@ -100,7 +151,7 @@ export default async function Layout({
             {children}
             <RandomArtifactButton locale={locale as Locale} />
 
-            {/* Schemas */}
+            {/* Structured Data Schemas */}
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
@@ -110,7 +161,7 @@ export default async function Layout({
             <script
               type="application/ld+json"
               dangerouslySetInnerHTML={{
-                __html: JSON.stringify(organizationSchema),
+                __html: JSON.stringify(museumSchema),
               }}
             />
           </ArtifactProvider>

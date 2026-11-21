@@ -1,3 +1,7 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 export default function StatBarChart({
   title,
   data,
@@ -24,21 +28,35 @@ export default function StatBarChart({
           total !== undefined &&
           data.map((item, idx) => {
             const percentage = total > 0 ? (item.count / total) * 100 : 0;
+            const targetWidth = `${Math.max(percentage, item.count > 0 ? 1.5 : 0)}%`;
+
             return (
-              <div key={idx} className="space-y-1">
+              <motion.div
+                key={idx}
+                className="space-y-1"
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.03 }}
+              >
                 <div className="flex justify-between text-[8px] md:text-[9px] font-medium text-stone-600 dark:text-stone-400">
                   <span className="truncate pr-1">{item.label}</span>
                   <span className="font-bold tabular-nums">{item.count}</span>
                 </div>
-                <div className="w-full h-0.5 bg-stone-100 dark:bg-stone-900 overflow-hidden">
-                  <div
-                    className="h-full bg-viet-red transition-all duration-1000 ease-out"
-                    style={{
-                      width: `${Math.max(percentage, item.count > 0 ? 1 : 0)}%`,
+                <div className="w-full h-1 bg-stone-100 dark:bg-stone-900 rounded-full overflow-hidden">
+                  <motion.div
+                    className="h-full bg-viet-red rounded-full"
+                    initial={{ width: 0 }}
+                    whileInView={{ width: targetWidth }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 0.1 + idx * 0.04,
+                      ease: [0.16, 1, 0.3, 1],
                     }}
-                  ></div>
+                  />
                 </div>
-              </div>
+              </motion.div>
             );
           })}
       </div>

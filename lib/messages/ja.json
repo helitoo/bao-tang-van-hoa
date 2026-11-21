@@ -1,9 +1,9 @@
 {
-  "nav_references": "参考文献",
+  "nav_references": "図書館",
   "nav_download": "データをダウンロードする",
   "nav_report": "コンテンツを報告する",
   "nav_artifact": "遺物",
-  "download_desc": "このデータは、Google NotebookLMやGeminiなどの高度な検索（最大の検索効率を得るために「参考文献」セクションのリソースと組み合わせることを推奨）、または統計分析などに活用いただけます。",
+  "download_desc": "このデータは、Google NotebookLMやGeminiなどの高度な検索（最大の検索効率を得るために「図書館」セクションのリソースと組み合わせることを推奨）、または統計分析などに活用いただけます。",
   "nav_timeline": "見学マップ",
   "timeline_title": "ベトナム歴史年表",
   "timeline_nation": "国号",

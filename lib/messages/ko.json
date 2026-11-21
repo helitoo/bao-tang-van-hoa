@@ -1,9 +1,9 @@
 {
-  "nav_references": "참고 문헌",
+  "nav_references": "도서관",
   "nav_download": "데이터 다운로드",
   "nav_report": "콘텐츠 신고",
   "nav_artifact": "유물",
-  "download_desc": "본 데이터를 Google NotebookLM, Gemini와 같은 고급 검색에 활용하거나(최고의 검색 효율을 위해 ‘참고 문헌’ 섹션에 언급된 리소스와 결합 권장), 통계 작업 등에 사용할 수 있습니다.",
+  "download_desc": "본 데이터를 Google NotebookLM, Gemini와 같은 고급 검색에 활용하거나(최고의 검색 효율을 위해 ‘도서관’ 섹션에 언급된 리소스와 결합 권장), 통계 작업 등에 사용할 수 있습니다.",
   "nav_timeline": "관람 안내도",
   "timeline_title": "베트남 역사 연대기",
   "timeline_nation": "국호",

@@ -1,26 +1,34 @@
 import type { Metadata } from "next";
-import { getLangDict } from "@/lib/lang";
+import { getLangDict, locales } from "@/lib/lang";
 
-// Metadata
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-
   const dict = await getLangDict(locale);
+
+  const languageAlternates: Record<string, string> = {};
+  locales.forEach((l) => {
+    languageAlternates[l] = `https://btvh.vercel.app/${l}/references`;
+  });
 
   return {
     title: dict.nav_references,
+    description: "Thư viện tư liệu số, cổ thư, điển tịch, hệ thống bảo tàng và cộng đồng nghiên cứu cổ phong di sản văn hóa Việt Nam.",
+    alternates: {
+      canonical: `https://btvh.vercel.app/${locale}/references`,
+      languages: languageAlternates,
+    },
+    openGraph: {
+      title: `${dict.nav_references} | ${dict.museum_name}`,
+      description: "Thư viện tư liệu, cổ thư và tài liệu tham khảo di sản.",
+      url: `https://btvh.vercel.app/${locale}/references`,
+    },
   };
 }
 
-// Root layout component
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

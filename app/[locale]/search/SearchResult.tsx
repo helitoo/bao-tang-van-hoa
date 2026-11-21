@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 import type { Locale } from "@/lib/lang";
 
@@ -8,6 +9,26 @@ import ArtifactCard from "@/components/ArtifactCard";
 import { Artifact } from "@/contexts/artifact";
 
 const ITEMS_PER_PAGE = 32;
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.03,
+    },
+  },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+  },
+};
 
 export default function SearchResult({
   locale,
@@ -72,11 +93,22 @@ export default function SearchResult({
         </span>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-4">
-        {paginatedArtifacts.map((item) => (
-          <ArtifactCard key={item.id} item={item} locale={locale} />
-        ))}
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentPage}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-4"
+        >
+          {paginatedArtifacts.map((item) => (
+            <motion.div key={item.id} variants={itemVariants} className="h-full">
+              <ArtifactCard item={item} locale={locale} />
+            </motion.div>
+          ))}
+        </motion.div>
+      </AnimatePresence>
 
       {totalPages > 1 && (
         <div className="mt-12 flex justify-center items-center space-x-1">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import Logo from "@/components/Logo";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
@@ -213,23 +214,31 @@ export default function Navbar({
               </span>
             </button>
 
-            {isLangOpen && (
-              <div className="absolute inline-block min-w-max right-0 mt-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50">
-                {langLabels.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => switchLocale(lang.code)}
-                    className={`w-full cursor-pointer whitespace-nowrap text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${
-                      locale === lang.code
-                        ? "text-viet-red font-extrabold"
-                        : "text-stone-600 dark:text-stone-300"
-                    }`}
-                  >
-                    {lang.fullName}
-                  </button>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {isLangOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute inline-block min-w-max right-0 mt-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50 origin-top-right overflow-hidden"
+                >
+                  {langLabels.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => switchLocale(lang.code)}
+                      className={`w-full cursor-pointer whitespace-nowrap text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${
+                        locale === lang.code
+                          ? "text-viet-red font-extrabold"
+                          : "text-stone-600 dark:text-stone-300"
+                      }`}
+                    >
+                      {lang.fullName}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* More links */}
@@ -257,20 +266,28 @@ export default function Navbar({
               </svg>
             </button>
 
-            {isLinkOpen && (
-              <div className="absolute inline-block min-w-max right-0 mt-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50">
-                {links.map((link) => (
-                  <Link
-                    key={link.url}
-                    href={`/${locale}/${link.url}`}
-                    hrefLang={locale}
-                    className={`whitespace-nowrap text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${pathname.includes(link.url) ? "text-viet-red bg-stone-50 dark:bg-stone-700 font-extrabold" : "text-stone-600 dark:text-stone-300"}`}
-                  >
-                    {dict[link.labelId]}
-                  </Link>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {isLinkOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute inline-block min-w-max right-0 mt-2 bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-sm shadow-xl py-1 z-50 origin-top-right overflow-hidden"
+                >
+                  {links.map((link) => (
+                    <Link
+                      key={link.url}
+                      href={`/${locale}/${link.url}`}
+                      hrefLang={locale}
+                      className={`whitespace-nowrap text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center ${pathname.includes(link.url) ? "text-viet-red bg-stone-50 dark:bg-stone-700 font-extrabold" : "text-stone-600 dark:text-stone-300"}`}
+                    >
+                      {dict[link.labelId]}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>

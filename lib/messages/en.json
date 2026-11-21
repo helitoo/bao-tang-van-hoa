@@ -1,9 +1,9 @@
 {
-  "nav_references": "References",
+  "nav_references": "Library",
   "nav_download": "Download data",
   "nav_report": "Report Content",
   "nav_artifact": "Artifact",
-  "download_desc": "You can use this data for advanced searches with tools like Google NotebookLM or Gemini (combined with the sources mentioned in the References section for maximum efficiency), or for statistical purposes...",
+  "download_desc": "You can use this data for advanced searches with tools like Google NotebookLM or Gemini (combined with the sources mentioned in the Library section for maximum efficiency), or for statistical purposes...",
   "nav_timeline": "Tour Map",
   "timeline_title": "Vietnam History Timeline",
   "timeline_nation": "Nation Name",

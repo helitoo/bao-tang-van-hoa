@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useArtifact, type Artifact } from "@/contexts/artifact";
 import { Locale } from "@/lib/lang";
@@ -100,20 +101,30 @@ export default function Search({
           setShowFilters={setShowFilters}
         />
 
-        {/* Body */}
-        <div className={showFilters ? "block" : "hidden"}>
-          <SearchBody
-            locale={locale as Locale}
-            dict={dict}
-            query={query}
-            setQuery={setQuery}
-            cats={cats}
-            setCats={setCats}
-            selectedColor={selectedColor}
-            onColorChange={handleColorChange}
-            handleSearchSubmit={handleSearchSubmit}
-          />
-        </div>
+        {/* Animated Filter Body */}
+        <AnimatePresence initial={false}>
+          {showFilters && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <SearchBody
+                locale={locale as Locale}
+                dict={dict}
+                query={query}
+                setQuery={setQuery}
+                cats={cats}
+                setCats={setCats}
+                selectedColor={selectedColor}
+                onColorChange={handleColorChange}
+                handleSearchSubmit={handleSearchSubmit}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <SearchResult
         locale={locale}

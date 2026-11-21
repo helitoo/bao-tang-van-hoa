@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 import type { Locale } from "@/lib/lang";
 import { parseYear } from "@/app/[locale]/timeline/parseYear";
@@ -15,6 +15,7 @@ export default function Timeline({
   dict: any;
 }) {
   const [zoom, setZoom] = useState(1);
+  const [hoveredItem, setHoveredItem] = useState<any | null>(null);
 
   const BASE_BAR_HEIGHT = 40;
   const BASE_FONT_SIZE = 11;
@@ -25,9 +26,6 @@ export default function Timeline({
       const endVal = parseYear(item.end);
       const duration = Math.abs(endVal - startVal);
 
-      // Calculate dynamic height: 100 years is standard (BASE_BAR_HEIGHT).
-      // Shorter durations (< 100 years) increase height.
-      // Max height is 3x BASE_BAR_HEIGHT (120px) when duration is 0.
       let barHeight;
       if (duration < 100) {
         const growthFactor = 2 * (1 - duration / 100);
@@ -36,7 +34,6 @@ export default function Timeline({
         barHeight = BASE_BAR_HEIGHT;
       }
 
-      // Calculate font size adjustments
       let fontSize = BASE_FONT_SIZE;
       if (item.type === "war") fontSize = BASE_FONT_SIZE * 0.75;
       else if (item.type === "independence") fontSize = BASE_FONT_SIZE * 1.25;
@@ -51,7 +48,6 @@ export default function Timeline({
       };
     });
 
-    // Sort by duration descending so smaller (narrower but taller) segments are drawn on top
     return raw.sort((a, b) => b.duration - a.duration);
   }, []);
 
@@ -77,12 +73,17 @@ export default function Timeline({
   };
 
   const VIEWPORT_HEIGHT = 400;
-  const Y_AXIS = 300; // Vertical position of the horizontal axis
+  const Y_AXIS = 300;
   const SVG_BASE_WIDTH = 1000;
   const currentWidth = SVG_BASE_WIDTH * zoom;
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      {/* Zoom Control */}
       <div className="flex flex-col items-center space-y-2 max-w-xs mx-auto mb-6">
         <label className="text-[10px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 flex justify-between w-full">
           <span>{dict.timeline_zoom}</span>
@@ -99,6 +100,45 @@ export default function Timeline({
         />
       </div>
 
+      {/* Interactive Hover Card */}
+      <div className="h-14 mb-4 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {hoveredItem ? (
+            <motion.div
+              key={hoveredItem.name[locale] || hoveredItem.name.vi}
+              initial={{ opacity: 0, scale: 0.95, y: 6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -6 }}
+              transition={{ duration: 0.2 }}
+              className="px-5 py-2.5 rounded-sm bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md flex items-center gap-4 text-xs"
+            >
+              <div
+                className="w-3 h-3 rounded-full shrink-0"
+                style={{ backgroundColor: getSegmentColor(hoveredItem.type) }}
+              ></div>
+              <div>
+                <span className="font-extrabold text-stone-900 dark:text-stone-100 text-sm">
+                  {hoveredItem.name[locale] ||
+                    hoveredItem.name.en ||
+                    hoveredItem.name.vi}
+                </span>
+                <span className="text-stone-400 dark:text-stone-500 ml-2 font-mono">
+                  ({hoveredItem.start} &rarr; {hoveredItem.end})
+                </span>
+              </div>
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-xs bg-stone-100 dark:bg-stone-700 text-stone-600 dark:text-stone-300">
+                {hoveredItem.duration} năm
+              </span>
+            </motion.div>
+          ) : (
+            <span className="text-xs text-stone-400 italic">
+              (Rê chuột vào một thời kỳ trên sơ đồ để xem niên biểu chi tiết)
+            </span>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Timeline Scroll Area */}
       <div className="overflow-x-auto overflow-y-hidden py-12 px-2 border border-stone-200 dark:border-stone-800 bg-white/50 dark:bg-stone-900/50 rounded-sm shadow-inner always-show-scrollbar custom-scrollbar-h relative">
         <div
           className="relative transition-all duration-300 ease-out"
@@ -165,8 +205,13 @@ export default function Timeline({
               const yRect = Y_AXIS - h;
 
               return (
-                <g key={index} className="group cursor-pointer">
-                  {/* PRECISION TRIGGER: Matches the segment and the vertical label area exactly. */}
+                <g
+                  key={index}
+                  className="group cursor-pointer"
+                  onMouseEnter={() => setHoveredItem(item)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                >
+                  {/* PRECISION TRIGGER */}
                   <rect
                     x={xStart}
                     y={yRect}
@@ -193,7 +238,7 @@ export default function Timeline({
                       fillOpacity="0.5"
                       stroke="white"
                       strokeWidth="0.5"
-                      className="group-hover:fill-opacity-90 transition-all duration-300"
+                      className="group-hover:fill-opacity-95 transition-all duration-300"
                     />
 
                     <text
@@ -216,6 +261,6 @@ export default function Timeline({
           </svg>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }

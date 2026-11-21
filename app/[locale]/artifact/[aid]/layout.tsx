@@ -1,23 +1,4 @@
-import type { Metadata } from "next";
-import { getLangDict } from "@/lib/lang";
-
-// Metadata
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-
-  const dict = await getLangDict(locale);
-
-  return {
-    title: dict.nav_artifact,
-  };
-}
-
-// Root layout component
-export default async function Layout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;

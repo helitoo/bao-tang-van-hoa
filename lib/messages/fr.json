@@ -1,9 +1,9 @@
 {
-  "nav_references": "Références",
+  "nav_references": "Bibliothèque",
   "nav_download": "Télécharger les données",
   "nav_report": "Signaler un contenu",
   "nav_artifact": "Artefact",
-  "download_desc": "Vous pouvez utiliser ces données pour des recherches avancées avec des outils comme Google NotebookLM ou Gemini (combinées avec les ressources mentionnées dans la section Références pour une efficacité maximale), ou à des fins statistiques...",
+  "download_desc": "Vous pouvez utiliser ces données pour des recherches avancées avec des outils comme Google NotebookLM ou Gemini (combinées avec les ressources mentionnées dans la section Bibliothèque pour une efficacité maximale), ou à des fins statistiques...",
   "nav_timeline": "Parcours de visite",
   "timeline_title": "Chronologie historique du Vietnam",
   "timeline_nation": "Nom de la nation",

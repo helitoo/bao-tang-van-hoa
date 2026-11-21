@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { motion } from "framer-motion";
 
 import { useArtifact } from "@/contexts/artifact";
 import { CATEGORY_GROUPS } from "@/lib/consts/categories";
@@ -52,17 +53,31 @@ export default function Statistics({
 
   return (
     <section className="max-w-7xl mx-auto px-2 md:px-4">
-      <div className="flex flex-col items-center mb-8">
-        <h3 className="text-2xl font-extrabold text-stone-800 dark:text-stone-200 mb-2 uppercase">
+      <motion.div
+        className="flex flex-col items-center mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <h3 className="text-2xl font-extrabold text-stone-800 dark:text-stone-200 mb-2 uppercase tracking-tight">
           {dict.stats_title}
         </h3>
-        <div className="h-0.5 w-16 bg-stone-200 dark:bg-stone-800"></div>
-      </div>
+        <div className="h-0.5 w-16 bg-viet-red"></div>
+      </motion.div>
 
-      <div className="space-y-4">
+      <motion.div
+        className="space-y-4"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }}
+        transition={{ duration: 0.7 }}
+      >
         <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-3 md:grid-rows-2 gap-2 md:gap-4 h-[650px] md:h-[500px]">
           {/* Ô (1; 1): Tổng số hiện vật - Trải dài 2 cột trên mobile */}
-          <div
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className={`col-span-2 md:col-span-1 md:row-span-2 bg-white dark:bg-stone-800/50 p-4 border border-stone-200 dark:border-stone-800 flex flex-col items-center justify-center text-center shadow-sm relative overflow-hidden group ${!stats && "skeleton"}`}
           >
             {stats && (
@@ -71,12 +86,18 @@ export default function Statistics({
                 <span className="text-[8px] md:text-[10px] font-extralight uppercase tracking-[0.2em] text-stone-400 mb-2">
                   {dict.stats_total}
                 </span>
-                <span className="text-4xl md:text-6xl font-extrabold text-viet-red drop-shadow-sm tabular-nums">
+                <motion.span
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
+                  className="text-4xl md:text-6xl font-extrabold text-viet-red drop-shadow-sm tabular-nums"
+                >
                   {stats.total}
-                </span>
+                </motion.span>
               </>
             )}
-          </div>
+          </motion.div>
 
           {/* Ô (2, 1) Mobile / (1, 2) Desktop: Tôn giáo & Tín ngưỡng */}
           <StatBarChart
@@ -112,11 +133,11 @@ export default function Statistics({
         </div>
         <div className="flex justify-center">
           <span className="text-[10px] font-extralight uppercase tracking-widest text-stone-400 dark:text-stone-500 opacity-80 flex items-center">
-            <span className="w-1 h-1 bg-stone-300 dark:bg-stone-700 rounded-full mr-2"></span>
+            <span className="w-1 h-1 bg-viet-red rounded-full mr-2"></span>
             {dict.home_update_note}
           </span>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

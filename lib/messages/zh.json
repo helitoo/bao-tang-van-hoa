@@ -1,9 +1,9 @@
 {
-  "nav_references": "参考资料",
+  "nav_references": "图书馆",
   "nav_download": "下载数据",
   "nav_report": "举报内容",
   "nav_artifact": "文物",
-  "download_desc": "您可以将此数据用于 Google NotebookLM、Gemini 等高级搜索（结合“参考文献”部分提到的资源以获得最佳搜索效果），或用于数据统计等...",
+  "download_desc": "您可以将此数据用于 Google NotebookLM、Gemini 等高级搜索（结合“图书馆”部分提到的资源以获得最佳搜索效果），或用于数据统计等...",
   "nav_timeline": "参观图",
   "timeline_title": "越南历史年表",
   "timeline_nation": "国号",

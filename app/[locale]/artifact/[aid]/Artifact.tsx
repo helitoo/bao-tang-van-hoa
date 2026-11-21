@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { ToastContainer, toast, Bounce } from "react-toastify";
 
@@ -24,25 +25,30 @@ export default function Artifact({
   locale,
   dict,
   aid,
+  initialArtifact,
 }: {
   locale: Locale;
   dict: any;
   aid: string;
+  initialArtifact?: Artifact;
 }) {
   // Artifact info handler
 
-  const [artifact, setArtifact] = useState<Artifact | undefined>(undefined);
-  const [driveId, setDriveId] = useState<string | undefined>();
+  const [artifact, setArtifact] = useState<Artifact | undefined>(initialArtifact);
+  const [driveId, setDriveId] = useState<string | undefined>(
+    initialArtifact ? getDriveId(initialArtifact.main_image) || undefined : undefined,
+  );
   const [notFound, setNotFound] = useState<boolean>(false);
 
   const { artifacts } = useArtifact();
 
   useEffect(() => {
+    if (artifact) return;
     if (!artifacts) return;
     const foundedArtifact = artifacts.find((a) => a.id === aid);
     if (foundedArtifact) setArtifact(foundedArtifact);
     else setNotFound(true);
-  }, [artifacts]);
+  }, [artifacts, aid, artifact]);
 
   useEffect(() => {
     if (!artifact) return;
@@ -206,11 +212,17 @@ export default function Artifact({
               className={`relative w-full md:w-1/2 lg:w-3/5 ${!artifact && "skeleton w-full h-50 rounded"}`}
             >
               {artifact && (
-                <>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="relative flex items-center justify-center bg-stone-50 dark:bg-stone-900/40 p-2 rounded-sm border border-stone-200/50 dark:border-stone-800"
+                >
                   <img
                     src={getImgUrl(artifact.main_image)}
-                    alt={artifact.name}
-                    className="max-w-full max-h-full object-contain cursor-pointer shadow"
+                    alt={`${artifact.name}${artifact.artifact_date ? ` (${artifact.artifact_date})` : ""} tại ${artifact.location || "Việt Nam"} - Bảo tàng Văn hóa`}
+                    decoding="async"
+                    className="max-w-full max-h-[500px] object-contain cursor-pointer shadow-md rounded-xs"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
                     }}
@@ -220,13 +232,15 @@ export default function Artifact({
                     }}
                   />
 
-                  {/* Enlarge Button - Moved to top right, no hover effects */}
-                  <button
+                  {/* Enlarge Button */}
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsModalOpen(true);
                     }}
-                    className="absolute top-4 right-4 p-2 rounded-full shadow-lg z-20 bg-black/70 hover:bg-black/50 text-stone-300"
+                    className="absolute top-4 right-4 p-2 rounded-full shadow-lg z-20 bg-black/70 hover:bg-black/90 text-stone-300 cursor-pointer"
                     aria-label="Enlarge"
                   >
                     <svg
@@ -243,8 +257,8 @@ export default function Artifact({
                         d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6"
                       />
                     </svg>
-                  </button>
-                </>
+                  </motion.button>
+                </motion.div>
               )}
             </div>
 
@@ -253,7 +267,12 @@ export default function Artifact({
               className={`w-full md:w-1/2 lg:w-2/5 space-y-8 ${!artifact && "skeleton w-full h-50 rounded"}`}
             >
               {artifact && (
-                <>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                  className="space-y-8"
+                >
                   <div className="space-y-4">
                     <h1 className="text-2xl lg:text-3xl font-extrabold text-stone-900 dark:text-stone-100 tracking-tight leading-tight">
                       {artifact.name}
@@ -266,7 +285,7 @@ export default function Artifact({
                             <Link
                               href={`/${locale}/search?cats=${cataid}`}
                               key={cataid}
-                              className="btn text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 px-2 py-1 border border-stone-200 dark:border-stone-700"
+                              className="btn text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-stone-500 dark:text-stone-400 px-2 py-1 border border-stone-200 dark:border-stone-700 hover:text-viet-red"
                             >
                               {name}
                             </Link>
@@ -281,9 +300,11 @@ export default function Artifact({
 
                   {/* Buttons Row */}
                   <div className="w-full flex items-center gap-3">
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.96 }}
                       onClick={toggleSave}
-                      className={`btn w-40 h-10 flex items-center justify-center space-x-2 rounded-sm tracking-widest border transition-all shrink-0 ${isSaved ? "bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-viet-red" : "bg-viet-red text-white border-viet-red hover:bg-red-800"}`}
+                      className={`btn w-40 h-10 flex items-center justify-center space-x-2 rounded-sm tracking-widest border transition-colors shrink-0 cursor-pointer ${isSaved ? "bg-stone-100 dark:bg-stone-800 border-stone-200 dark:border-stone-700 text-viet-red" : "bg-viet-red text-white border-viet-red hover:bg-red-800"}`}
                     >
                       <svg
                         className="w-4 h-4"
@@ -301,10 +322,12 @@ export default function Artifact({
                       <span className="whitespace-nowrap text-sm">
                         {isSaved ? dict.btn_saved : dict.btn_save}
                       </span>
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.96 }}
                       onClick={shareArtifact}
-                      className="btn w-40 h-10 flex items-center justify-center space-x-2 rounded-sm tracking-widest bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-viet-red hover:text-viet-red transition-all shrink-0"
+                      className="btn w-40 h-10 flex items-center justify-center space-x-2 rounded-sm tracking-widest bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 hover:border-viet-red hover:text-viet-red transition-all shrink-0 cursor-pointer"
                     >
                       <svg
                         className="w-4 h-4"
@@ -322,7 +345,7 @@ export default function Artifact({
                       <span className="whitespace-nowrap text-sm">
                         {copySuccess ? dict.btn_share_copied : dict.btn_share}
                       </span>
-                    </button>
+                    </motion.button>
                   </div>
 
                   {/* Short description and Detail description */}
@@ -393,7 +416,7 @@ export default function Artifact({
                       </p>
                     )}
                   </div>
-                </>
+                </motion.div>
               )}
             </div>
           </div>
@@ -426,58 +449,70 @@ export default function Artifact({
           </div>
 
           {/* Popup Modal */}
-          {isModalOpen && artifact && (
-            <div
-              className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
-              onClick={() => setIsModalOpen(false)}
-            >
-              <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
-
-              <div
-                className="relative w-full max-w-6xl h-full max-h-[90vh] bg-stone-950 shadow-2xl rounded-sm overflow-hidden flex items-center justify-center"
-                onClick={(e) => e.stopPropagation()}
+          <AnimatePresence>
+            {isModalOpen && artifact && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+                onClick={() => setIsModalOpen(false)}
               >
-                {driveId ? (
-                  <iframe
-                    src={`https://drive.google.com/file/d/${driveId}/preview`}
-                    className="w-full h-full border-none"
-                    allow="autoplay"
-                    title={artifact.name}
-                  ></iframe>
-                ) : (
-                  <img
-                    src={getImgUrl(artifact.main_image)}
-                    alt={artifact.name}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                )}
+                <div className="absolute inset-0 bg-black/90 backdrop-blur-sm"></div>
 
-                {/* Close Button at Maiddle Right Edge */}
-                <button
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-0 mr-9 md:mr-4 bg-black/70 hover:bg-black/50 text-stone-300 p-2 rounded-full shadow-2xl z-[110]"
-                  aria-label="Close"
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.92, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.92, y: 15 }}
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                  className="relative w-full max-w-6xl h-full max-h-[90vh] bg-stone-950 shadow-2xl rounded-sm overflow-hidden flex items-center justify-center z-10"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
+                  {driveId ? (
+                    <iframe
+                      src={`https://drive.google.com/file/d/${driveId}/preview`}
+                      className="w-full h-full border-none"
+                      allow="autoplay"
+                      title={artifact.name}
+                    ></iframe>
+                  ) : (
+                    <img
+                      src={getImgUrl(artifact.main_image)}
+                      alt={artifact.name}
+                      className="max-w-full max-h-full object-contain"
                     />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          )}
+                  )}
+
+                  {/* Close Button at Middle Right Edge */}
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-0 mr-9 md:mr-4 bg-black/70 hover:bg-black/90 text-stone-300 p-2 rounded-full shadow-2xl z-[110] cursor-pointer"
+                    aria-label="Close"
+                  >
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </>
       )}
     </>
