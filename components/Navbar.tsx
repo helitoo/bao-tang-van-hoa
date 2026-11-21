@@ -120,7 +120,7 @@ export default function Navbar({
             href={`/${locale}/map`}
             hrefLang={locale}
             title={dict.nav_map}
-            className={`btn flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${pathname.includes("map") ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
+            className={`btn hidden sm:flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm transition-all ${pathname.includes("map") ? "text-viet-red bg-red-50 md:bg-transparent dark:bg-red-900/10 md:dark:bg-transparent" : "text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent"}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -144,9 +144,12 @@ export default function Navbar({
           </Link>
 
           {/* Contribute */}
-          <button
+          <a
+            href="https://forms.gle/dmjtuKRCcX9WN9h8A"
+            target="_blank"
+            rel="noopener noreferrer"
             title={dict.nav_contribute}
-            className="btn flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent transition-all"
+            className="btn hidden sm:flex items-center justify-center p-2.5 md:px-3 md:py-2 md:space-x-1 rounded-full md:rounded-sm text-stone-500 hover:text-viet-red hover:bg-stone-200 md:hover:bg-transparent dark:hover:bg-stone-800 md:dark:hover:bg-transparent transition-all"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -164,15 +167,10 @@ export default function Navbar({
               <path d="M12 3v14" />
               <path d="M5 21h14" />
             </svg>
-            <Link
-              href="https://forms.gle/dmjtuKRCcX9WN9h8A"
-              hrefLang="vi"
-              target="_blank"
-              className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider"
-            >
+            <span className="hidden md:inline text-[10px] font-extrabold uppercase tracking-wider">
               {dict.nav_contribute}
-            </Link>
-          </button>
+            </span>
+          </a>
 
           {/* Saved */}
           <Link
@@ -285,6 +283,14 @@ export default function Navbar({
                       {dict[link.labelId]}
                     </Link>
                   ))}
+                  <a
+                    href="https://forms.gle/dmjtuKRCcX9WN9h8A"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="sm:hidden whitespace-nowrap text-left px-4 py-2 text-xs font-medium hover:bg-stone-50 dark:hover:bg-stone-700 hover:text-viet-red transition-colors flex justify-between items-center text-stone-600 dark:text-stone-300 border-t border-stone-100 dark:border-stone-700 mt-1 pt-2"
+                  >
+                    {dict.nav_contribute}
+                  </a>
                 </motion.div>
               )}
             </AnimatePresence>

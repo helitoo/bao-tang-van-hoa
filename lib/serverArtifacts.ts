@@ -73,25 +73,68 @@ export function parseCSV(text: string): Artifact[] {
   return results;
 }
 
+let memoryCache: {
+  artifacts: Artifact[];
+  map: Map<string, Artifact>;
+  timestamp: number;
+} | null = null;
+
+let pendingPromise: Promise<Artifact[]> | null = null;
+const CACHE_TTL = 3600 * 1000; // 1 hour
+
 export async function fetchArtifactsServer(): Promise<Artifact[]> {
-  try {
-    const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}&range=${SHEET_RANGE}`;
-    const response = await fetch(url, {
-      next: { revalidate: 3600 },
-    });
-    if (!response.ok) return [];
-    const text = await response.text();
-    if (text.includes("<!DOCTYPE html>")) return [];
-    return parseCSV(text);
-  } catch (err) {
-    console.error("Error fetching artifacts on server:", err);
-    return [];
+  const now = Date.now();
+  if (memoryCache && now - memoryCache.timestamp < CACHE_TTL) {
+    return memoryCache.artifacts;
   }
+
+  if (pendingPromise) {
+    return pendingPromise;
+  }
+
+  pendingPromise = (async () => {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}&range=${SHEET_RANGE}`;
+      const response = await fetch(url, {
+        next: { revalidate: 3600 },
+      });
+      if (!response.ok) return memoryCache?.artifacts || [];
+      const text = await response.text();
+      if (text.includes("<!DOCTYPE html>")) return memoryCache?.artifacts || [];
+      const artifacts = parseCSV(text);
+
+      const map = new Map<string, Artifact>();
+      for (const a of artifacts) {
+        if (a.id) {
+          map.set(String(a.id).trim(), a);
+        }
+      }
+
+      memoryCache = {
+        artifacts,
+        map,
+        timestamp: Date.now(),
+      };
+
+      return artifacts;
+    } catch (err) {
+      console.error("Error fetching artifacts on server:", err);
+      return memoryCache?.artifacts || [];
+    } finally {
+      pendingPromise = null;
+    }
+  })();
+
+  return pendingPromise;
 }
 
 export async function getArtifactByIdServer(
   id: string,
 ): Promise<Artifact | undefined> {
-  const artifacts = await fetchArtifactsServer();
-  return artifacts.find((a) => String(a.id).trim() === String(id).trim());
+  const cleanId = String(id).trim();
+  if (memoryCache && Date.now() - memoryCache.timestamp < CACHE_TTL) {
+    return memoryCache.map.get(cleanId);
+  }
+  await fetchArtifactsServer();
+  return memoryCache?.map.get(cleanId);
 }

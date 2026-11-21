@@ -55,44 +55,66 @@ export default function Artifact({
     setDriveId(getDriveId(artifact.main_image) || undefined);
   }, [artifact]);
 
-  // Find similar artifacts handler
+  // Find similar artifacts handler (optimized & non-blocking)
 
   const [similarArtifacts, setSimilarArtifacts] = useState<
     Artifact[] | undefined
   >();
 
   useEffect(() => {
-    if (!artifact || !artifacts) return;
+    if (!artifact || !artifacts || artifacts.length === 0) return;
 
-    const currCatName = getCategoryNames(artifact.categories, locale);
+    // Use setTimeout to defer calculation and keep page transition instant
+    const timer = setTimeout(() => {
+      const targetCats = new Set(artifact.categories || []);
+      const otherArtifacts = artifacts.filter((a) => a.id !== artifact.id);
 
-    setSimilarArtifacts(
-      artifacts
-        .filter((a) => a.id !== artifact.id)
+      // Prioritize items that share categories, era, or location
+      const scoredCandidates = otherArtifacts.map((a) => {
+        let catOverlap = 0;
+        if (a.categories) {
+          for (const c of a.categories) {
+            if (targetCats.has(c)) catOverlap++;
+          }
+        }
+        const eraMatch =
+          artifact.artifact_date && a.artifact_date === artifact.artifact_date
+            ? 1
+            : 0;
+
+        return {
+          artifact: a,
+          catOverlap,
+          eraMatch,
+        };
+      });
+
+      // Sort by category overlap and era match to narrow down to top 30 candidates
+      scoredCandidates.sort(
+        (a, b) =>
+          b.catOverlap * 2 + b.eraMatch - (a.catOverlap * 2 + a.eraMatch),
+      );
+      const topCandidates = scoredCandidates.slice(0, 30).map((c) => c.artifact);
+
+      const targetText = `${artifact.name} ${artifact.short_description || ""}`;
+      const results = topCandidates
         .map((a) => {
           const nameScore = similarityScore(
-            `${artifact.name} ${artifact.short_description || ""}`,
+            targetText,
             `${a.name} ${a.short_description || ""}`,
           );
-
-          const descScore = similarityScore(
-            artifact.description || "",
-            a.description || "",
-          );
-
-          const catScore = similarityScore(
-            currCatName,
-            getCategoryNames(a.categories, locale),
-          );
-
           return {
             ...a,
-            similarityScore: nameScore * 0.5 + descScore * 0.4 + catScore * 0.1,
+            similarityScore: nameScore,
           };
         })
         .sort((a, b) => b.similarityScore - a.similarityScore)
-        .slice(0, 12),
-    );
+        .slice(0, 12);
+
+      setSimilarArtifacts(results);
+    }, 50);
+
+    return () => clearTimeout(timer);
   }, [artifact, artifacts]);
 
   // Render (None) if the value is falsy

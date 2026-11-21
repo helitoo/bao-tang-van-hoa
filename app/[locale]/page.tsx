@@ -16,7 +16,7 @@ export default async function Page({
   const dict = await getLangDict(locale);
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-16 pb-24 md:pb-32">
       {/* Animated Hero Section */}
       <HeroSection locale={locale} dict={dict} />
 
@@ -32,8 +32,8 @@ export default async function Page({
       {/* Newest artifacts */}
       <NewestArtifacts locale={locale as Locale} dict={dict} />
 
-      {/* Donate */}
-      <Donate />
+      {/* Donate (tạm thời ẩn) */}
+      {/* <Donate /> */}
     </div>
   );
 }

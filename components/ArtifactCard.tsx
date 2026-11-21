@@ -41,6 +41,7 @@ export default function ArtifactCard({
   return (
     <MotionLink
       href={`/${locale}/artifact/${item.id}`}
+      prefetch={true}
       whileHover={{ y: -5, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
