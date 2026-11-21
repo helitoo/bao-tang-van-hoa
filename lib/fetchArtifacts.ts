@@ -4,7 +4,8 @@ import type { Artifact } from "@/contexts/artifact";
 
 const SPREADSHEET_ID = process.env.NEXT_PUBLIC_SPREADSHEET_ID;
 const SHEET_NAME = process.env.NEXT_PUBLIC_SHEET_NAME;
-const SHEET_RANGE = process.env.NEXT_PUBLIC_SHEET_RANGE;
+const rawRange = process.env.NEXT_PUBLIC_SHEET_RANGE || "A1:Z";
+const SHEET_RANGE = rawRange.endsWith(":M") ? rawRange.replace(/:M$/i, ":Z") : rawRange;
 
 function parseCSV(text: string): Artifact[] {
   const rows: string[][] = [];

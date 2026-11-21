@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { useArtifact, type Artifact } from "@/contexts/artifact";
@@ -16,33 +16,23 @@ export default function Search({
   dict,
   initQuery,
   initCats,
+  initColor = "",
 }: {
   locale: Locale;
   dict: any;
   initQuery: string;
   initCats: string[];
+  initColor?: string;
 }) {
   const router = useRouter();
 
-  // Filters
+  // Filters state
   const [query, setQuery] = useState<string>(initQuery);
   const [cats, setCats] = useState<string[]>(initCats);
+  const [selectedColor, setSelectedColor] = useState<string>(initColor);
 
   // Hide / Show search panel
   const [showFilters, setShowFilters] = useState(true);
-
-  // Set current filters to url
-
-  function setUrl() {
-    const search = new URLSearchParams();
-
-    if (query.trim()) search.set("query", query.trim());
-    cats.filter(Boolean).forEach((c) => search.append("cats", c));
-
-    router.push(search.toString() ? `?${search.toString()}` : "");
-  }
-
-  // handle search submit
 
   const { artifacts } = useArtifact();
 
@@ -50,21 +40,54 @@ export default function Search({
     Artifact[] | undefined
   >(artifacts);
 
-  useEffect(() => {
-    setFilteredArtifacts(artifacts);
-  }, [artifacts]);
+  // Helper để đồng bộ URL tìm kiếm
+  function syncUrl(q: string, c: string[], col: string) {
+    const search = new URLSearchParams();
+    if (q.trim()) search.set("query", q.trim());
+    c.filter(Boolean).forEach((cat) => search.append("cats", cat));
+    if (col.trim()) search.set("color", col.trim());
 
-  function handleSearchSubmit() {
-    if (!artifacts) return;
-    setUrl();
-    setFilteredArtifacts(getFilteredArtifacts(query, cats, artifacts, locale));
+    const urlStr = search.toString() ? `?${search.toString()}` : `/${locale}/search`;
+    router.replace(urlStr, { scroll: false });
   }
 
-  // First search
+  // Cờ nhận diện lần render đầu tiên
+  const isFirstRender = useRef(true);
+
+  // Tự động lọc danh sách với debounce nhẹ (250ms) khi bất kỳ filter nào thay đổi (query, cats, color)
   useEffect(() => {
     if (!artifacts) return;
-    setFilteredArtifacts(getFilteredArtifacts(query, cats, artifacts, locale));
-  }, [artifacts]);
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      setFilteredArtifacts(
+        getFilteredArtifacts(query, cats, artifacts, locale, selectedColor),
+      );
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setFilteredArtifacts(
+        getFilteredArtifacts(query, cats, artifacts, locale, selectedColor),
+      );
+      syncUrl(query, cats, selectedColor);
+    }, 250);
+
+    return () => clearTimeout(timer);
+  }, [query, cats, selectedColor, artifacts, locale]);
+
+  // Xử lý khi nhấn nút "Tìm kiếm ngay" hoặc nhấn Enter (cập nhật ngay lập tức không cần chờ debounce)
+  function handleSearchSubmit() {
+    if (!artifacts) return;
+    syncUrl(query, cats, selectedColor);
+    setFilteredArtifacts(
+      getFilteredArtifacts(query, cats, artifacts, locale, selectedColor),
+    );
+  }
+
+  function handleColorChange(newColor: string) {
+    setSelectedColor(newColor);
+  }
 
   return (
     <div className="w-full flex-shrink-0">
@@ -86,6 +109,8 @@ export default function Search({
             setQuery={setQuery}
             cats={cats}
             setCats={setCats}
+            selectedColor={selectedColor}
+            onColorChange={handleColorChange}
             handleSearchSubmit={handleSearchSubmit}
           />
         </div>

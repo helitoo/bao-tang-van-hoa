@@ -17,6 +17,7 @@ export type Artifact = {
   public_date: string; // dd-mm-yyyy
   location: string;
   coordinates?: string;
+  colors?: string;
 };
 
 interface ArtifactContextType {
