@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 import type { Locale } from "@/lib/lang";
@@ -40,6 +40,7 @@ export default function SearchResult({
   filteredArtifacts: Artifact[] | undefined;
 }) {
   const [currentPage, setCurrentPage] = useState(1);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const totalPages = filteredArtifacts
     ? Math.ceil(filteredArtifacts.length / ITEMS_PER_PAGE)
@@ -74,19 +75,27 @@ export default function SearchResult({
     return p;
   };
 
-  const goToPage = (page: number) => {
+  // Chuyển trang khi người dùng chủ động bấm phân trang: đổi trang & cuộn mượt đến đầu kết quả
+  const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
-  // Reset page
-  useEffect(() => goToPage(1), [filteredArtifacts]);
+  // Khi bộ lọc/từ khóa thay đổi: CHỈ reset trang về 1 trong yên lặng, TUYỆT ĐỐI KHÔNG cuộn trang
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredArtifacts]);
 
   if (!filteredArtifacts) return <></>;
 
   return (
-    <div className="flex-1">
+    <div ref={resultsRef} className="flex-1 scroll-mt-20">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b-2 border-stone-200 dark:border-stone-800 pb-4 gap-4">
         <span className="text-stone-500 font-medium italic text-sm">
           {dict.found} {filteredArtifacts.length} {dict.artifacts}
@@ -113,7 +122,7 @@ export default function SearchResult({
       {totalPages > 1 && (
         <div className="mt-12 flex justify-center items-center space-x-1">
           <button
-            onClick={() => goToPage(1)}
+            onClick={() => handlePageChange(1)}
             disabled={currentPage === 1}
             className="btn size-8 border font-extrabold text-[10px] bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             title="First Page"
@@ -136,7 +145,7 @@ export default function SearchResult({
             return (
               <button
                 key={pageNum}
-                onClick={() => goToPage(pageNum)}
+                onClick={() => handlePageChange(pageNum)}
                 className={`btn size-8 border font-extrabold text-[10px] transition-colors ${
                   currentPage === pageNum
                     ? "bg-viet-red text-white border-viet-red"
@@ -149,7 +158,7 @@ export default function SearchResult({
           })}
 
           <button
-            onClick={() => goToPage(totalPages)}
+            onClick={() => handlePageChange(totalPages)}
             disabled={currentPage === totalPages}
             className="btn size-8 border font-extrabold text-[10px] bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             title="Last Page"
