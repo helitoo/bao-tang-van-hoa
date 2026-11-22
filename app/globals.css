@@ -6,7 +6,7 @@
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: var(--font-montserrat), "Montserrat", sans-serif;
   font-weight: 500; /* Medium 500 as default */
   background-color: #f7f3e9; /* Light mode cream */
   background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");

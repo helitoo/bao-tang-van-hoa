@@ -15,9 +15,7 @@ import HolidayToast from "@/components/HolidayToast";
 
 // Font
 const montserrat = Montserrat({
-  subsets: ["latin"],
-  weight: ["200", "500", "700", "800"],
-  style: ["normal", "italic"],
+  subsets: ["latin", "vietnamese"],
   variable: "--font-montserrat",
   display: "swap",
 });
