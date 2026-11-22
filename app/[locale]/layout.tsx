@@ -11,6 +11,7 @@ import { ArtifactProvider } from "@/contexts/artifact";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RandomArtifactButton from "@/components/RandomArtifactButton";
+import HolidayToast from "@/components/HolidayToast";
 
 // Font
 const montserrat = Montserrat({
@@ -146,6 +147,7 @@ export default async function Layout({
     <html lang={locale} suppressHydrationWarning>
       <body className={montserrat.variable}>
         <ThemeProvider>
+          <HolidayToast locale={locale as Locale} />
           <Navbar locale={locale} dict={dict} />
           <ArtifactProvider>
             {children}

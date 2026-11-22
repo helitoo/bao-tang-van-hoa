@@ -47,7 +47,9 @@ export function getFilteredArtifacts(
   cats: string[],
   artifacts: Artifact[],
   locale: Locale,
-  selectedColor?: string,
+  colors?: string[] | string,
+  excludeCats: string[] = [],
+  excludeColors: string[] = [],
 ) {
   if (!artifacts || !Array.isArray(artifacts)) return [];
 
@@ -55,8 +57,8 @@ export function getFilteredArtifacts(
     ...artifacts,
   ];
 
-  // 1. Lọc theo danh mục / tag (Logic AND: Hiện vật phải chứa TẤT CẢ các danh mục được chọn)
-  const validCats = cats.filter(Boolean);
+  // 1. Lọc theo danh mục / tag (Logic AND: Hiện vật phải chứa TẤT CẢ các danh mục "Bao gồm")
+  const validCats = (cats || []).filter(Boolean);
   if (validCats.length > 0) {
     results = results.filter((artifact) => {
       if (
@@ -71,26 +73,67 @@ export function getFilteredArtifacts(
     });
   }
 
-  // 2. Lọc theo màu sắc được chọn (nếu có)
-  const activeColor = (selectedColor || "").trim();
-  if (activeColor) {
+  // 2. Lọc loại trừ danh mục (Logic NOT: Hiện vật KHÔNG ĐƯỢC chứa BẤT KỲ danh mục "Loại trừ" nào)
+  const validExcludeCats = (excludeCats || []).filter(Boolean);
+  if (validExcludeCats.length > 0) {
+    results = results.filter((artifact) => {
+      if (
+        !artifact ||
+        !artifact.categories ||
+        !Array.isArray(artifact.categories)
+      )
+        return true;
+      return !validExcludeCats.some((excludedId) =>
+        artifact.categories.includes(excludedId),
+      );
+    });
+  }
+
+  // 3. Lọc loại trừ màu sắc (Logic NOT: Hiện vật KHÔNG ĐƯỢC chứa BẤT KỲ màu nào tương đồng với màu "Loại trừ")
+  const rawExcludeColors = (excludeColors || []).map((c) => c.trim()).filter(Boolean);
+  if (rawExcludeColors.length > 0) {
+    results = results.filter((artifact) => {
+      const hexMatches = (artifact.colors || "").match(/#[0-9a-fA-F]{6}/gi) || [];
+      if (hexMatches.length === 0) return true;
+      const hasExcludedColor = rawExcludeColors.some((excColor) =>
+        hexMatches.some((hex) => getColorDistance(excColor, hex) <= COLOR_SIMILARITY_THRESHOLD)
+      );
+      return !hasExcludedColor;
+    });
+  }
+
+  // 4. Lọc bao gồm màu sắc (Logic AND: Hiện vật phải có sắc độ tương đồng với TẤT CẢ các màu "Bao gồm")
+  const rawIncludeColors = Array.isArray(colors)
+    ? colors
+    : typeof colors === "string" && colors.trim()
+    ? [colors]
+    : [];
+  const validIncludeColors = rawIncludeColors.map((c) => c.trim()).filter(Boolean);
+
+  if (validIncludeColors.length > 0) {
     results = results
       .map((artifact) => {
-        const hexMatches = (artifact.colors || "").match(/#[0-9a-fA-F]{6}/g) || [];
+        const hexMatches = (artifact.colors || "").match(/#[0-9a-fA-F]{6}/gi) || [];
         if (hexMatches.length === 0) return null;
 
-        const distances = hexMatches.map((hex) => getColorDistance(activeColor, hex));
-        const minDist = Math.min(...distances);
+        const matchesAll = validIncludeColors.every((incColor) =>
+          hexMatches.some((hex) => getColorDistance(incColor, hex) <= COLOR_SIMILARITY_THRESHOLD)
+        );
 
-        if (minDist <= COLOR_SIMILARITY_THRESHOLD) {
-          return { ...artifact, colorDistance: minDist };
-        }
-        return null;
+        if (!matchesAll) return null;
+
+        const allDistances = validIncludeColors.map((incColor) => {
+          const dists = hexMatches.map((hex) => getColorDistance(incColor, hex));
+          return Math.min(...dists);
+        });
+        const avgDist = allDistances.reduce((a, b) => a + b, 0) / allDistances.length;
+
+        return { ...artifact, colorDistance: avgDist };
       })
       .filter((a): a is Artifact & { colorDistance: number } => a !== null);
   }
 
-  // 3. Lọc và xếp hạng theo từ khóa tìm kiếm (query)
+  // 5. Lọc và xếp hạng theo từ khóa tìm kiếm (query)
   const cleanedQuery = query.trim().toLowerCase();
 
   if (cleanedQuery) {
@@ -115,19 +158,16 @@ export function getFilteredArtifacts(
       .filter((a) => (a.searchScore ?? 0) > 0);
   }
 
-  // 4. Sắp xếp kết quả tối ưu
-  if (cleanedQuery && activeColor) {
-    // Cả từ khóa và màu sắc: ưu tiên điểm từ khóa, kế tiếp là độ gần màu
+  // 6. Sắp xếp kết quả tối ưu
+  if (cleanedQuery && validIncludeColors.length > 0) {
     results.sort((a, b) => {
       const scoreDiff = (b.searchScore ?? 0) - (a.searchScore ?? 0);
       if (Math.abs(scoreDiff) > 0.1) return scoreDiff;
       return (a.colorDistance ?? 9999) - (b.colorDistance ?? 9999);
     });
-  } else if (activeColor) {
-    // Chỉ chọn màu: hiện vật có màu gần nhất đứng đầu tiên
+  } else if (validIncludeColors.length > 0) {
     results.sort((a, b) => (a.colorDistance ?? 9999) - (b.colorDistance ?? 9999));
   } else if (cleanedQuery) {
-    // Chỉ tìm kiếm theo từ khóa
     results.sort((a, b) => (b.searchScore ?? 0) - (a.searchScore ?? 0));
   }
 

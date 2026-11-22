@@ -85,5 +85,8 @@
   "nav_badge": "Mes Badges",
   "badge_desc": "Chaque fois que vous consultez un artefact, vous gagnez 1 point ! Atteignez des étapes clés pour débloquer un badge spécial. Le calcul est automatique, mais les paliers restent un secret—continuez à explorer et profitez des collections !",
   "new_badge_cong": "Félicitations ! Vous avez obtenu le badge ",
-  "not_found_badge": "Aucun badge pour le moment ! Poursuivez votre visite pour débloquer votre premier badge."
+  "not_found_badge": "Aucun badge pour le moment ! Poursuivez votre visite pour débloquer votre premier badge.",
+  "filter_state_none": "Non sélectionné",
+  "filter_state_include": "Inclure",
+  "filter_state_exclude": "Exclure"
 }

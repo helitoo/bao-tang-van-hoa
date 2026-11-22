@@ -2,6 +2,12 @@
 
 import type { Locale } from "@/lib/lang";
 import { CATEGORY_GROUPS } from "@/lib/consts/categories";
+import CategorySelector, {
+  type CategoryFilterMode,
+} from "@/components/CategorySelector";
+import ColorSelector, {
+  type ColorFilterMode,
+} from "@/components/ColorSelector";
 
 const PRESET_COLORS: { hex: string; name: Record<string, string> }[] = [
   {
@@ -122,9 +128,12 @@ export default function SearchBody({
   query,
   setQuery,
   cats,
-  setCats,
-  selectedColor,
-  onColorChange,
+  excludeCats,
+  onToggleCategory,
+  colors,
+  excludeColors,
+  onToggleColor,
+  onClearColors,
   handleSearchSubmit,
 }: {
   locale: Locale;
@@ -132,25 +141,22 @@ export default function SearchBody({
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
   cats: string[];
-  setCats: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedColor: string;
-  onColorChange: (color: string) => void;
+  excludeCats: string[];
+  onToggleCategory: (id: string) => void;
+  colors: string[];
+  excludeColors: string[];
+  onToggleColor: (hex: string, forceMode?: ColorFilterMode) => void;
+  onClearColors: () => void;
   handleSearchSubmit: () => void;
 }) {
-  // Toggle category
-  function toggleCat(id: string) {
-    const newCats = cats.includes(id)
-      ? cats.filter((c) => c !== id)
-      : [...cats, id];
+  // Tìm màu tùy chỉnh đang được kích hoạt (nếu không nằm trong PRESET_COLORS)
+  const activeCustomColor =
+    [...colors, ...excludeColors].find(
+      (hex) =>
+        !PRESET_COLORS.some((c) => c.hex.toLowerCase() === hex.toLowerCase()),
+    ) || "";
 
-    setCats(newCats);
-  }
-
-  const isCustomColor =
-    Boolean(selectedColor) &&
-    !PRESET_COLORS.some(
-      (c) => c.hex.toLowerCase() === selectedColor.toLowerCase(),
-    );
+  const hasActiveColors = colors.length > 0 || excludeColors.length > 0;
 
   return (
     <form
@@ -200,10 +206,10 @@ export default function SearchBody({
             <span className="w-1 h-1 bg-viet-red mr-2"></span>
             {dict.filter_color || "Lọc theo màu sắc chủ đạo"}
           </h4>
-          {selectedColor && (
+          {hasActiveColors && (
             <button
               type="button"
-              onClick={() => onColorChange("")}
+              onClick={onClearColors}
               className="text-[10px] text-stone-400 hover:text-viet-red transition-colors flex items-center gap-1 font-semibold"
             >
               <span>✕</span>
@@ -214,65 +220,69 @@ export default function SearchBody({
 
         <div className="flex flex-wrap items-center gap-2">
           {PRESET_COLORS.map((c) => {
-            const isSelected =
-              selectedColor.toLowerCase() === c.hex.toLowerCase();
+            const isIncluded = colors.some(
+              (col) => col.toLowerCase() === c.hex.toLowerCase(),
+            );
+            const isExcluded = excludeColors.some(
+              (col) => col.toLowerCase() === c.hex.toLowerCase(),
+            );
+            const mode: ColorFilterMode = isIncluded
+              ? "include"
+              : isExcluded
+              ? "exclude"
+              : "none";
+
             return (
-              <button
+              <ColorSelector
                 key={c.hex}
-                type="button"
-                title={c.name[locale] || c.name.vi}
-                onClick={() => onColorChange(isSelected ? "" : c.hex)}
-                className={`w-6 h-6 rounded-full border transition-all relative flex items-center justify-center ${
-                  isSelected
-                    ? "scale-110 border-viet-red ring-2 ring-viet-red/50 shadow"
-                    : "border-stone-300 dark:border-stone-600 hover:scale-105"
-                }`}
-                style={{ backgroundColor: c.hex }}
-              >
-                {isSelected && (
-                  <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                    ✓
-                  </span>
-                )}
-              </button>
+                hex={c.hex}
+                name={c.name[locale] || c.name.vi}
+                mode={mode}
+                onToggle={onToggleColor}
+                locale={locale}
+                dict={dict}
+              />
             );
           })}
+
+          {/* Custom Color Selector (nếu đã chọn) */}
+          {activeCustomColor && (
+            <ColorSelector
+              hex={activeCustomColor}
+              name={dict.custom_color || "Màu tùy chỉnh"}
+              mode={
+                colors.some(
+                  (col) => col.toLowerCase() === activeCustomColor.toLowerCase(),
+                )
+                  ? "include"
+                  : excludeColors.some(
+                      (col) =>
+                        col.toLowerCase() === activeCustomColor.toLowerCase(),
+                    )
+                  ? "exclude"
+                  : "none"
+              }
+              onToggle={onToggleColor}
+              locale={locale}
+              dict={dict}
+            />
+          )}
 
           {/* Custom Color Picker Button */}
           <label
             title={dict.custom_color || "Chọn màu tùy chỉnh"}
-            className={`w-6 h-6 rounded-full border cursor-pointer flex items-center justify-center relative transition-transform hover:scale-105 ${
-              isCustomColor
-                ? "scale-110 border-viet-red ring-2 ring-viet-red/50 shadow"
-                : "border-dashed border-stone-400 dark:border-stone-500 hover:border-viet-red"
-            }`}
-            style={{
-              backgroundColor: isCustomColor ? selectedColor : undefined,
-            }}
+            className="w-6.5 h-6.5 rounded-full border border-dashed border-stone-400 dark:border-stone-500 hover:border-viet-red cursor-pointer flex items-center justify-center relative transition-transform hover:scale-105"
           >
             <input
               type="color"
-              value={selectedColor || "#b91c1c"}
-              onChange={(e) => onColorChange(e.target.value)}
+              value={activeCustomColor || "#b91c1c"}
+              onChange={(e) => onToggleColor(e.target.value, "include")}
               className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
             />
-            {isCustomColor ? (
-              <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-                ✓
-              </span>
-            ) : (
-              <span className="text-xs text-stone-500 dark:text-stone-400 font-bold leading-none select-none">
-                +
-              </span>
-            )}
-          </label>
-
-          {/* Active color label */}
-          {selectedColor && (
-            <span className="text-[11px] font-mono font-medium text-stone-500 dark:text-stone-400 ml-1">
-              {selectedColor.toUpperCase()}
+            <span className="text-xs text-stone-500 dark:text-stone-400 font-bold leading-none select-none">
+              +
             </span>
-          )}
+          </label>
         </div>
       </div>
 
@@ -284,25 +294,26 @@ export default function SearchBody({
               <span className="w-1 h-1 bg-viet-red mr-2"></span>
               {group.title[locale] || group.title.en || group.title.vi}
             </h4>
-            <div className="grid grid-cols-1 gap-1 pr-2">
-              {group.options.map((opt) => (
-                <label
-                  key={opt.id}
-                  className="flex items-center space-x-2 cursor-pointer group py-0.5"
-                >
-                  <input
-                    type="checkbox"
-                    checked={cats.includes(opt.id)}
-                    onChange={() => toggleCat(opt.id)}
-                    className="w-3.5 h-3.5 border border-stone-300 dark:border-stone-600 rounded-sm text-viet-red focus:ring-viet-red cursor-pointer bg-white dark:bg-stone-800 transition-all"
+            <div className="grid grid-cols-1 gap-0.5 pr-2">
+              {group.options.map((opt) => {
+                const mode: CategoryFilterMode = cats.includes(opt.id)
+                  ? "include"
+                  : excludeCats.includes(opt.id)
+                  ? "exclude"
+                  : "none";
+
+                return (
+                  <CategorySelector
+                    key={opt.id}
+                    id={opt.id}
+                    label={opt.name[locale] || opt.name.en || opt.name.vi}
+                    mode={mode}
+                    onToggle={onToggleCategory}
+                    locale={locale}
+                    dict={dict}
                   />
-                  <span
-                    className={`text-xs transition-colors font-medium ${cats.includes(opt.id) ? "text-viet-red font-extrabold" : "text-stone-600 dark:text-stone-400 group-hover:text-stone-900 dark:group-hover:text-stone-100"}`}
-                  >
-                    {opt.name[locale] || opt.name.en || opt.name.vi}
-                  </span>
-                </label>
-              ))}
+                );
+              })}
             </div>
           </div>
         ))}

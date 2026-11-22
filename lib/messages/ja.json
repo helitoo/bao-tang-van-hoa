@@ -85,5 +85,8 @@
   "nav_badge": "マイバッジ",
   "badge_desc": "展示品を1つ見るごとに1ポイントGET！一定のポイントが貯まると、素敵なバッジがもらえます。ポイントはシステムで自動計算されますが、どのタイミングでもらえるかは秘密です。今はただ、展示品をじっくり楽しんでくださいね、へへっ！",
   "new_badge_cong": "Congratulations! You've earned the ",
-  "not_found_badge": "まだバッジを獲得していません。引き続き館内を探索してみましょう！"
+  "not_found_badge": "まだバッジを獲得していません。引き続き館内を探索してみましょう！",
+  "filter_state_none": "未選択",
+  "filter_state_include": "含む",
+  "filter_state_exclude": "除外"
 }

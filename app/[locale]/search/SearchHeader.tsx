@@ -9,16 +9,22 @@ export default function SearchHeader({
   dict,
   showFilters,
   setShowFilters,
+  onResetFilters,
 }: {
   locale: Locale;
   dict: any;
   showFilters: boolean;
   setShowFilters: React.Dispatch<React.SetStateAction<boolean>>;
+  onResetFilters?: () => void;
 }) {
   const router = useRouter();
 
   function handleResetFilters() {
-    router.push(`/${locale}/search/`);
+    if (onResetFilters) {
+      onResetFilters();
+    } else {
+      router.push(`/${locale}/search/`);
+    }
   }
 
   return (

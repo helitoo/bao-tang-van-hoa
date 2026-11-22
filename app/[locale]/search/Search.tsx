@@ -17,20 +17,36 @@ export default function Search({
   dict,
   initQuery,
   initCats,
+  initExcludeCats = [],
+  initColors = [],
+  initExcludeColors = [],
   initColor = "",
 }: {
   locale: Locale;
   dict: any;
   initQuery: string;
   initCats: string[];
+  initExcludeCats?: string[];
+  initColors?: string[];
+  initExcludeColors?: string[];
   initColor?: string;
 }) {
   const router = useRouter();
 
+  // Khởi tạo colors từ initColors hoặc fallback initColor
+  const parsedInitColors =
+    initColors.length > 0
+      ? initColors
+      : initColor
+      ? [initColor]
+      : [];
+
   // Filters state
   const [query, setQuery] = useState<string>(initQuery);
   const [cats, setCats] = useState<string[]>(initCats);
-  const [selectedColor, setSelectedColor] = useState<string>(initColor);
+  const [excludeCats, setExcludeCats] = useState<string[]>(initExcludeCats);
+  const [colors, setColors] = useState<string[]>(parsedInitColors);
+  const [excludeColors, setExcludeColors] = useState<string[]>(initExcludeColors);
 
   // Hide / Show search panel
   const [showFilters, setShowFilters] = useState(true);
@@ -42,52 +58,153 @@ export default function Search({
   >(artifacts);
 
   // Helper để đồng bộ URL tìm kiếm
-  function syncUrl(q: string, c: string[], col: string) {
+  function syncUrl(
+    q: string,
+    c: string[],
+    exc: string[],
+    cols: string[],
+    excCols: string[],
+  ) {
     const search = new URLSearchParams();
     if (q.trim()) search.set("query", q.trim());
     c.filter(Boolean).forEach((cat) => search.append("cats", cat));
-    if (col.trim()) search.set("color", col.trim());
+    exc.filter(Boolean).forEach((cat) => search.append("excludeCats", cat));
+    cols.filter(Boolean).forEach((col) => search.append("colors", col));
+    excCols.filter(Boolean).forEach((col) => search.append("excludeColors", col));
 
     const urlStr = search.toString() ? `?${search.toString()}` : `/${locale}/search`;
     router.replace(urlStr, { scroll: false });
   }
 
+  // Toggle category mode: none -> include -> exclude -> none -> include
+  function handleToggleCategory(id: string) {
+    if (cats.includes(id)) {
+      // include -> exclude
+      setCats((prev) => prev.filter((c) => c !== id));
+      setExcludeCats((prev) => [...prev.filter((c) => c !== id), id]);
+    } else if (excludeCats.includes(id)) {
+      // exclude -> none
+      setExcludeCats((prev) => prev.filter((c) => c !== id));
+    } else {
+      // none -> include
+      setCats((prev) => [...prev.filter((c) => c !== id), id]);
+    }
+  }
+
+  // Toggle color mode: none -> include -> exclude -> none -> include
+  function handleToggleColor(
+    hex: string,
+    forceMode?: "include" | "exclude" | "none",
+  ) {
+    const normalized = hex.toLowerCase();
+    const isIncluded = colors.some((c) => c.toLowerCase() === normalized);
+    const isExcluded = excludeColors.some((c) => c.toLowerCase() === normalized);
+
+    if (forceMode === "include") {
+      setExcludeColors((prev) =>
+        prev.filter((c) => c.toLowerCase() !== normalized),
+      );
+      if (!isIncluded) {
+        setColors((prev) => [
+          ...prev.filter((c) => c.toLowerCase() !== normalized),
+          hex,
+        ]);
+      }
+      return;
+    }
+
+    if (isIncluded) {
+      // include -> exclude
+      setColors((prev) => prev.filter((c) => c.toLowerCase() !== normalized));
+      setExcludeColors((prev) => [
+        ...prev.filter((c) => c.toLowerCase() !== normalized),
+        hex,
+      ]);
+    } else if (isExcluded) {
+      // exclude -> none
+      setExcludeColors((prev) =>
+        prev.filter((c) => c.toLowerCase() !== normalized),
+      );
+    } else {
+      // none -> include
+      setColors((prev) => [
+        ...prev.filter((c) => c.toLowerCase() !== normalized),
+        hex,
+      ]);
+    }
+  }
+
+  function handleClearColors() {
+    setColors([]);
+    setExcludeColors([]);
+  }
+
+  // Reset filters
+  function handleResetFilters() {
+    setQuery("");
+    setCats([]);
+    setExcludeCats([]);
+    setColors([]);
+    setExcludeColors([]);
+    syncUrl("", [], [], [], []);
+  }
+
   // Cờ nhận diện lần render đầu tiên
   const isFirstRender = useRef(true);
 
-  // Tự động lọc danh sách với debounce nhẹ (250ms) khi bất kỳ filter nào thay đổi (query, cats, color)
+  // Tự động lọc danh sách với debounce nhẹ (250ms) khi bất kỳ filter nào thay đổi
   useEffect(() => {
     if (!artifacts) return;
 
     if (isFirstRender.current) {
       isFirstRender.current = false;
       setFilteredArtifacts(
-        getFilteredArtifacts(query, cats, artifacts, locale, selectedColor),
+        getFilteredArtifacts(
+          query,
+          cats,
+          artifacts,
+          locale,
+          colors,
+          excludeCats,
+          excludeColors,
+        ),
       );
       return;
     }
 
     const timer = setTimeout(() => {
       setFilteredArtifacts(
-        getFilteredArtifacts(query, cats, artifacts, locale, selectedColor),
+        getFilteredArtifacts(
+          query,
+          cats,
+          artifacts,
+          locale,
+          colors,
+          excludeCats,
+          excludeColors,
+        ),
       );
-      syncUrl(query, cats, selectedColor);
+      syncUrl(query, cats, excludeCats, colors, excludeColors);
     }, 250);
 
     return () => clearTimeout(timer);
-  }, [query, cats, selectedColor, artifacts, locale]);
+  }, [query, cats, excludeCats, colors, excludeColors, artifacts, locale]);
 
-  // Xử lý khi nhấn nút "Tìm kiếm ngay" hoặc nhấn Enter (cập nhật ngay lập tức không cần chờ debounce)
+  // Xử lý khi nhấn nút "Tìm kiếm ngay" hoặc nhấn Enter
   function handleSearchSubmit() {
     if (!artifacts) return;
-    syncUrl(query, cats, selectedColor);
+    syncUrl(query, cats, excludeCats, colors, excludeColors);
     setFilteredArtifacts(
-      getFilteredArtifacts(query, cats, artifacts, locale, selectedColor),
+      getFilteredArtifacts(
+        query,
+        cats,
+        artifacts,
+        locale,
+        colors,
+        excludeCats,
+        excludeColors,
+      ),
     );
-  }
-
-  function handleColorChange(newColor: string) {
-    setSelectedColor(newColor);
   }
 
   return (
@@ -99,6 +216,7 @@ export default function Search({
           dict={dict}
           showFilters={showFilters}
           setShowFilters={setShowFilters}
+          onResetFilters={handleResetFilters}
         />
 
         {/* Animated Filter Body */}
@@ -117,9 +235,12 @@ export default function Search({
                 query={query}
                 setQuery={setQuery}
                 cats={cats}
-                setCats={setCats}
-                selectedColor={selectedColor}
-                onColorChange={handleColorChange}
+                excludeCats={excludeCats}
+                onToggleCategory={handleToggleCategory}
+                colors={colors}
+                excludeColors={excludeColors}
+                onToggleColor={handleToggleColor}
+                onClearColors={handleClearColors}
                 handleSearchSubmit={handleSearchSubmit}
               />
             </motion.div>

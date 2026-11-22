@@ -86,5 +86,8 @@
   "nav_badge": "내 배지",
   "badge_desc": "작품을 하나 볼 때마다 1점씩 적립돼요! 일정 점수가 모이면 그에 맞는 멋진 배지를 받을 수 있습니다. 모든 계산은 시스템이 자동으로 해주지만, 목표 점수는 비밀이에요! 그냥 편하게 작품들을 감상해 보세요, 헤헤!",
   "new_badge_cong": "Congratulations! You've earned the ",
-  "not_found_badge": "아직 획득한 배지가 없어요. 박물관을 좀 더 탐험해 보세요!"
+  "not_found_badge": "아직 획득한 배지가 없어요. 박물관을 좀 더 탐험해 보세요!",
+  "filter_state_none": "선택 안 함",
+  "filter_state_include": "포함",
+  "filter_state_exclude": "제외"
 }

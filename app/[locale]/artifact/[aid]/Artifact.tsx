@@ -201,7 +201,6 @@ export default function Artifact({
 
   return (
     <>
-      <ToastContainer />
       {notFound ? (
         <div className="mt-25 flex items-center justify-center">
           <div className="flex flex-col items-center">

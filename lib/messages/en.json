@@ -85,5 +85,8 @@
   "nav_badge": "My Badges",
   "badge_desc": "Every time you view an artifact, you'll earn 1 point! Once you reach certain milestones, you'll unlock a special badge. The system handles all the math automatically, but the exact milestones are a secret—so just keep exploring and enjoying the artifacts, hehe!",
   "new_badge_cong": "Congratulations! You've earned the ",
-  "not_found_badge": "No badges yet! Continue your museum journey to earn your first one."
+  "not_found_badge": "No badges yet! Continue your museum journey to earn your first one.",
+  "filter_state_none": "Unselected",
+  "filter_state_include": "Include",
+  "filter_state_exclude": "Exclude"
 }
