@@ -159,14 +159,38 @@ export default function Artifact({
   };
 
   // Share artifact handler
-
   const [copySuccess, setCopySuccess] = useState(false);
 
-  const shareArtifact = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
-    });
+  const copyToClipboard = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      });
+    }
+  };
+
+  const shareArtifact = async () => {
+    const shareData = {
+      title: artifact?.name
+        ? `${artifact.name} | ${dict.museum_name || "Bảo tàng Văn hóa Việt Nam"}`
+        : document.title,
+      text: artifact?.short_description || artifact?.description || "",
+      url: window.location.href,
+    };
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err: any) {
+        // Nếu người dùng không chủ động bấm Hủy (AbortError), fallback sao chép link
+        if (err?.name !== "AbortError") {
+          copyToClipboard();
+        }
+      }
+    } else {
+      copyToClipboard();
+    }
   };
 
   // Popup window state
