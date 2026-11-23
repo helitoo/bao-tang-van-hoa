@@ -1,5 +1,3 @@
-"use client";
-
 import type { Artifact } from "@/contexts/artifact";
 import type { Locale } from "@/lib/lang";
 import { CATEGORY_GROUPS, getCategoryNames } from "@/lib/consts/categories";

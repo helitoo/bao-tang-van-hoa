@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 import type { Locale } from "@/lib/lang";
@@ -34,22 +34,30 @@ export default function SearchResult({
   locale,
   dict,
   filteredArtifacts,
+  currentPage,
+  onPageChange,
 }: {
   locale: Locale;
   dict: any;
   filteredArtifacts: Artifact[] | undefined;
+  currentPage: number;
+  onPageChange: (page: number) => void;
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const totalPages = filteredArtifacts
     ? Math.ceil(filteredArtifacts.length / ITEMS_PER_PAGE)
     : 0;
 
+  const activePage =
+    totalPages > 0
+      ? Math.min(Math.max(1, currentPage), totalPages)
+      : Math.max(1, currentPage);
+
   const paginatedArtifacts = filteredArtifacts
     ? filteredArtifacts.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        currentPage * ITEMS_PER_PAGE,
+        (activePage - 1) * ITEMS_PER_PAGE,
+        activePage * ITEMS_PER_PAGE,
       )
     : [];
 
@@ -59,8 +67,8 @@ export default function SearchResult({
       for (let i = 1; i <= totalPages; i++) p.push(i);
       return p;
     }
-    let start = currentPage - 1;
-    let end = currentPage + 1;
+    let start = activePage - 1;
+    let end = activePage + 1;
     if (start < 1) {
       start = 1;
       end = 3;
@@ -77,8 +85,8 @@ export default function SearchResult({
 
   // Chuyển trang khi người dùng chủ động bấm phân trang: đổi trang & cuộn mượt đến đầu kết quả
   const handlePageChange = (page: number) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+    if (page < 1 || (totalPages > 0 && page > totalPages)) return;
+    onPageChange(page);
 
     if (resultsRef.current) {
       resultsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -86,11 +94,6 @@ export default function SearchResult({
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
-
-  // Khi bộ lọc/từ khóa thay đổi: CHỈ reset trang về 1 trong yên lặng, TUYỆT ĐỐI KHÔNG cuộn trang
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filteredArtifacts]);
 
   if (!filteredArtifacts) return <></>;
 
@@ -104,7 +107,7 @@ export default function SearchResult({
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={currentPage}
+          key={activePage}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -123,7 +126,7 @@ export default function SearchResult({
         <div className="mt-12 flex justify-center items-center space-x-1">
           <button
             onClick={() => handlePageChange(1)}
-            disabled={currentPage === 1}
+            disabled={activePage === 1}
             className="btn size-8 border font-extrabold text-[10px] bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             title="First Page"
           >
@@ -147,7 +150,7 @@ export default function SearchResult({
                 key={pageNum}
                 onClick={() => handlePageChange(pageNum)}
                 className={`btn size-8 border font-extrabold text-[10px] transition-colors ${
-                  currentPage === pageNum
+                  activePage === pageNum
                     ? "bg-viet-red text-white border-viet-red"
                     : "bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700"
                 }`}
@@ -159,7 +162,7 @@ export default function SearchResult({
 
           <button
             onClick={() => handlePageChange(totalPages)}
-            disabled={currentPage === totalPages}
+            disabled={activePage === totalPages}
             className="btn size-8 border font-extrabold text-[10px] bg-white dark:bg-stone-800 text-stone-600 dark:text-stone-400 border-stone-200 dark:border-stone-700 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
             title="Last Page"
           >

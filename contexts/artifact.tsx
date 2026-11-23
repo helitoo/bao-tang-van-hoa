@@ -11,6 +11,8 @@ export type Artifact = {
   categories: string[];
   main_image: string;
   supporting_images?: string[];
+  sources?: string[];
+  source_url?: string;
   author: string;
   contributor: string;
   artifact_date: string;
@@ -34,7 +36,17 @@ export function ArtifactProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       const data = await fetchArtifacts();
-      setArtifacts(data);
+      const validArtifacts = data?.filter(
+        (item) =>
+          Boolean(item.id && String(item.id).trim()) &&
+          Boolean(item.name && String(item.name).trim()) &&
+          Boolean(
+            (item.main_image && String(item.main_image).trim()) ||
+              ((item as any)["main image"] &&
+                String((item as any)["main image"]).trim()),
+          ),
+      );
+      setArtifacts(validArtifacts);
     })();
   }, []);
 

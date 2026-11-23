@@ -4,9 +4,18 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: "*",
-        allow: "/",
-        disallow: ["/*/saved", "/api/"],
+        userAgent: [
+          "*",
+          "GPTBot",
+          "ChatGPT-User",
+          "ClaudeBot",
+          "PerplexityBot",
+          "Google-Extended",
+          "Googlebot",
+          "Bingbot",
+        ],
+        allow: ["/", "/api/artifacts", "/llms.txt", "/llms-full.txt"],
+        disallow: ["/*/saved"],
       },
       {
         userAgent: "Googlebot-Image",

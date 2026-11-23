@@ -21,7 +21,17 @@ export async function fetchArtifacts(): Promise<Artifact[] | undefined> {
     if (text.includes("<!DOCTYPE html>"))
       throw new Error("Invalid CSV (Access Denied)");
 
-    return parseCSV(text);
+    const parsed = parseCSV(text);
+    return parsed.filter(
+      (item) =>
+        Boolean(item.id && String(item.id).trim()) &&
+        Boolean(item.name && String(item.name).trim()) &&
+        Boolean(
+          (item.main_image && String(item.main_image).trim()) ||
+            ((item as any)["main image"] &&
+              String((item as any)["main image"]).trim()),
+        ),
+    );
   } catch (err: any) {
     return undefined;
   }

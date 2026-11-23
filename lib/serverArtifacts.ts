@@ -82,8 +82,32 @@ export function parseCSV(text: string): Artifact[] {
       } else artifact[header] = value;
     });
 
-    if (!artifact.id || !artifact.main_image || !artifact.categories?.length)
+    const id = (artifact.id || "").toString().trim();
+    const name = (artifact.name || "").toString().trim();
+    const mainImage = (
+      artifact.main_image ||
+      artifact["main image"] ||
+      ""
+    )
+      .toString()
+      .trim();
+
+    if (!id || !name || !mainImage || !artifact.categories?.length)
       continue;
+
+    artifact.id = id;
+    artifact.name = name;
+    artifact.main_image = mainImage;
+
+    const sourcesList = [
+      ...(artifact.sources || []),
+      ...(artifact.supporting_images || []),
+    ].filter((s) => s.startsWith("http://") || s.startsWith("https://"));
+    if (sourcesList.length > 0) {
+      artifact.sources = Array.from(new Set(sourcesList));
+      artifact.source_url = artifact.sources[0];
+    }
+
     results.push(artifact as Artifact);
   }
   return results;

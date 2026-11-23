@@ -112,6 +112,12 @@ export default async function Page({
     ],
   };
 
+  const sourceUrls = [
+    ...(artifact?.sources || []),
+    ...(artifact?.supporting_images || []),
+  ].filter((s) => s.startsWith("http://") || s.startsWith("https://"));
+  const primarySourceUrl = artifact?.source_url || sourceUrls[0];
+
   const artworkSchema = artifact
     ? {
         "@context": "https://schema.org",
@@ -130,6 +136,8 @@ export default async function Page({
         },
         genre: artifact.categories?.join(", "),
         inLanguage: locale,
+        ...(primarySourceUrl ? { isBasedOn: primarySourceUrl } : {}),
+        ...(sourceUrls.length > 0 ? { sameAs: sourceUrls } : {}),
       }
     : null;
 

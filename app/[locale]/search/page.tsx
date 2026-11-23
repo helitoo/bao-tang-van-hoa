@@ -1,5 +1,7 @@
 import { getLangDict, Locale } from "@/lib/lang";
 import Search from "@/app/[locale]/search/Search";
+import { fetchArtifactsServer } from "@/lib/serverArtifacts";
+import { getFilteredArtifacts } from "@/app/[locale]/search/getFilteredArtifacts";
 
 export default async function Page({
   params,
@@ -13,6 +15,7 @@ export default async function Page({
     color?: string | string[];
     colors?: string | string[];
     excludeColors?: string | string[];
+    page?: string | string[];
   }>;
 }) {
   // Get locale
@@ -21,6 +24,10 @@ export default async function Page({
 
   // Get query params
   const sp = await searchParams;
+
+  const rawPage = Array.isArray(sp.page) ? sp.page[0] : sp.page;
+  const parsedPage = rawPage ? parseInt(rawPage, 10) : 1;
+  const page = !isNaN(parsedPage) && parsedPage > 0 ? parsedPage : 1;
 
   const query = sp.query ?? "";
   const rawCats = Array.isArray(sp.cats) ? sp.cats : sp.cats ? [sp.cats] : [];
@@ -64,6 +71,18 @@ export default async function Page({
     }
   });
 
+  // Server-side prefetch artifacts for instant SSR and search engine / AI agent crawlers
+  const allArtifacts = await fetchArtifactsServer();
+  const initialFilteredArtifacts = getFilteredArtifacts(
+    query,
+    cats,
+    allArtifacts,
+    locale as Locale,
+    colors,
+    excludeCats,
+    excludeColors,
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 lg:py-12 flex flex-col gap-8">
       <Search
@@ -74,6 +93,9 @@ export default async function Page({
         initExcludeCats={excludeCats}
         initColors={colors}
         initExcludeColors={excludeColors}
+        initPage={page}
+        initialArtifacts={allArtifacts}
+        initialFilteredArtifacts={initialFilteredArtifacts}
       />
       <style>{`.custom-scrollbar::-webkit-scrollbar { width: 3px; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 2px; } .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #44403c; }`}</style>
     </div>
