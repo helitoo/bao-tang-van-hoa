@@ -42,11 +42,27 @@ export function parseCSV(text: string): Artifact[] {
 
   if (rows.length < 2) return [];
 
-  const headers = rows[0].map((h) => h.trim());
+  const rawHeaders = rows[0].map((h) => h.trim());
+  const isMerged = rawHeaders.length > 0 && rawHeaders[0].startsWith("id ");
+  let headers: string[];
+  let dataRows: string[][];
+
+  if (isMerged) {
+    headers = rawHeaders.map((h) => h.split(/\s+/)[0]);
+    const extractedRow = rawHeaders.map((h) => {
+      const spaceIdx = h.indexOf(" ");
+      return spaceIdx !== -1 ? h.slice(spaceIdx + 1).trim() : "";
+    });
+    dataRows = [extractedRow, ...rows.slice(1)];
+  } else {
+    headers = rawHeaders;
+    dataRows = rows.slice(1);
+  }
+
   const results: Artifact[] = [];
 
-  for (let i = 1; i < rows.length; i++) {
-    const data = rows[i];
+  for (let i = 0; i < dataRows.length; i++) {
+    const data = dataRows[i];
     if (data.length < headers.length) continue;
     const artifact: any = {};
     headers.forEach((header, index) => {
@@ -94,7 +110,7 @@ export async function fetchArtifactsServer(): Promise<Artifact[]> {
 
   pendingPromise = (async () => {
     try {
-      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}&range=${SHEET_RANGE}`;
+      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}&range=${SHEET_RANGE}&headers=1`;
       const response = await fetch(url, {
         next: { revalidate: 3600 },
       });
