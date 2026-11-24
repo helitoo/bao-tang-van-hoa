@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       Math.max(1, parseInt(searchParams.get("limit") || "20", 10) || 20),
     );
 
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
     const allArtifacts = await fetchArtifactsServer();
     const filtered = getFilteredArtifacts(query, cats, allArtifacts, locale);
 
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
         location: item.location || "",
         author: item.author || "",
         main_image: item.main_image || "",
-        url: `https://btvh.vercel.app/${locale}/artifact/${item.id}`,
+        url: `${baseUrl}/${locale}/artifact/${item.id}`,
         source_url: sourceUrl,
         sources: sources.length > 0 ? sources : undefined,
       };

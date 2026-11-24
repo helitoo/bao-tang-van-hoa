@@ -9,22 +9,25 @@ export async function generateMetadata({
   const { locale } = await params;
   const dict = await getLangDict(locale);
 
-  const languageAlternates: Record<string, string> = {};
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
+  const languageAlternates: Record<string, string> = {
+    "x-default": `${baseUrl}/vi/timeline`,
+  };
   locales.forEach((l) => {
-    languageAlternates[l] = `https://btvh.vercel.app/${l}/timeline`;
+    languageAlternates[l] = `${baseUrl}/${l}/timeline`;
   });
 
   return {
     title: dict.timeline_title || dict.nav_timeline,
     description: "Sơ đồ niên biểu tham quan lịch sử Việt Nam qua các triều đại dựng nước, giữ nước và các mốc thời kỳ lịch sử tiêu biểu.",
     alternates: {
-      canonical: `https://btvh.vercel.app/${locale}/timeline`,
+      canonical: `${baseUrl}/${locale}/timeline`,
       languages: languageAlternates,
     },
     openGraph: {
       title: `${dict.timeline_title || dict.nav_timeline} | ${dict.museum_name}`,
       description: "Sơ đồ niên biểu lịch sử Việt Nam qua các thời kỳ.",
-      url: `https://btvh.vercel.app/${locale}/timeline`,
+      url: `${baseUrl}/${locale}/timeline`,
     },
   };
 }

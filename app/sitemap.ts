@@ -3,7 +3,7 @@ import { locales } from "@/lib/lang";
 import { fetchArtifactsServer } from "@/lib/serverArtifacts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://btvh.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
   const staticRoutes = [
     "",
     "/search",
@@ -16,14 +16,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const entries: MetadataRoute.Sitemap = [];
 
-  // Static routes across all 6 locales
+  // Static routes across all 6 locales with full x-default and hreflang alternates
   for (const route of staticRoutes) {
+    const alternatesLanguages: Record<string, string> = {
+      "x-default": `${baseUrl}/vi${route}`,
+    };
+    for (const l of locales) {
+      alternatesLanguages[l] = `${baseUrl}/${l}${route}`;
+    }
+
     for (const locale of locales) {
       entries.push({
         url: `${baseUrl}/${locale}${route}`,
         lastModified: new Date(),
         changeFrequency: route === "" ? "daily" : "weekly",
         priority: route === "" ? 1.0 : 0.8,
+        alternates: {
+          languages: alternatesLanguages,
+        },
       });
     }
   }
@@ -41,12 +51,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }
       }
 
+      const artifactAlternates: Record<string, string> = {
+        "x-default": `${baseUrl}/vi/artifact/${artifact.id}`,
+      };
+      for (const l of locales) {
+        artifactAlternates[l] = `${baseUrl}/${l}/artifact/${artifact.id}`;
+      }
+
       for (const locale of locales) {
         entries.push({
           url: `${baseUrl}/${locale}/artifact/${artifact.id}`,
           lastModified: lastMod,
           changeFrequency: "monthly",
           priority: 0.7,
+          alternates: {
+            languages: artifactAlternates,
+          },
         });
       }
     }

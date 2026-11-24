@@ -29,15 +29,16 @@ export async function generateMetadata({
   const { locale } = await params;
   const dict = await getLangDict(locale);
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
   const languageAlternates: Record<string, string> = {
-    "x-default": "https://btvh.vercel.app/vi",
+    "x-default": `${baseUrl}/vi`,
   };
   locales.forEach((l) => {
-    languageAlternates[l] = `https://btvh.vercel.app/${l}`;
+    languageAlternates[l] = `${baseUrl}/${l}`;
   });
 
   return {
-    metadataBase: new URL("https://btvh.vercel.app"),
+    metadataBase: new URL(baseUrl),
     title: {
       default: dict.museum_name,
       template: `%s | ${dict.museum_name}`,
@@ -57,6 +58,9 @@ export async function generateMetadata({
       "Lịch sử Việt Nam",
       "Bảo vật quốc gia",
     ],
+    verification: {
+      google: "googleebf997dcf426483e",
+    },
     robots: {
       index: true,
       follow: true,
@@ -69,19 +73,19 @@ export async function generateMetadata({
       },
     },
     alternates: {
-      canonical: `https://btvh.vercel.app/${locale}`,
+      canonical: `${baseUrl}/${locale}`,
       languages: languageAlternates,
     },
     openGraph: {
       title: dict.museum_name,
       description: dict.footer_desc,
-      url: `https://btvh.vercel.app/${locale}`,
+      url: `${baseUrl}/${locale}`,
       siteName: dict.museum_name,
       locale: locale === "vi" ? "vi_VN" : locale,
       type: "website",
       images: [
         {
-          url: "https://btvh.vercel.app/background.webp",
+          url: `${baseUrl}/background.webp`,
           width: 1200,
           height: 630,
           alt: dict.museum_name,
@@ -92,7 +96,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: dict.museum_name,
       description: dict.footer_desc,
-      images: ["https://btvh.vercel.app/background.webp"],
+      images: [`${baseUrl}/background.webp`],
     },
   };
 }
@@ -112,17 +116,18 @@ export default async function Layout({
   }
 
   const dict = await getLangDict(locale);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
 
   // Dynamic Schemas
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: dict.museum_name,
-    url: `https://btvh.vercel.app/${locale}`,
+    url: `${baseUrl}/${locale}`,
     inLanguage: locale,
     potentialAction: {
       "@type": "SearchAction",
-      target: `https://btvh.vercel.app/${locale}/search?query={search_term_string}`,
+      target: `${baseUrl}/${locale}/search?query={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
@@ -132,9 +137,9 @@ export default async function Layout({
     "@type": "Museum",
     name: dict.museum_name,
     alternateName: dict.museum_sub,
-    url: `https://btvh.vercel.app/${locale}`,
-    logo: "https://btvh.vercel.app/icon.png",
-    image: "https://btvh.vercel.app/background.webp",
+    url: `${baseUrl}/${locale}`,
+    logo: `${baseUrl}/icon.png`,
+    image: `${baseUrl}/background.webp`,
     description: dict.mission_desc || dict.footer_desc,
     contactPoint: {
       "@type": "ContactPoint",

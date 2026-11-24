@@ -30,9 +30,12 @@ export async function generateMetadata({
     dict.footer_desc;
   const imageUrl = getImgUrl(artifact.main_image, 1200);
 
-  const languageAlternates: Record<string, string> = {};
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
+  const languageAlternates: Record<string, string> = {
+    "x-default": `${baseUrl}/vi/artifact/${aid}`,
+  };
   locales.forEach((l) => {
-    languageAlternates[l] = `https://btvh.vercel.app/${l}/artifact/${aid}`;
+    languageAlternates[l] = `${baseUrl}/${l}/artifact/${aid}`;
   });
 
   return {
@@ -50,13 +53,13 @@ export async function generateMetadata({
       "cổ vật Việt Nam",
     ].filter(Boolean) as string[],
     alternates: {
-      canonical: `https://btvh.vercel.app/${locale}/artifact/${aid}`,
+      canonical: `${baseUrl}/${locale}/artifact/${aid}`,
       languages: languageAlternates,
     },
     openGraph: {
       title: `${title} | ${dict.museum_name}`,
       description,
-      url: `https://btvh.vercel.app/${locale}/artifact/${aid}`,
+      url: `${baseUrl}/${locale}/artifact/${aid}`,
       siteName: dict.museum_name,
       images: [
         {
@@ -88,6 +91,8 @@ export default async function Page({
     getArtifactByIdServer(aid),
   ]);
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
+
   // Schema.org Structured Data: VisualArtwork & BreadcrumbList
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -97,19 +102,19 @@ export default async function Page({
         "@type": "ListItem",
         position: 1,
         name: dict.nav_home,
-        item: `https://btvh.vercel.app/${locale}`,
+        item: `${baseUrl}/${locale}`,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: dict.nav_search,
-        item: `https://btvh.vercel.app/${locale}/search`,
+        item: `${baseUrl}/${locale}/search`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: artifact ? artifact.name : dict.nav_artifact,
-        item: `https://btvh.vercel.app/${locale}/artifact/${aid}`,
+        item: `${baseUrl}/${locale}/artifact/${aid}`,
       },
     ],
   };

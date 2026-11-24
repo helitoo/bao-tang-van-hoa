@@ -9,22 +9,25 @@ export async function generateMetadata({
   const { locale } = await params;
   const dict = await getLangDict(locale);
 
-  const languageAlternates: Record<string, string> = {};
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
+  const languageAlternates: Record<string, string> = {
+    "x-default": `${baseUrl}/vi/references`,
+  };
   locales.forEach((l) => {
-    languageAlternates[l] = `https://btvh.vercel.app/${l}/references`;
+    languageAlternates[l] = `${baseUrl}/${l}/references`;
   });
 
   return {
     title: dict.nav_references,
     description: "Thư viện tư liệu số, cổ thư, điển tịch, hệ thống bảo tàng và cộng đồng nghiên cứu cổ phong di sản văn hóa Việt Nam.",
     alternates: {
-      canonical: `https://btvh.vercel.app/${locale}/references`,
+      canonical: `${baseUrl}/${locale}/references`,
       languages: languageAlternates,
     },
     openGraph: {
       title: `${dict.nav_references} | ${dict.museum_name}`,
       description: "Thư viện tư liệu, cổ thư và tài liệu tham khảo di sản.",
-      url: `https://btvh.vercel.app/${locale}/references`,
+      url: `${baseUrl}/${locale}/references`,
     },
   };
 }

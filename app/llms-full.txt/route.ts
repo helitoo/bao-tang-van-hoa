@@ -4,10 +4,11 @@ import { getCategoryNames } from "@/lib/consts/categories";
 
 export async function GET() {
   try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
     const artifacts = await fetchArtifactsServer();
 
     let output = `# Danh mục toàn bộ hiện vật - Hàm Anh Các (含英閣 - Ham Anh Cac)
-Website: https://btvh.vercel.app
+Website: ${baseUrl}
 Tổng số hiện vật: ${artifacts.length}
 Cập nhật: ${new Date().toISOString()}
 
@@ -31,7 +32,7 @@ Cập nhật: ${new Date().toISOString()}
       output += `
 ## [${a.id}] ${a.name}
 - **Mã hiện vật (ID):** ${a.id}
-- **URL chi tiết:** https://btvh.vercel.app/vi/artifact/${a.id}${sourceUrl ? `\n- **Nguồn gốc / Bảo tàng gốc:** ${sourceUrl}` : ""}
+- **URL chi tiết:** ${baseUrl}/vi/artifact/${a.id}${sourceUrl ? `\n- **Nguồn gốc / Bảo tàng gốc:** ${sourceUrl}` : ""}
 - **Thời đại / Niên đại:** ${a.artifact_date || "Chưa rõ"}
 - **Địa điểm / Xuất xứ:** ${a.location || "Việt Nam"}
 - **Tác giả / Nghệ nhân:** ${a.author || "Khuyết danh"}
