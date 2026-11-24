@@ -173,7 +173,7 @@ export default function Artifact({
   const shareArtifact = async () => {
     const shareData = {
       title: artifact?.name
-        ? `${artifact.name} | ${dict.museum_name || "Bảo tàng Văn hóa Việt Nam"}`
+        ? `${artifact.name} | ${dict.museum_name || "Hàm Anh Các"}`
         : document.title,
       text: artifact?.short_description || artifact?.description || "",
       url: window.location.href,
@@ -265,7 +265,7 @@ export default function Artifact({
                 >
                   <img
                     src={getImgUrl(artifact.main_image)}
-                    alt={`${artifact.name}${artifact.artifact_date ? ` (${artifact.artifact_date})` : ""} tại ${artifact.location || "Việt Nam"} - Bảo tàng Văn hóa`}
+                    alt={`${artifact.name}${artifact.artifact_date ? ` (${artifact.artifact_date})` : ""} tại ${artifact.location || "Việt Nam"} - Hàm Anh Các`}
                     decoding="async"
                     className="max-w-full max-h-[500px] object-contain cursor-pointer shadow-md rounded-xs"
                     onError={(e) => {

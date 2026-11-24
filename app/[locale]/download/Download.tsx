@@ -197,7 +197,7 @@ export default function Download() {
                   Bảng tính & Thống kê
                 </span>
                 <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-2">
-                  btvh-{maxPublicDate}.csv
+                  ham-anh-cac-{maxPublicDate}.csv
                 </h4>
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 leading-snug">
                   Định dạng CSV chuẩn UTF-8 có BOM, tối ưu cho Excel, Google Sheets, R và Python Pandas.
@@ -211,7 +211,7 @@ export default function Download() {
               whileTap={{ scale: 0.97 }}
               onClick={() =>
                 handleDownloadData(
-                  `btvh-${maxPublicDate}.csv`,
+                  `ham-anh-cac-${maxPublicDate}.csv`,
                   "text/csv;charset=utf-8",
                 )
               }
@@ -247,7 +247,7 @@ export default function Download() {
                   Văn bản & AI Prompt
                 </span>
                 <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-2">
-                  btvh-{maxPublicDate}.txt
+                  ham-anh-cac-{maxPublicDate}.txt
                 </h4>
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 leading-snug">
                   Định dạng văn bản thuần, tối ưu để nạp vào Google NotebookLM, Gemini, Claude và ChatGPT.
@@ -261,7 +261,7 @@ export default function Download() {
               whileTap={{ scale: 0.97 }}
               onClick={() =>
                 handleDownloadData(
-                  `btvh-${maxPublicDate}.txt`,
+                  `ham-anh-cac-${maxPublicDate}.txt`,
                   "text/plain;charset=utf-8",
                 )
               }

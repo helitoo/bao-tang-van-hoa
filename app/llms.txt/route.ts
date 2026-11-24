@@ -10,7 +10,7 @@ export async function GET() {
     return `### ${groupName}\n${items}`;
   }).join("\n\n");
 
-  const markdown = `# Bảo tàng Văn hóa Việt Nam (BTVH)
+  const markdown = `# Hàm Anh Các (含英閣 - Ham Anh Cac)
 
 > Kho lưu trữ số hóa di sản, cổ vật và hiện vật văn hóa lịch sử Việt Nam qua các thời kỳ. Hỗ trợ 6 ngôn ngữ: Tiếng Việt, Tiếng Anh, Tiếng Pháp, Tiếng Trung, Tiếng Nhật, Tiếng Hàn.
 > Website chính thức: https://btvh.vercel.app

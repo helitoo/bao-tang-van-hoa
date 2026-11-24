@@ -24,7 +24,7 @@ export default function Footer({ dict }: { dict: any }) {
           <div className="flex flex-col md:flex-row justify-evenly gap-0.5 mt-2">
             <button className="btn w-auto text-[6px] sm:text-[9px] bg-viet-red text-white px-1 py-0.5 transition-transform duration-300">
               <Link
-                href="mailto:bao162006@gmail.com?subject=%5BBTVH%5D%20B%C3%81O%20C%C3%81O%20N%E1%BB%98I%20DUNG"
+                href="mailto:bao162006@gmail.com?subject=%5BHAC%5D%20B%C3%81O%20C%C3%81O%20N%E1%BB%98I%20DUNG"
                 hrefLang="vi"
                 target="_blank"
                 rel="noopener noreferrer"

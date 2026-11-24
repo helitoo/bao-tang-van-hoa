@@ -44,7 +44,9 @@ export async function generateMetadata({
       artifact.location,
       ...(artifact.categories || []),
       "di sản văn hóa Việt Nam",
-      "bảo tàng văn hóa",
+      "Hàm Anh Các",
+      "Ham Anh Cac",
+      "含英閣",
       "cổ vật Việt Nam",
     ].filter(Boolean) as string[],
     alternates: {

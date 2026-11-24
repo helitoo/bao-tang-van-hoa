@@ -50,7 +50,7 @@ export default function ArtifactCard({
       <div className="overflow-hidden relative bg-stone-100 dark:bg-stone-800 flex items-center justify-center aspect-square">
         <img
           src={getImgUrl(item.main_image, 500)}
-          alt={`${item.name}${item.artifact_date ? ` (${item.artifact_date})` : ""} - Hiện vật Bảo tàng Văn hóa Việt Nam`}
+          alt={`${item.name}${item.artifact_date ? ` (${item.artifact_date})` : ""} - Hiện vật Hàm Anh Các`}
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"

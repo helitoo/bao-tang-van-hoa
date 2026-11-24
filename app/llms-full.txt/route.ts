@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const artifacts = await fetchArtifactsServer();
 
-    let output = `# Danh mục toàn bộ hiện vật - Bảo tàng Văn hóa Việt Nam (BTVH)
+    let output = `# Danh mục toàn bộ hiện vật - Hàm Anh Các (含英閣 - Ham Anh Cac)
 Website: https://btvh.vercel.app
 Tổng số hiện vật: ${artifacts.length}
 Cập nhật: ${new Date().toISOString()}

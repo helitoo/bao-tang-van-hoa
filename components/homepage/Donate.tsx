@@ -38,7 +38,7 @@ export default function Donate() {
           Ngân hàng: <strong>Vietinbank</strong> hoặc ví điện tử:{" "}
           <strong>Momo</strong>, STK: <strong>0785563729</strong>, tên chủ TK:{" "}
           <strong>CAO THÁI BẢO</strong>. Nội dung{" "}
-          <strong>BTVHVN - Donate - Thông điệp của bạn</strong> (nhằm mục đích
+          <strong>HAC - Donate - Thông điệp của bạn</strong> (nhằm mục đích
           thống kê).
         </p>
       </div>
