@@ -172,12 +172,10 @@ export default function SearchBody({
           placeholder={dict.nav_placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearchSubmit()}
           className="w-full bg-white dark:bg-stone-800 border-2 border-stone-200 dark:border-stone-700 rounded-sm px-4 py-1.5 focus:outline-none focus:border-viet-red transition-colors text-sm shadow-sm font-medium"
         />
         <button
-          type="button"
-          onClick={handleSearchSubmit}
+          type="submit"
           className="btn absolute right-3 text-stone-400 hover:text-viet-red flex items-center"
           aria-label="Search"
         >
