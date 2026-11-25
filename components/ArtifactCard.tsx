@@ -72,10 +72,16 @@ export default function ArtifactCard({
         )}
       </div>
       <div className="p-3 flex-1 border-t border-stone-100 dark:border-stone-800 flex flex-col">
-        <h4 className="font-semibold group-hover:text-viet-red dark:text-stone-100 dark:group-hover:text-viet-red transition-colors mb-1 leading-tight line-clamp-2">
+        <h4
+          title={item.name}
+          className="font-semibold group-hover:text-viet-red dark:text-stone-100 dark:group-hover:text-viet-red transition-colors mb-1 leading-tight line-clamp-2"
+        >
           {item.name}
         </h4>
-        <p className="text-stone-500 dark:text-stone-400 text-[9px] leading-relaxed italic opacity-80 font-medium mt-auto line-clamp-2">
+        <p
+          title={item.short_description || item.description || ""}
+          className="text-stone-500 dark:text-stone-400 text-[9px] leading-relaxed italic opacity-80 font-medium mt-auto line-clamp-2"
+        >
           {item.short_description}
         </p>
       </div>

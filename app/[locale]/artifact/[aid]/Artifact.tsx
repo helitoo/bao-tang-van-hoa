@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -40,7 +40,7 @@ export default function Artifact({
   );
   const [notFound, setNotFound] = useState<boolean>(false);
 
-  const { artifacts } = useArtifact();
+  const { artifacts, collections } = useArtifact();
 
   useEffect(() => {
     if (artifact) return;
@@ -55,8 +55,24 @@ export default function Artifact({
     setDriveId(getDriveId(artifact.main_image) || undefined);
   }, [artifact]);
 
-  // Find similar artifacts handler (optimized & non-blocking)
+  // Artifacts in the same collection
+  const sameCollectionArtifacts = useMemo(() => {
+    if (!artifact?.collections?.length || !artifacts?.length) return [];
+    const myColSet = new Set(artifact.collections);
+    const list = artifacts.filter(
+      (a) =>
+        a.id !== artifact.id &&
+        a.collections?.some((cid) => myColSet.has(cid)),
+    );
+    // Rule: Sắp xếp các artifact trong collection theo bảng chữ cái
+    return list.sort((a, b) => a.name.localeCompare(b.name, "vi"));
+  }, [artifact, artifacts]);
 
+  const sameColIdSet = useMemo(() => {
+    return new Set(sameCollectionArtifacts.map((a) => a.id));
+  }, [sameCollectionArtifacts]);
+
+  // Find similar artifacts handler (optimized & non-blocking), excluding same collection items
   const [similarArtifacts, setSimilarArtifacts] = useState<
     Artifact[] | undefined
   >();
@@ -67,7 +83,9 @@ export default function Artifact({
     // Use setTimeout to defer calculation and keep page transition instant
     const timer = setTimeout(() => {
       const targetCats = new Set(artifact.categories || []);
-      const otherArtifacts = artifacts.filter((a) => a.id !== artifact.id);
+      const otherArtifacts = artifacts.filter(
+        (a) => a.id !== artifact.id && !sameColIdSet.has(a.id),
+      );
 
       // Prioritize items that share categories, era, or location
       const scoredCandidates = otherArtifacts.map((a) => {
@@ -115,7 +133,7 @@ export default function Artifact({
     }, 50);
 
     return () => clearTimeout(timer);
-  }, [artifact, artifacts]);
+  }, [artifact, artifacts, sameColIdSet]);
 
   // Render (None) if the value is falsy
 
@@ -338,6 +356,42 @@ export default function Artifact({
                         );
                       })}
                     </div>
+
+                    {/* Collection Tags */}
+                    {artifact.collections && artifact.collections.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {artifact.collections.map((colId) => {
+                          const col = collections?.find((c) => c.id === colId);
+                          const colName =
+                            col?.name ||
+                            `${dict.nav_collection || "Bộ sưu tập"} #${colId}`;
+                          return (
+                            <Link
+                              href={`/${locale}/collection/${colId}`}
+                              key={colId}
+                              className="btn inline-flex items-center gap-1.5 text-[9px] font-extrabold bg-stone-100 dark:bg-stone-800 text-viet-red dark:text-red-400 px-2.5 py-1 border border-red-200 dark:border-red-900/50 hover:bg-viet-red hover:text-white dark:hover:text-white transition-colors rounded-xs shadow-xs"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="11"
+                                height="11"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M12.65 7.65a2 2 0 0 1 2.629-1.046l5.51 2.374a2 2 0 0 1 1.046 2.628l-3.957 9.184a2 2 0 0 1-2.628 1.046l-5.51-2.374a2 2 0 0 1-1.046-2.628z" />
+                                <path d="M18 7.777V4a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2v10a2 2 0 0 0 1.137 1.805" />
+                                <path d="m8 4.389-4.364.809a2 2 0 0 0-1.602 2.33l1.822 9.833a2 2 0 0 0 2.331 1.602l2.542-.47" />
+                              </svg>
+                              <span>{colName}</span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
                     <p className="text-stone-500 dark:text-stone-400 font-medium italic border-l-4 border-viet-red pl-6 py-2 leading-relaxed bg-stone-100/50 dark:bg-stone-800/30">
                       {renderOrPlaceholder(artifact.short_description)}
                     </p>
@@ -465,6 +519,36 @@ export default function Artifact({
               )}
             </div>
           </div>
+
+          {/* Same Collection Section */}
+          {sameCollectionArtifacts.length > 0 && (
+            <div className="pt-16 border-t-2 border-stone-200 dark:border-stone-800 mb-16 w-full">
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-extrabold text-stone-900 dark:text-stone-100 uppercase tracking-tighter">
+                    {dict.artifact_same_collection || "Hiện vật cùng bộ sưu tập"}
+                  </h3>
+                  <span className="text-xs text-stone-500 dark:text-stone-400 font-bold bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded-full">
+                    {sameCollectionArtifacts.length}
+                  </span>
+                </div>
+                {artifact?.collections?.[0] && (
+                  <Link
+                    href={`/${locale}/collection/${artifact.collections[0]}`}
+                    hrefLang={locale}
+                    className="text-[11px] font-extrabold uppercase tracking-widest text-viet-red hover:underline decoration-2 underline-offset-4"
+                  >
+                    {dict.see_all}
+                  </Link>
+                )}
+              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6 w-full">
+                {sameCollectionArtifacts.slice(0, 12).map((item) => (
+                  <ArtifactCard key={item.id} item={item} locale={locale} />
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Suggested Section*/}
           <div className="pt-16 border-t-2 border-stone-200 dark:border-stone-800 mb-16 w-full">

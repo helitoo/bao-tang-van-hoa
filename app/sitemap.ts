@@ -1,11 +1,15 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/lib/lang";
-import { fetchArtifactsServer } from "@/lib/serverArtifacts";
+import {
+  fetchArtifactsServer,
+  getCollectionsWithArtifactsServer,
+} from "@/lib/serverArtifacts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
   const staticRoutes = [
     "",
+    "/collection",
     "/search",
     "/map",
     "/timeline",
@@ -30,12 +34,39 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         url: `${baseUrl}/${locale}${route}`,
         lastModified: new Date(),
         changeFrequency: route === "" ? "daily" : "weekly",
-        priority: route === "" ? 1.0 : 0.8,
+        priority: route === "" ? 1.0 : route === "/collection" ? 0.9 : 0.8,
         alternates: {
           languages: alternatesLanguages,
         },
       });
     }
+  }
+
+  // Dynamic collections
+  try {
+    const collections = await getCollectionsWithArtifactsServer();
+    for (const col of collections) {
+      const colAlternates: Record<string, string> = {
+        "x-default": `${baseUrl}/vi/collection/${col.id}`,
+      };
+      for (const l of locales) {
+        colAlternates[l] = `${baseUrl}/${l}/collection/${col.id}`;
+      }
+
+      for (const locale of locales) {
+        entries.push({
+          url: `${baseUrl}/${locale}/collection/${col.id}`,
+          lastModified: new Date(),
+          changeFrequency: "weekly",
+          priority: 0.8,
+          alternates: {
+            languages: colAlternates,
+          },
+        });
+      }
+    }
+  } catch (err) {
+    console.error("Failed to generate collections sitemap:", err);
   }
 
   // Dynamic artifacts

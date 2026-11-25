@@ -12,7 +12,7 @@ export type Badge = {
   floor: number;
 };
 
-const NORMAL_BADGES: Badge[] = [
+export const NORMAL_BADGES: Badge[] = [
   {
     url: "/badge/nm.png",
     name: "Nhập môn",
@@ -60,7 +60,7 @@ const NORMAL_BADGES: Badge[] = [
   },
 ];
 
-const HACKED_BADGE: Badge = {
+export const HACKED_BADGE: Badge = {
   url: "/badge/h.png",
   name: "Xuất quỷ nhập thần",
   floor: 0,
@@ -113,20 +113,21 @@ function getInfo() {
 }
 
 export function getBadges() {
-  let info = getInfo();
+  const info = getInfo();
 
-  let badges = NORMAL_BADGES.filter(
+  const badges = NORMAL_BADGES.filter(
     (badge) => badge.floor <= info.numOfViewedArtifacts,
   );
 
-  if (
-    badges.length &&
-    Math.max(...badges.map((badge) => badge.floor)) != info.maxBadgeFloor
-  ) {
-    badges.length = 0;
-    info = DEFAULT_INFO;
-    info.hacked = true;
-    localStorage.setItem(BADGE_INFO_KEY, getEncodeInfo(info));
+  // Synchronize maxBadgeFloor if needed
+  if (badges.length > 0) {
+    const currentMaxFloor = Math.max(...badges.map((b) => b.floor));
+    if (info.maxBadgeFloor !== currentMaxFloor) {
+      info.maxBadgeFloor = currentMaxFloor;
+      if (typeof window !== "undefined" && window.localStorage) {
+        localStorage.setItem(BADGE_INFO_KEY, getEncodeInfo(info));
+      }
+    }
   }
 
   if (info.hacked) badges.push(HACKED_BADGE);
@@ -152,18 +153,14 @@ export function setInfo(): Promise<Badge | undefined> {
 
       const maxBadge = getMaxBadge(newInfo);
 
-      if (!maxBadge || newInfo.maxBadgeFloor > maxBadge.floor) {
-        localStorage.setItem(BADGE_INFO_KEY, getEncodeInfo(newInfo));
-        resolve(undefined);
-      } else if (newInfo.maxBadgeFloor < maxBadge.floor) {
+      if (maxBadge && newInfo.maxBadgeFloor < maxBadge.floor) {
         newInfo.maxBadgeFloor = maxBadge.floor;
         localStorage.setItem(BADGE_INFO_KEY, getEncodeInfo(newInfo));
         resolve(maxBadge);
+      } else {
+        localStorage.setItem(BADGE_INFO_KEY, getEncodeInfo(newInfo));
+        resolve(undefined);
       }
-
-      localStorage.setItem(BADGE_INFO_KEY, getEncodeInfo(newInfo));
-      resolve(undefined);
-    }, 5000); // 5s
-    // }, 0);
+    }, 500);
   });
 }

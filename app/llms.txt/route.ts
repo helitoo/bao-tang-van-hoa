@@ -40,7 +40,9 @@ Hàm Anh Các cung cấp đầy đủ các phương thức truy cập và khai p
    - Ví dụ: \`${baseUrl}/vi/artifact/1\`
    - Mỗi trang chi tiết đều cung cấp thẻ dữ liệu có cấu trúc Schema.org (\`VisualArtwork\`, \`BreadcrumbList\`) chuẩn JSON-LD cho công cụ tìm kiếm và AI.
 
-4. **Trang tra cứu & bản đồ:**
+4. **Trang tra cứu, bộ sưu tập & bản đồ:**
+   - Danh sách bộ sưu tập chuyên đề: \`${baseUrl}/vi/collection\`
+   - Chi tiết bộ sưu tập: \`${baseUrl}/vi/collection/{collection_id}\`
    - Tìm kiếm kết hợp bộ lọc: \`${baseUrl}/vi/search?query={keyword}&cats={category_id}&page={page}\`
    - Bản đồ di tích & kiến trúc cổ: \`${baseUrl}/vi/map\`
    - Sơ đồ dòng thời gian lịch sử: \`${baseUrl}/vi/timeline\`

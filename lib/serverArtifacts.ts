@@ -1,4 +1,4 @@
-import type { Artifact } from "@/contexts/artifact";
+import type { Artifact, Collection, CollectionWithArtifacts } from "@/contexts/artifact";
 
 const SPREADSHEET_ID =
   process.env.NEXT_PUBLIC_SPREADSHEET_ID ||
@@ -9,7 +9,7 @@ const SHEET_RANGE = rawRange.endsWith(":M")
   ? rawRange.replace(/:M$/i, ":Z")
   : rawRange;
 
-export function parseCSV(text: string): Artifact[] {
+function parseRawCSVRows(text: string): string[][] {
   const rows: string[][] = [];
   let currentRow: string[] = [];
   let currentField = "";
@@ -39,7 +39,11 @@ export function parseCSV(text: string): Artifact[] {
     currentRow.push(currentField);
     rows.push(currentRow);
   }
+  return rows;
+}
 
+export function parseCSV(text: string): Artifact[] {
+  const rows = parseRawCSVRows(text);
   if (rows.length < 2) return [];
 
   const rawHeaders = rows[0].map((h) => h.trim());
@@ -70,6 +74,11 @@ export function parseCSV(text: string): Artifact[] {
       if (header === "categories") {
         artifact[header] = value
           .split(/[\s,]+/)
+          .filter(Boolean)
+          .map((v) => v.trim());
+      } else if (header === "collections") {
+        artifact[header] = value
+          .split(/\s+/)
           .filter(Boolean)
           .map((v) => v.trim());
       } else if (header === "supporting_images" || header === "sources") {
@@ -109,6 +118,32 @@ export function parseCSV(text: string): Artifact[] {
     }
 
     results.push(artifact as Artifact);
+  }
+  return results;
+}
+
+export function parseCollectionsCSV(text: string): Collection[] {
+  const rows = parseRawCSVRows(text);
+  if (rows.length < 2) return [];
+
+  const headers = rows[0].map((h) => h.trim().toLowerCase());
+  const idIdx = headers.indexOf("id") !== -1 ? headers.indexOf("id") : 0;
+  const nameIdx = headers.indexOf("name") !== -1 ? headers.indexOf("name") : 1;
+  const descIdx = headers.indexOf("description") !== -1 ? headers.indexOf("description") : 2;
+
+  const results: Collection[] = [];
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const id = (row[idIdx] || "").trim();
+    const name = (row[nameIdx] || "").trim();
+    const description = (row[descIdx] || "").trim();
+    if (!id || !name) continue;
+
+    results.push({
+      id,
+      name,
+      description,
+    });
   }
   return results;
 }
@@ -177,4 +212,100 @@ export async function getArtifactByIdServer(
   }
   await fetchArtifactsServer();
   return memoryCache?.map.get(cleanId);
+}
+
+let collectionsCache: {
+  collections: Collection[];
+  timestamp: number;
+} | null = null;
+let pendingCollectionsPromise: Promise<Collection[]> | null = null;
+
+export async function fetchCollectionsServer(): Promise<Collection[]> {
+  const now = Date.now();
+  if (collectionsCache && now - collectionsCache.timestamp < CACHE_TTL) {
+    return collectionsCache.collections;
+  }
+
+  if (pendingCollectionsPromise) {
+    return pendingCollectionsPromise;
+  }
+
+  pendingCollectionsPromise = (async () => {
+    try {
+      const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=collections&range=A1:C&headers=1`;
+      const response = await fetch(url, {
+        next: { revalidate: 3600 },
+      });
+      if (!response.ok) return collectionsCache?.collections || [];
+      const text = await response.text();
+      if (text.includes("<!DOCTYPE html>")) return collectionsCache?.collections || [];
+      const collections = parseCollectionsCSV(text);
+
+      collectionsCache = {
+        collections,
+        timestamp: Date.now(),
+      };
+
+      return collections;
+    } catch (err) {
+      console.error("Error fetching collections on server:", err);
+      return collectionsCache?.collections || [];
+    } finally {
+      pendingCollectionsPromise = null;
+    }
+  })();
+
+  return pendingCollectionsPromise;
+}
+
+export async function getCollectionsWithArtifactsServer(): Promise<CollectionWithArtifacts[]> {
+  const [rawCollections, artifacts] = await Promise.all([
+    fetchCollectionsServer(),
+    fetchArtifactsServer(),
+  ]);
+
+  // Group artifacts by collection id
+  const artifactsByColId = new Map<string, Artifact[]>();
+  for (const a of artifacts) {
+    if (a.collections && Array.isArray(a.collections)) {
+      for (const colId of a.collections) {
+        const cleanColId = String(colId).trim();
+        if (!cleanColId) continue;
+        const list = artifactsByColId.get(cleanColId) || [];
+        list.push(a);
+        artifactsByColId.set(cleanColId, list);
+      }
+    }
+  }
+
+  const result: CollectionWithArtifacts[] = [];
+  for (const col of rawCollections) {
+    const colArtifacts = artifactsByColId.get(col.id) || [];
+    // Rule: Do not display collections without artifacts
+    if (colArtifacts.length === 0) continue;
+
+    // Rule: Sort artifacts in collection alphabetically
+    const sortedArtifacts = [...colArtifacts].sort((a, b) =>
+      a.name.localeCompare(b.name, "vi"),
+    );
+
+    result.push({
+      ...col,
+      artifacts: sortedArtifacts,
+      coverImage: sortedArtifacts[0]?.main_image,
+    });
+  }
+
+  // Rule: Sort collections alphabetically
+  result.sort((a, b) => a.name.localeCompare(b.name, "vi"));
+
+  return result;
+}
+
+export async function getCollectionByIdServer(
+  id: string,
+): Promise<CollectionWithArtifacts | undefined> {
+  const collections = await getCollectionsWithArtifactsServer();
+  const cleanId = String(id).trim();
+  return collections.find((c) => c.id === cleanId);
 }

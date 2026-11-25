@@ -8,6 +8,8 @@ import { FULL_HEADERS } from "@/lib/exportData/dataMetadata";
 import { getCsvContent } from "@/lib/exportData/getCsvContent";
 import { getTxtContent } from "@/lib/exportData/getTxtContent";
 
+import type { Locale } from "@/lib/lang";
+
 const defaultCheckedHeaders: string[] = [
   "id",
   "name",
@@ -19,7 +21,13 @@ const defaultCheckedHeaders: string[] = [
   "location",
 ];
 
-export default function Download() {
+export default function Download({
+  dict,
+  locale,
+}: {
+  dict: any;
+  locale: Locale;
+}) {
   const { artifacts } = useArtifact();
 
   // Checker state
@@ -121,10 +129,10 @@ export default function Download() {
             <div>
               <h3 className="text-sm font-extrabold uppercase tracking-tight text-stone-900 dark:text-stone-100 flex items-center gap-2">
                 <span className="w-2 h-2 bg-viet-red rounded-full"></span>
-                Tùy chọn trường thông tin
+                {dict.download_field_options || "Tùy chọn trường thông tin"}
               </h3>
               <p className="text-[11px] text-stone-500 mt-0.5">
-                Đã chọn {selectedCount} / {FULL_HEADERS.length} trường
+                {dict.download_selected || "Đã chọn"} {selectedCount} / {FULL_HEADERS.length} {dict.download_fields_unit || "trường"}
               </p>
             </div>
             <div className="flex gap-2">
@@ -134,7 +142,7 @@ export default function Download() {
                 onClick={handleSelectAll}
                 className="text-[10px] font-bold px-2.5 py-1 bg-stone-100 dark:bg-stone-800 hover:text-viet-red rounded-xs border border-stone-200 dark:border-stone-700 transition-colors"
               >
-                Chọn tất cả
+                {dict.download_select_all || "Chọn tất cả"}
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -142,14 +150,15 @@ export default function Download() {
                 onClick={handleResetDefault}
                 className="text-[10px] font-bold px-2.5 py-1 bg-stone-100 dark:bg-stone-800 hover:text-viet-red rounded-xs border border-stone-200 dark:border-stone-700 transition-colors"
               >
-                Mặc định
+                {dict.download_default || "Mặc định"}
               </motion.button>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-            {FULL_HEADERS.map(({ key, label }) => {
+            {FULL_HEADERS.map(({ key, label, dictKey }) => {
               const isChecked = checkedState[key];
+              const displayLabel = (dictKey && dict[dictKey]) || label;
               return (
                 <motion.label
                   key={key}
@@ -167,7 +176,7 @@ export default function Download() {
                     onChange={() => handleChange(key)}
                     className="w-3.5 h-3.5 accent-viet-red rounded-xs cursor-pointer"
                   />
-                  <span className="text-xs truncate">{label}</span>
+                  <span className="text-xs truncate">{displayLabel}</span>
                 </motion.label>
               );
             })}
@@ -179,10 +188,10 @@ export default function Download() {
           <div className="border-b border-stone-200 dark:border-stone-800 pb-3">
             <h3 className="text-sm font-extrabold uppercase tracking-tight text-stone-900 dark:text-stone-100 flex items-center gap-2">
               <span className="w-2 h-2 bg-viet-red rounded-full"></span>
-              Định dạng tải về
+              {dict.download_formats || "Định dạng tải về"}
             </h3>
             <p className="text-[11px] text-stone-500 mt-0.5">
-              Tổng số hiện vật khả dụng: {artifacts ? artifacts.length : "..."}
+              {dict.download_total_artifacts || "Tổng số hiện vật khả dụng"}: {artifacts ? artifacts.length : "..."}
             </p>
           </div>
 
@@ -194,13 +203,13 @@ export default function Download() {
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[9px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-100/60 dark:bg-emerald-950/50 px-2 py-0.5 rounded-xs">
-                  Bảng tính & Thống kê
+                  {dict.download_csv_badge || "Bảng tính & Thống kê"}
                 </span>
                 <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-2">
                   ham-anh-cac-{maxPublicDate}.csv
                 </h4>
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 leading-snug">
-                  Định dạng CSV chuẩn UTF-8 có BOM, tối ưu cho Excel, Google Sheets, R và Python Pandas.
+                  {dict.download_csv_desc || "Định dạng CSV chuẩn UTF-8 có BOM, tối ưu cho Excel, Google Sheets, R và Python Pandas."}
                 </p>
               </div>
               <span className="text-2xl ml-2">📊</span>
@@ -232,7 +241,7 @@ export default function Download() {
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <path d="m7 10 5 5 5-5" />
               </svg>
-              <span>Tải file .CSV</span>
+              <span>{dict.download_csv_btn || "Tải file .CSV"}</span>
             </motion.button>
           </motion.div>
 
@@ -244,13 +253,13 @@ export default function Download() {
             <div className="flex items-start justify-between">
               <div>
                 <span className="text-[9px] font-mono uppercase tracking-wider text-sky-600 dark:text-sky-400 font-bold bg-sky-100/60 dark:bg-sky-950/50 px-2 py-0.5 rounded-xs">
-                  Văn bản & AI Prompt
+                  {dict.download_txt_badge || "Văn bản & AI Prompt"}
                 </span>
                 <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100 mt-2">
                   ham-anh-cac-{maxPublicDate}.txt
                 </h4>
                 <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 leading-snug">
-                  Định dạng văn bản thuần, tối ưu để nạp vào Google NotebookLM, Gemini, Claude và ChatGPT.
+                  {dict.download_txt_desc || "Định dạng văn bản thuần, tối ưu để nạp vào Google NotebookLM, Gemini, Claude và ChatGPT."}
                 </p>
               </div>
               <span className="text-2xl ml-2">📝</span>
@@ -282,7 +291,7 @@ export default function Download() {
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <path d="m7 10 5 5 5-5" />
               </svg>
-              <span>Tải file .TXT</span>
+              <span>{dict.download_txt_btn || "Tải file .TXT"}</span>
             </motion.button>
           </motion.div>
 
@@ -297,7 +306,7 @@ export default function Download() {
               >
                 <span className="text-base">✓</span>
                 <span>
-                  Đã tạo và tải xuống <strong>{downloadSuccess}</strong> thành công!
+                  {dict.download_success_prefix || "Đã tạo và tải xuống"} <strong>{downloadSuccess}</strong> {dict.download_success_suffix || "thành công!"}
                 </span>
               </motion.div>
             )}

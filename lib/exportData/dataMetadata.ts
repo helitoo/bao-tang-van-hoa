@@ -1,18 +1,19 @@
 import { getCategoryNames } from "@/lib/consts/categories";
 
-export const FULL_HEADERS: { key: string; label: string }[] = [
+export const FULL_HEADERS: { key: string; label: string; dictKey?: string }[] = [
   { key: "id", label: "ID" },
-  { key: "name", label: "Name" },
-  { key: "short_description", label: "Short Description" },
-  { key: "description", label: "Description" },
-  { key: "categories", label: "Categories" },
-  { key: "main_image", label: "Main Image URL" },
-  { key: "supporting_images", label: "Supporting Images" },
-  { key: "author", label: "Author" },
-  { key: "contributor", label: "Contributor" },
-  { key: "artifact_date", label: "Artifact Era" },
-  { key: "public_date", label: "Public Date" },
-  { key: "location", label: "Location" },
+  { key: "name", label: "Name", dictKey: "download_field_name" },
+  { key: "short_description", label: "Short Description", dictKey: "download_field_short_desc" },
+  { key: "description", label: "Description", dictKey: "artifact_desc" },
+  { key: "categories", label: "Categories", dictKey: "filter_cats" },
+  { key: "main_image", label: "Main Image URL", dictKey: "download_field_main_image" },
+  { key: "supporting_images", label: "Supporting Images", dictKey: "download_field_supporting_images" },
+  { key: "author", label: "Author", dictKey: "artifact_author" },
+  { key: "contributor", label: "Contributor", dictKey: "artifact_contributor" },
+  { key: "artifact_date", label: "Artifact Era", dictKey: "artifact_date" },
+  { key: "public_date", label: "Public Date", dictKey: "artifact_public_date" },
+  { key: "location", label: "Location", dictKey: "artifact_location" },
+  { key: "collections", label: "Collections", dictKey: "nav_collection" },
 ];
 
 export const FIELD_CONTENT_MAP = {
@@ -28,4 +29,5 @@ export const FIELD_CONTENT_MAP = {
   artifact_date: (a: any) => a.artifact_date,
   public_date: (a: any) => a.public_date,
   location: (a: any) => a.location,
+  collections: (a: any) => (a.collections || []).join(", "),
 };

@@ -34,7 +34,7 @@ export default async function Page({
         </p>
       </div>
 
-      <Download />
+      <Download dict={dict} locale={locale as Locale} />
     </div>
   );
 }
