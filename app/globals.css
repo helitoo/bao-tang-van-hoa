@@ -54,38 +54,40 @@ h4 {
 }
 
 /* Skeleton */
-.skeleton {
-  position: relative;
-  overflow: hidden;
-  background-color: #e5e7eb;
-  border-radius: 6px;
-}
+@layer components {
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background-color: #e7e5e4;
+    border-radius: 6px;
+  }
 
-.skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.6),
-    transparent
-  );
-  animation: shimmer 1.5s infinite;
-}
+  .skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.75) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.2s ease-in-out infinite;
+  }
 
-.dark .skeleton {
-  background-color: #292524;
-}
+  .dark .skeleton {
+    background-color: #292524;
+  }
 
-.dark .skeleton::after {
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.08),
-    transparent
-  );
+  .dark .skeleton::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.16) 50%,
+      transparent 100%
+    );
+  }
 }
 
 @keyframes shimmer {

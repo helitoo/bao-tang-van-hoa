@@ -55,7 +55,10 @@ export default function SkeletonImage({
       }`}
     >
       {status === "loading" && (
-        <div className="skeleton absolute inset-0 rounded-none!" aria-hidden="true" />
+        <div
+          className="skeleton absolute inset-0 rounded-none!"
+          aria-hidden="true"
+        />
       )}
       <img
         {...imgProps}

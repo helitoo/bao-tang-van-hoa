@@ -214,6 +214,12 @@ export default function Artifact({
 
   // Popup window state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalIframeLoaded, setIsModalIframeLoaded] = useState(false);
+
+  const openModal = () => {
+    setIsModalIframeLoaded(false);
+    setIsModalOpen(true);
+  };
 
   // Badge infor processing
   const hasRun = useRef(false);
@@ -293,7 +299,7 @@ export default function Artifact({
                     fallbackClassName="max-h-40 opacity-60"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsModalOpen(true);
+                      openModal();
                     }}
                   />
 
@@ -303,7 +309,7 @@ export default function Artifact({
                     whileTap={{ scale: 0.9 }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setIsModalOpen(true);
+                      openModal();
                     }}
                     className="absolute top-4 right-4 p-2 rounded-full shadow-lg z-20 bg-black/70 hover:bg-black/90 text-stone-300 cursor-pointer"
                     aria-label="Enlarge"
@@ -601,17 +607,30 @@ export default function Artifact({
                   onClick={(e) => e.stopPropagation()}
                 >
                   {driveId ? (
-                    <iframe
-                      src={`https://drive.google.com/file/d/${driveId}/preview`}
-                      className="w-full h-full border-none"
-                      allow="autoplay"
-                      title={artifact.name}
-                    ></iframe>
+                    <div className="relative w-full h-full">
+                      {!isModalIframeLoaded && (
+                        <div
+                          className="skeleton absolute inset-0 rounded-none!"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <iframe
+                        src={`https://drive.google.com/file/d/${driveId}/preview`}
+                        className={`w-full h-full border-none transition-opacity duration-300 ${
+                          isModalIframeLoaded ? "opacity-100" : "opacity-0"
+                        }`}
+                        allow="autoplay"
+                        title={artifact.name}
+                        onLoad={() => setIsModalIframeLoaded(true)}
+                      ></iframe>
+                    </div>
                   ) : (
-                    <img
+                    <SkeletonImage
                       src={getImgUrl(artifact.main_image)}
                       alt={artifact.name}
+                      wrapperClassName="flex items-center justify-center"
                       className="max-w-full max-h-full object-contain"
+                      fallbackClassName="max-h-40 opacity-60"
                     />
                   )}
 

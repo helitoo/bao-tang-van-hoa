@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback, useState } from "react";
+
 const getFaviconUrl = (url: string) => {
   try {
     const domain = new URL(url).hostname;
@@ -28,6 +30,16 @@ export default function ReferenceItem({ url }: { url: string }) {
   const hostname = getCleanHostname(url);
   const isImg = isImageUrl(url);
   const cleanUrl = url.trim();
+  const [imgStatus, setImgStatus] = useState<"loading" | "loaded" | "error">(
+    "loading",
+  );
+
+  const imgRef = useCallback((img: HTMLImageElement | null) => {
+    if (!img || !img.complete) return;
+    setImgStatus((prev) =>
+      prev !== "loading" ? prev : img.naturalWidth > 0 ? "loaded" : "error",
+    );
+  }, []);
 
   return (
     <div className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-sm overflow-hidden transition-all hover:border-viet-red shadow-sm">
@@ -99,19 +111,25 @@ export default function ReferenceItem({ url }: { url: string }) {
         </div>
 
         {/* 4. Image Preview (Hiển thị nếu là URL của ảnh) */}
-        {isImg && (
+        {isImg && imgStatus !== "error" && (
           <div className="pt-2">
             <div className="aspect-video bg-stone-50 dark:bg-stone-950 border border-stone-100 dark:border-stone-800 rounded-sm overflow-hidden relative">
+              {imgStatus === "loading" && (
+                <div
+                  className="skeleton absolute inset-0 rounded-none!"
+                  aria-hidden="true"
+                />
+              )}
               <img
+                ref={imgRef}
                 src={cleanUrl}
                 alt="Reference preview"
-                className="w-full h-full object-contain"
+                className={`w-full h-full object-contain transition-opacity duration-300 ${
+                  imgStatus === "loading" ? "opacity-0" : "opacity-100"
+                }`}
                 loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).parentElement?.classList.add(
-                    "hidden",
-                  );
-                }}
+                onLoad={() => setImgStatus("loaded")}
+                onError={() => setImgStatus("error")}
               />
             </div>
           </div>
