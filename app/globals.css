@@ -75,6 +75,19 @@ h4 {
   animation: shimmer 1.5s infinite;
 }
 
+.dark .skeleton {
+  background-color: #292524;
+}
+
+.dark .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+}
+
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
@@ -183,4 +196,26 @@ h4 {
   font-size: 12px !important;
   font-weight: 600 !important;
   padding: 6px 10px !important;
+}
+
+/* Fade-up entrance driven by CSS only, so content stays visible even if JS animations never start */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up {
+    animation: none;
+  }
 }

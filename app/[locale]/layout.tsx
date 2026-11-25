@@ -7,6 +7,10 @@ import { locales, getLangDict, Locale } from "@/lib/lang";
 
 import { ThemeProvider } from "@/contexts/theme";
 import { ArtifactProvider } from "@/contexts/artifact";
+import {
+  fetchArtifactsServer,
+  fetchCollectionsServer,
+} from "@/lib/serverArtifacts";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -115,7 +119,13 @@ export default async function Layout({
     notFound();
   }
 
-  const dict = await getLangDict(locale);
+  // Artifacts and collections are fetched on the server (cached for 1 hour)
+  // and passed to the client provider, so pages render with data right away.
+  const [dict, initialArtifacts, initialCollections] = await Promise.all([
+    getLangDict(locale),
+    fetchArtifactsServer(),
+    fetchCollectionsServer(),
+  ]);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
 
   // Dynamic Schemas
@@ -154,7 +164,10 @@ export default async function Layout({
         <ThemeProvider>
           <HolidayToast locale={locale as Locale} />
           <Navbar locale={locale} dict={dict} />
-          <ArtifactProvider>
+          <ArtifactProvider
+            initialArtifacts={initialArtifacts}
+            initialCollections={initialCollections}
+          >
             {children}
             <RandomArtifactButton locale={locale as Locale} />
 

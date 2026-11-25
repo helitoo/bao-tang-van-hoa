@@ -4,7 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import type { CollectionWithArtifacts } from "@/contexts/artifact";
-import { getImgUrl, FALLBACK_IMAGE } from "@/lib/imgProcessor";
+import { getImgUrl } from "@/lib/imgProcessor";
+import SkeletonImage from "@/components/SkeletonImage";
 
 const MotionLink = motion.create(Link);
 
@@ -24,22 +25,18 @@ export default function CollectionCard({
   return (
     <MotionLink
       href={`/${locale}/collection/${item.id}`}
-      prefetch={true}
       whileHover={{ y: -5, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
       className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm hover:shadow-xl hover:border-viet-red/40 dark:hover:border-viet-red/40 transition-shadow duration-300 overflow-hidden flex flex-col h-full rounded-xs"
     >
-      <div className="overflow-hidden relative bg-stone-100 dark:bg-stone-800 flex items-center justify-center aspect-square">
-        <img
+      <div className="overflow-hidden relative flex items-center justify-center aspect-square">
+        <SkeletonImage
           src={getImgUrl(cover, 500)}
           alt={`${item.name} - Bộ sưu tập Hàm Anh Các`}
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-          }}
         />
         <div className="absolute top-2 left-2 flex flex-col gap-1 z-10 pointer-events-none">
           <span className="text-[9px] font-bold tracking-tight px-2 py-0.5 rounded-xs shadow-sm backdrop-blur-md text-white bg-viet-red/80 flex items-center gap-1">

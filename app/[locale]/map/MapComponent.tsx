@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useArtifact, type Artifact } from "@/contexts/artifact";
-import { parseExplicitCoords, geocodeArtifactDynamic } from "@/lib/geoCoords";
+import { parseExplicitCoords } from "@/lib/geoCoords";
 import { getImgUrl } from "@/lib/imgProcessor";
+import SkeletonImage from "@/components/SkeletonImage";
 
 interface MapComponentProps {
   locale: string;
@@ -23,9 +24,12 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
   const markersClusterRef = useRef<any>(null);
   const markerByItemRef = useRef<Map<string, any>>(new Map());
   const layersRef = useRef<{ osm: any; satellite: any } | null>(null);
+  const leafletRef = useRef<any>(null);
+  const [isMapReady, setIsMapReady] = useState(false);
 
   const [mappedList, setMappedList] = useState<MappedArtifact[]>([]);
-  const [isGeocoding, setIsGeocoding] = useState(false);
+  // Still waiting for the artifact list from the spreadsheet
+  const isLoading = artifacts === undefined;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -44,7 +48,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
     );
   }, [mappedList, searchQuery]);
 
-  // Initialize Leaflet Map and Dynamically Geocode Artifacts from Name and Location
+  // Initialize the Leaflet map once (independent of the artifact data)
   useEffect(() => {
     if (typeof window === "undefined" || !mapContainerRef.current) return;
 
@@ -82,6 +86,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
 
       // @ts-ignore
       window.L = L;
+      leafletRef.current = L;
 
       if (!L.markerClusterGroup) {
         await import("leaflet.markercluster");
@@ -145,86 +150,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
       markersClusterRef.current = clusterGroup;
       map.addLayer(clusterGroup);
 
-      // Helper to add a marker to the map
-      function addMarker(item: Artifact, coords: [number, number]) {
-        const singleIcon = L.divIcon({
-          html: `<div class="custom-single-pin"><div class="custom-single-pin-inner"></div></div>`,
-          className: "custom-single-marker",
-          iconSize: [28, 28],
-          iconAnchor: [14, 14],
-          popupAnchor: [0, -14],
-        });
-
-        const marker = L.marker(coords, { icon: singleIcon, title: item.name });
-
-        const popupContent = `
-          <div class="w-64 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 overflow-hidden font-sans">
-            <div class="h-32 w-full overflow-hidden bg-stone-100 relative">
-              <img src="${getImgUrl(item.main_image, 400)}" alt="${item.name.replace(/"/g, "&quot;")}" class="w-full h-full object-cover" onerror="this.src='/icon.png'" />
-            </div>
-            <div class="p-3">
-              <h4 class="font-bold text-sm text-stone-900 dark:text-stone-100 line-clamp-2 leading-tight">${item.name}</h4>
-              <div class="flex items-center gap-1 text-[11px] text-stone-500 dark:text-stone-400 mt-1">
-                <span>📍 ${item.location || "Việt Nam"}</span>
-                ${item.artifact_date ? `<span class="opacity-40">•</span><span>${item.artifact_date}</span>` : ""}
-              </div>
-              ${item.short_description ? `<p class="text-[11px] text-stone-600 dark:text-stone-400 line-clamp-2 mt-1.5 italic">${item.short_description}</p>` : ""}
-              <a href="/${locale}/artifact/${item.id}" style="color: #ffffff !important;" class="mt-3 block w-full text-center py-1.5 bg-viet-red text-white text-xs font-bold rounded hover:opacity-90 transition-opacity no-underline">
-                ${dict.map_view_details || "Xem chi tiết"} &rarr;
-              </a>
-            </div>
-          </div>
-        `;
-
-        marker.bindPopup(popupContent, { maxWidth: 280 });
-        marker.on("click", () => {
-          setSelectedId(item.id);
-        });
-
-        clusterGroup.addLayer(marker);
-        markerByItemRef.current.set(item.id, marker);
-      }
-
-      // Filter architecture items (tag "kt")
-      const ktItems = (artifacts || []).filter((a) =>
-        a.categories?.includes("kt")
-      );
-
-      if (ktItems.length === 0) return;
-
-      setIsGeocoding(true);
-
-      // Process artifacts dynamically through Geocoding API (in small concurrent batches)
-      const BATCH_SIZE = 3;
-      for (let i = 0; i < ktItems.length; i += BATCH_SIZE) {
-        if (!isMounted) break;
-        const batch = ktItems.slice(i, i + BATCH_SIZE);
-
-        await Promise.all(
-          batch.map(async (item) => {
-            if (!isMounted) return;
-            // 1. If explicit coordinates exist in sheet, use directly
-            let coords = parseExplicitCoords(item.coordinates);
-
-            // 2. Otherwise dynamically geocode via OpenStreetMap API
-            if (!coords) {
-              coords = await geocodeArtifactDynamic(item.name, item.location);
-            }
-
-            if (coords && isMounted) {
-              addMarker(item, coords);
-              setMappedList((prev) => {
-                if (prev.some((p) => p.item.id === item.id)) return prev;
-                return [...prev, { item, coords: coords! }];
-              });
-            }
-          })
-        );
-      }
-
-      if (isMounted) {
-        setIsGeocoding(false);
-      }
+      if (isMounted) setIsMapReady(true);
     }
 
     initMap();
@@ -234,9 +160,78 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
       if (map) {
         map.remove();
         mapInstanceRef.current = null;
+        markersClusterRef.current = null;
       }
+      setIsMapReady(false);
     };
-  }, [artifacts, locale, dict]);
+  }, []);
+
+  // Add markers once the map is ready and whenever the artifact list changes
+  useEffect(() => {
+    const L = leafletRef.current;
+    const clusterGroup = markersClusterRef.current;
+    if (!isMapReady || !L || !clusterGroup) return;
+
+    clusterGroup.clearLayers();
+    markerByItemRef.current.clear();
+
+    // Helper to build a marker for an artifact
+    function createMarker(item: Artifact, coords: [number, number]) {
+      const singleIcon = L.divIcon({
+        html: `<div class="custom-single-pin"><div class="custom-single-pin-inner"></div></div>`,
+        className: "custom-single-marker",
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -14],
+      });
+
+      const marker = L.marker(coords, { icon: singleIcon, title: item.name });
+
+      const popupContent = `
+        <div class="w-64 bg-white dark:bg-stone-900 text-stone-900 dark:text-stone-100 overflow-hidden font-sans">
+          <div class="h-32 w-full overflow-hidden bg-stone-100 relative">
+            <img src="${getImgUrl(item.main_image, 400)}" alt="${item.name.replace(/"/g, "&quot;")}" class="w-full h-full object-cover" onerror="this.src='/icon.png'" />
+          </div>
+          <div class="p-3">
+            <h4 class="font-bold text-sm text-stone-900 dark:text-stone-100 line-clamp-2 leading-tight">${item.name}</h4>
+            <div class="flex items-center gap-1 text-[11px] text-stone-500 dark:text-stone-400 mt-1">
+              <span>📍 ${item.location || "Việt Nam"}</span>
+              ${item.artifact_date ? `<span class="opacity-40">•</span><span>${item.artifact_date}</span>` : ""}
+            </div>
+            ${item.short_description ? `<p class="text-[11px] text-stone-600 dark:text-stone-400 line-clamp-2 mt-1.5 italic">${item.short_description}</p>` : ""}
+            <a href="/${locale}/artifact/${item.id}" style="color: #ffffff !important;" class="mt-3 block w-full text-center py-1.5 bg-viet-red text-white text-xs font-bold rounded hover:opacity-90 transition-opacity no-underline">
+              ${dict.map_view_details || "Xem chi tiết"} &rarr;
+            </a>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, { maxWidth: 280 });
+      marker.on("click", () => {
+        setSelectedId(item.id);
+      });
+
+      markerByItemRef.current.set(item.id, marker);
+      return marker;
+    }
+
+    // Filter architecture items (tag "kt") that already have explicit coordinates
+    const mapped: MappedArtifact[] = [];
+    for (const item of artifacts || []) {
+      if (!item.categories?.includes("kt")) continue;
+      const coords = parseExplicitCoords(item.coordinates);
+      if (!coords) continue;
+      mapped.push({ item, coords });
+    }
+
+    setMappedList(mapped);
+    if (mapped.length === 0) return;
+
+    // Add all markers in one pass so the cluster is computed only once
+    clusterGroup.addLayers(
+      mapped.map(({ item, coords }) => createMarker(item, coords))
+    );
+  }, [isMapReady, artifacts, locale, dict]);
 
   // Focus marker when clicked from sidebar list
   function handleSelectArtifact(item: Artifact, coords: [number, number]) {
@@ -341,7 +336,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
                 : dict.map_locations || "Địa điểm"}
             </span>
             <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-950/60 text-viet-red font-bold flex items-center gap-1">
-              {isGeocoding && (
+              {isLoading && (
                 <span className="w-1.5 h-1.5 rounded-full bg-viet-red animate-ping" />
               )}
               <span>{filteredList.length}</span>
@@ -501,7 +496,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
               <span>{dict.nav_map || "Địa điểm kiến trúc"}</span>
             </h2>
             <div className="flex items-center gap-1">
-              {isGeocoding && (
+              {isLoading && (
                 <span className="text-[10px] text-stone-500 animate-pulse">
                   {dict.map_locating || "Đang định vị..."}
                 </span>
@@ -553,7 +548,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
         <div className="flex-1 overflow-y-auto divide-y divide-stone-100 dark:divide-stone-800">
           {filteredList.length === 0 ? (
             <div className="p-8 text-center text-stone-400 text-xs italic">
-              {isGeocoding
+              {isLoading
                 ? dict.map_locating || "Đang định vị..."
                 : dict.map_no_results || "Không tìm thấy hiện vật kiến trúc phù hợp."}
             </div>
@@ -572,14 +567,15 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
                       : "hover:bg-stone-50 dark:hover:bg-stone-800/50"
                   }`}
                 >
-                  <img
-                    src={getImgUrl(item.main_image, 160)}
-                    alt={item.name}
-                    className="w-14 h-14 object-cover rounded-md shrink-0 bg-stone-200"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = "/icon.png";
-                    }}
-                  />
+                  <div className="w-14 h-14 shrink-0 rounded-md overflow-hidden">
+                    <SkeletonImage
+                      src={getImgUrl(item.main_image, 160)}
+                      alt={item.name}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                      fallbackClassName="object-contain! p-2 opacity-60"
+                    />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xs font-bold text-stone-900 dark:text-stone-100 truncate group-hover:text-viet-red">
                       {item.name}

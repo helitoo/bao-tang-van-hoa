@@ -9,7 +9,8 @@ import { ToastContainer, toast, Bounce } from "react-toastify";
 import type { Locale } from "@/lib/lang";
 import similarityScore from "@/lib/fuzzySearching";
 import { getCategoryNames, getCategoryName } from "@/lib/consts/categories";
-import { getDriveId, getImgUrl, FALLBACK_IMAGE } from "@/lib/imgProcessor";
+import { getDriveId, getImgUrl } from "@/lib/imgProcessor";
+import SkeletonImage from "@/components/SkeletonImage";
 
 import type { Artifact } from "@/contexts/artifact";
 import { useArtifact } from "@/contexts/artifact";
@@ -281,14 +282,15 @@ export default function Artifact({
                   transition={{ duration: 0.5, ease: "easeOut" }}
                   className="relative flex items-center justify-center bg-stone-50 dark:bg-stone-900/40 p-2 rounded-sm border border-stone-200/50 dark:border-stone-800"
                 >
-                  <img
-                    src={getImgUrl(artifact.main_image)}
+                  <SkeletonImage
+                    src={getImgUrl(artifact.main_image, 1200)}
+                    wrapperClassName="flex items-center justify-center"
+                    loadingClassName="min-h-[320px]"
+                    fetchPriority="high"
                     alt={`${artifact.name}${artifact.artifact_date ? ` (${artifact.artifact_date})` : ""} tại ${artifact.location || "Việt Nam"} - Hàm Anh Các`}
                     decoding="async"
                     className="max-w-full max-h-[500px] object-contain cursor-pointer shadow-md rounded-xs"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-                    }}
+                    fallbackClassName="max-h-40 opacity-60"
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsModalOpen(true);

@@ -2,30 +2,11 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { motion, type Variants } from "framer-motion";
+import { motion } from "framer-motion";
 
 import ArtifactCard from "@/components/ArtifactCard";
 import { useArtifact } from "@/contexts/artifact";
 import { Locale } from "@/lib/lang";
-
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.05,
-    },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
-  },
-};
 
 export default function Saved({ locale, dict }: { locale: Locale; dict: any }) {
   const { artifacts } = useArtifact();
@@ -68,22 +49,17 @@ export default function Saved({ locale, dict }: { locale: Locale; dict: any }) {
         </div>
 
         {savedArtifacts.length > 0 ? (
-          <motion.div
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {savedArtifacts.map((item) => (
-              <motion.div
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            {savedArtifacts.map((item, index) => (
+              <div
                 key={item.id}
-                variants={itemVariants}
-                className="h-full"
+                className="h-full fade-up"
+                style={{ animationDelay: `${Math.min(index, 20) * 50}ms` }}
               >
                 <ArtifactCard item={item} locale={locale} />
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
         ) : (
           <motion.div
             className="py-24 text-center space-y-6 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-sm"

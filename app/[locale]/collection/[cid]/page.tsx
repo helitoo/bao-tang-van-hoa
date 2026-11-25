@@ -8,7 +8,7 @@ import {
   getCollectionsWithArtifactsServer,
 } from "@/lib/serverArtifacts";
 import ArtifactCard from "@/components/ArtifactCard";
-import { getImgUrl } from "@/lib/imgProcessor";
+import { getSourceImgUrl } from "@/lib/imgProcessor";
 
 export async function generateMetadata({
   params,
@@ -33,7 +33,7 @@ export async function generateMetadata({
     collection.description?.slice(0, 160) ||
     `Bộ sưu tập ${collection.name} gồm ${collection.artifacts.length} hiện vật tại Hàm Anh Các.`;
   const coverImage = collection.coverImage
-    ? getImgUrl(collection.coverImage, 1200)
+    ? getSourceImgUrl(collection.coverImage, 1200)
     : undefined;
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";

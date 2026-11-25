@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { type Locale, getLangDict, locales } from "@/lib/lang";
 import Artifact from "@/app/[locale]/artifact/[aid]/Artifact";
 import { getArtifactByIdServer } from "@/lib/serverArtifacts";
-import { getImgUrl } from "@/lib/imgProcessor";
+import { getSourceImgUrl } from "@/lib/imgProcessor";
 
 export async function generateMetadata({
   params,
@@ -28,7 +28,7 @@ export async function generateMetadata({
     artifact.short_description ||
     artifact.description?.slice(0, 160) ||
     dict.footer_desc;
-  const imageUrl = getImgUrl(artifact.main_image, 1200);
+  const imageUrl = getSourceImgUrl(artifact.main_image, 1200);
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
   const languageAlternates: Record<string, string> = {
@@ -131,7 +131,7 @@ export default async function Page({
         "@type": "VisualArtwork",
         name: artifact.name,
         description: artifact.description || artifact.short_description,
-        image: getImgUrl(artifact.main_image, 1200),
+        image: getSourceImgUrl(artifact.main_image, 1200),
         dateCreated: artifact.artifact_date,
         creator: {
           "@type": "Person",

@@ -6,7 +6,8 @@ import { motion } from "framer-motion";
 import type { Locale } from "@/lib/lang";
 import type { Artifact } from "@/contexts/artifact";
 import { CATEGORY_GROUPS } from "@/lib/consts/categories";
-import { getImgUrl, FALLBACK_IMAGE } from "@/lib/imgProcessor";
+import { getImgUrl } from "@/lib/imgProcessor";
+import SkeletonImage from "@/components/SkeletonImage";
 
 const BADGE_IDS = ["bvqg", "dtqg", "dtqgdb", "dstg"];
 
@@ -41,22 +42,18 @@ export default function ArtifactCard({
   return (
     <MotionLink
       href={`/${locale}/artifact/${item.id}`}
-      prefetch={true}
       whileHover={{ y: -5, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 350, damping: 25 }}
       className="group bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 shadow-sm hover:shadow-xl hover:border-viet-red/40 dark:hover:border-viet-red/40 transition-shadow duration-300 overflow-hidden flex flex-col h-full rounded-xs"
     >
-      <div className="overflow-hidden relative bg-stone-100 dark:bg-stone-800 flex items-center justify-center aspect-square">
-        <img
+      <div className="overflow-hidden relative flex items-center justify-center aspect-square">
+        <SkeletonImage
           src={getImgUrl(item.main_image, 500)}
           alt={`${item.name}${item.artifact_date ? ` (${item.artifact_date})` : ""} - Hiện vật Hàm Anh Các`}
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = FALLBACK_IMAGE;
-          }}
         />
         {badges.length > 0 && (
           <div className="absolute top-2 left-2 flex flex-col gap-1 z-10 pointer-events-none">
