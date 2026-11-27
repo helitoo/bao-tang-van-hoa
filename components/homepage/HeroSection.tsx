@@ -20,11 +20,11 @@ export default function HeroSection({
         transition={{ duration: 1.4, ease: "easeOut" }}
       >
         <img
-          src="/background.webp"
-          alt="Khuê văn các"
-          className="w-full h-full object-cover opacity-60"
+          src="/bgs/bg.png"
+          alt={dict.museum_name || "Bảo tàng Văn hóa"}
+          className="w-full h-full object-cover opacity-90"
         />
-        <div className="absolute inset-0 bg-linear-to-b from-stone-900/70 via-stone-900/40 to-stone-900/80"></div>
+        <div className="absolute inset-0 bg-linear-to-b from-black/30 via-black/15 to-black/40"></div>
       </motion.div>
 
       {/* Hero Content with staggered entrance */}

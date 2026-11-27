@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Logo from "@/components/Logo";
 
 export default function IntroductionSection({ dict }: { dict: any }) {
   return (
@@ -22,7 +21,7 @@ export default function IntroductionSection({ dict }: { dict: any }) {
       </motion.div>
 
       <motion.div
-        className="relative p-10 rounded-sm dark:bg-stone-900 mb-16 overflow-hidden transition-colors duration-300 border border-stone-200/60 dark:border-stone-800/80 shadow-sm"
+        className="relative p-5 rounded-sm dark:bg-stone-900 mb-16 overflow-hidden transition-colors duration-300 border border-stone-200/60 dark:border-stone-800/80 shadow-sm"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
@@ -31,12 +30,18 @@ export default function IntroductionSection({ dict }: { dict: any }) {
         <div className="halftone-bg absolute inset-0 pointer-events-none"></div>
         <div className="relative z-10">
           <motion.div
-            initial={{ scale: 0.8, rotate: -5 }}
-            whileInView={{ scale: 1, rotate: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            className="flex justify-center"
           >
-            <Logo className="size-10 text-viet-red mb-6 mx-auto" />
+            <img
+              src="/bgs/title-bg.png"
+              alt="Tiêu đề"
+              className="w-[90%] md:w-[75%] h-auto object-contain mb-5 mx-auto"
+              draggable={false}
+            />
           </motion.div>
           <p className="text-2xl md:text-3xl font-extrabold text-stone-800 dark:text-stone-200 mb-4 leading-relaxed px-4">
             {dict.mission_title}

@@ -41,6 +41,29 @@ export async function generateMetadata({
     languageAlternates[l] = `${baseUrl}/${l}`;
   });
 
+  const ogImageMap: Record<string, string> = {
+    vi: `${baseUrl}/bgs/og-vi.png`,
+    en: `${baseUrl}/bgs/og-en.png`,
+    zh: `${baseUrl}/bgs/og-zh.png`,
+    ja: `${baseUrl}/bgs/og-ja.png`,
+    ko: `${baseUrl}/bgs/og-ko.png`,
+    fr: `${baseUrl}/bgs/og-fr.png`,
+  };
+  const ogImageUrl = ogImageMap[locale] || `${baseUrl}/bgs/og-vi.png`;
+
+  const ogLocaleMap: Record<string, string> = {
+    vi: "vi_VN",
+    en: "en_US",
+    zh: "zh_CN",
+    ja: "ja_JP",
+    ko: "ko_KR",
+    fr: "fr_FR",
+  };
+  const ogLocale = ogLocaleMap[locale] || "vi_VN";
+  const alternateOgLocales = Object.values(ogLocaleMap).filter(
+    (l) => l !== ogLocale
+  );
+
   return {
     metadataBase: new URL(baseUrl),
     title: {
@@ -85,14 +108,16 @@ export async function generateMetadata({
       description: dict.footer_desc,
       url: `${baseUrl}/${locale}`,
       siteName: dict.museum_name,
-      locale: locale === "vi" ? "vi_VN" : locale,
+      locale: ogLocale,
+      alternateLocale: alternateOgLocales,
       type: "website",
       images: [
         {
-          url: `${baseUrl}/background.webp`,
-          width: 1200,
-          height: 630,
+          url: ogImageUrl,
+          width: 1920,
+          height: 1080,
           alt: dict.museum_name,
+          type: "image/png",
         },
       ],
     },
@@ -100,7 +125,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: dict.museum_name,
       description: dict.footer_desc,
-      images: [`${baseUrl}/background.webp`],
+      images: [ogImageUrl],
     },
   };
 }
@@ -149,7 +174,7 @@ export default async function Layout({
     alternateName: dict.museum_sub,
     url: `${baseUrl}/${locale}`,
     logo: `${baseUrl}/icon.png`,
-    image: `${baseUrl}/background.webp`,
+    image: `${baseUrl}/bgs/bg.png`,
     description: dict.mission_desc || dict.footer_desc,
     contactPoint: {
       "@type": "ContactPoint",
