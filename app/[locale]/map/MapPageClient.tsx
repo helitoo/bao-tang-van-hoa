@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import type { MapArtifact } from "@/contexts/artifact";
 
 const MapComponent = dynamic(() => import("./MapComponent"), {
   ssr: false,
@@ -19,9 +20,11 @@ const MapComponent = dynamic(() => import("./MapComponent"), {
 export default function MapPageClient({
   locale,
   dict,
+  artifacts,
 }: {
   locale: string;
   dict: any;
+  artifacts: MapArtifact[];
 }) {
-  return <MapComponent locale={locale} dict={dict} />;
+  return <MapComponent locale={locale} dict={dict} artifacts={artifacts} />;
 }

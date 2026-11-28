@@ -1,7 +1,10 @@
 import type { Locale } from "@/lib/lang";
 
 export interface Category {
-  id: string;
+  /** Numeric id — matches public.categories.id in Supabase */
+  id: number;
+  /** Legacy short code from the Google Sheet era (kept so old links still work) */
+  code: string;
   name: Record<Locale, string>;
   groupId: "religion" | "genre" | "era" | "region";
 }
@@ -25,7 +28,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     },
     options: [
       {
-        id: "pg",
+        id: 1,
+        code: "pg",
         name: {
           vi: "Phật giáo",
           en: "Buddhism",
@@ -37,7 +41,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "tg",
+        id: 2,
+        code: "tg",
         name: {
           vi: "Tôn giáo khác",
           en: "Other religions",
@@ -49,7 +54,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "pt",
+        id: 3,
+        code: "pt",
         name: {
           vi: "Phong tục",
           en: "Customs",
@@ -61,7 +67,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "tn",
+        id: 4,
+        code: "tn",
         name: {
           vi: "Tín ngưỡng",
           en: "Beliefs",
@@ -73,7 +80,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "nv",
+        id: 5,
+        code: "nv",
         name: {
           vi: "Nhân vật",
           en: "Characters",
@@ -85,7 +93,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "lv",
+        id: 6,
+        code: "lv",
         name: {
           vi: "Linh vật",
           en: "Mythical Creatures",
@@ -97,7 +106,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "tt",
+        id: 7,
+        code: "tt",
         name: {
           vi: "Thần thánh",
           en: "Deities",
@@ -109,7 +119,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "religion",
       },
       {
-        id: "mq",
+        id: 8,
+        code: "mq",
         name: {
           vi: "Ma quỷ",
           en: "Demons & Ghosts",
@@ -134,7 +145,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     },
     options: [
       {
-        id: "mbac",
+        id: 9,
+        code: "mbac",
         name: {
           vi: "Miền Bắc",
           en: "Northern region",
@@ -146,7 +158,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "mtrung",
+        id: 10,
+        code: "mtrung",
         name: {
           vi: "Miền Trung",
           en: "Central region",
@@ -158,7 +171,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "mnam",
+        id: 11,
+        code: "mnam",
         name: {
           vi: "Miền Nam",
           en: "Southern region",
@@ -170,7 +184,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "mnui",
+        id: 12,
+        code: "mnui",
         name: {
           vi: "Các dân tộc miền núi",
           en: "Highland ethnicities",
@@ -182,7 +197,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "region",
       },
       {
-        id: "nq",
+        id: 13,
+        code: "nq",
         name: {
           vi: "Ngoại quốc",
           en: "Foreign",
@@ -207,7 +223,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     },
     options: [
       {
-        id: "kt",
+        id: 14,
+        code: "kt",
         name: {
           vi: "Kiến trúc",
           en: "Architecture",
@@ -219,7 +236,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "tp",
+        id: 15,
+        code: "tp",
         name: {
           vi: "Trang phục",
           en: "Clothing",
@@ -231,7 +249,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "hv",
+        id: 16,
+        code: "hv",
         name: {
           vi: "Hoa văn",
           en: "Patterns",
@@ -243,7 +262,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "vt",
+        id: 17,
+        code: "vt",
         name: {
           vi: "Văn thư",
           en: "Records",
@@ -255,7 +275,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "qs",
+        id: 18,
+        code: "qs",
         name: {
           vi: "Quân sự",
           en: "Military",
@@ -267,7 +288,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "an",
+        id: 19,
+        code: "an",
         name: {
           vi: "Âm nhạc",
           en: "Music",
@@ -279,7 +301,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "dc",
+        id: 20,
+        code: "dc",
         name: {
           vi: "Dụng cụ",
           en: "Utensils",
@@ -291,7 +314,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "dk",
+        id: 21,
+        code: "dk",
         name: {
           vi: "Điêu khắc",
           en: "Sculpture",
@@ -303,7 +327,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "bvqg",
+        id: 22,
+        code: "bvqg",
         name: {
           vi: "Bảo vật quốc gia",
           en: "National treasure",
@@ -315,7 +340,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "dtqg",
+        id: 23,
+        code: "dtqg",
         name: {
           vi: "Di tích quốc gia",
           en: "National site",
@@ -327,7 +353,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "dtqgdb",
+        id: 24,
+        code: "dtqgdb",
         name: {
           vi: "Di tích quốc gia đặc biệt",
           en: "Special national site",
@@ -339,7 +366,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "genre",
       },
       {
-        id: "dstg",
+        id: 25,
+        code: "dstg",
         name: {
           vi: "Di sản thế giới",
           en: "World heritage",
@@ -364,7 +392,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
     },
     options: [
       {
-        id: "cd",
+        id: 26,
+        code: "cd",
         name: {
           vi: "Cổ đại",
           en: "Antiquity",
@@ -376,7 +405,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "champa",
+        id: 27,
+        code: "champa",
         name: {
           vi: "Champa",
           en: "Champa",
@@ -388,7 +418,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "dl",
+        id: 28,
+        code: "dl",
         name: {
           vi: "Thời kỳ độc lập sau Bắc thuộc",
           en: "Post-Chinese rule",
@@ -400,7 +431,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "ly",
+        id: 29,
+        code: "ly",
         name: {
           vi: "Nhà Lý",
           en: "Lý Dynasty",
@@ -412,7 +444,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "tran",
+        id: 30,
+        code: "tran",
         name: {
           vi: "Nhà Trần",
           en: "Trần Dynasty",
@@ -424,7 +457,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "ho",
+        id: 31,
+        code: "ho",
         name: {
           vi: "Nhà Hồ",
           en: "Hồ Dynasty",
@@ -436,7 +470,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "leso",
+        id: 32,
+        code: "leso",
         name: {
           vi: "Nhà Lê sơ",
           en: "Early Lê Dynasty",
@@ -448,7 +483,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "mac",
+        id: 33,
+        code: "mac",
         name: {
           vi: "Nhà Mạc",
           en: "Mạc Dynasty",
@@ -460,7 +496,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "leth",
+        id: 34,
+        code: "leth",
         name: {
           vi: "Nhà Lê trung hưng",
           en: "Revival Lê Dynasty",
@@ -472,7 +509,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "ts",
+        id: 35,
+        code: "ts",
         name: {
           vi: "Nhà Tây sơn",
           en: "Tây-sơn Dynasty",
@@ -484,7 +522,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "nguyen",
+        id: 36,
+        code: "nguyen",
         name: {
           vi: "Nhà Nguyễn",
           en: "Nguyễn Dynasty",
@@ -496,7 +535,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "bac",
+        id: 37,
+        code: "bac",
         name: {
           vi: "Bắc thuộc",
           en: "Under Chinese rule",
@@ -508,7 +548,8 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
         groupId: "era",
       },
       {
-        id: "phap",
+        id: 38,
+        code: "phap",
         name: {
           vi: "Pháp thuộc",
           en: "Under French rule",
@@ -523,26 +564,61 @@ export const CATEGORY_GROUPS: CategoryGroup[] = [
   },
 ];
 
-const CATEGORY_MAP: Record<string, Category> = Object.fromEntries(
-  CATEGORY_GROUPS.flatMap((group) =>
-    group.options.map((category) => [category.id, category]),
-  ),
+export const ALL_CATEGORIES: Category[] = CATEGORY_GROUPS.flatMap(
+  (group) => group.options,
 );
 
-export function getCategoryNames(categories: string[], locale: Locale) {
-  return categories
-    .map(
-      (id) =>
-        CATEGORY_MAP[id]?.name[locale] ??
-        CATEGORY_MAP[id]?.name.en ??
-        CATEGORY_MAP[id]?.name.vi
-    )
+const CATEGORY_MAP: Map<number, Category> = new Map(
+  ALL_CATEGORIES.map((category) => [category.id, category]),
+);
+
+const CATEGORY_ID_BY_CODE: Map<string, number> = new Map(
+  ALL_CATEGORIES.map((category) => [category.code, category.id]),
+);
+
+/** Category ids used by code that needs a specific category. */
+export const CATEGORY_ID = Object.fromEntries(
+  ALL_CATEGORIES.map((category) => [category.code, category.id]),
+) as Record<string, number>;
+
+/**
+ * Parses a category from a URL / API parameter. Accepts the numeric id ("14")
+ * and, for backward compatibility, the legacy code ("kt").
+ */
+export function parseCategoryParam(value: string): number | undefined {
+  const v = value.trim();
+  if (!v) return undefined;
+  if (/^\d+$/.test(v)) {
+    const id = Number(v);
+    return CATEGORY_MAP.has(id) ? id : undefined;
+  }
+  return CATEGORY_ID_BY_CODE.get(v.toLowerCase());
+}
+
+export function parseCategoryParams(values: string[]): number[] {
+  const ids: number[] = [];
+  for (const raw of values) {
+    for (const part of raw.split(",")) {
+      const id = parseCategoryParam(part);
+      if (id !== undefined && !ids.includes(id)) ids.push(id);
+    }
+  }
+  return ids;
+}
+
+export function getCategory(categoryId: number): Category | undefined {
+  return CATEGORY_MAP.get(categoryId);
+}
+
+export function getCategoryNames(categories: number[], locale: Locale) {
+  return (categories || [])
+    .map((id) => getCategoryName(id, locale))
     .filter(Boolean)
     .join(", ");
 }
 
-export function getCategoryName(categoryId: string, locale: Locale) {
-  const category = CATEGORY_MAP[categoryId];
+export function getCategoryName(categoryId: number, locale: Locale) {
+  const category = CATEGORY_MAP.get(categoryId);
   return (
     category?.name[locale] ??
     category?.name.en ??

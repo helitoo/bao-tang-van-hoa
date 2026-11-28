@@ -1,12 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { useArtifact } from "@/contexts/artifact";
 import { FULL_HEADERS } from "@/lib/exportData/dataMetadata";
-import { getCsvContent } from "@/lib/exportData/getCsvContent";
-import { getTxtContent } from "@/lib/exportData/getTxtContent";
 
 import type { Locale } from "@/lib/lang";
 
@@ -24,12 +21,16 @@ const defaultCheckedHeaders: string[] = [
 export default function Download({
   dict,
   locale,
+  latestPublicDate,
+  totalArtifacts,
 }: {
   dict: any;
   locale: Locale;
+  /** dd/mm/yyyy of the most recently published artifact (computed on the server) */
+  latestPublicDate?: string;
+  /** Number of artifacts in the export (computed on the server) */
+  totalArtifacts: number;
 }) {
-  const { artifacts } = useArtifact();
-
   // Checker state
   const [checkedState, setCheckedState] = useState<Record<string, boolean>>(
     FULL_HEADERS.reduce(
@@ -74,36 +75,29 @@ export default function Download({
     );
   };
 
-  // Find max artifact public date
-  const [maxPublicDate, setMaxPublicDate] = useState<string>("latest");
-
-  useEffect(() => {
-    if (!artifacts || artifacts.length === 0) return;
-    const dateStr = artifacts[0]?.public_date?.replaceAll("/", "-") || "latest";
-    setMaxPublicDate(dateStr);
-  }, [artifacts]);
+  // File name suffix: date of the newest artifact, e.g. ham-anh-cac-14-03-2026.csv
+  const maxPublicDate = latestPublicDate?.replaceAll("/", "-") || "latest";
 
   // Handle download
   const handleDownloadData = (
     fileName: string,
     fileType: "text/csv;charset=utf-8" | "text/plain;charset=utf-8",
   ) => {
-    if (!artifacts || artifacts.length === 0) return;
+    // The file is generated on the server (/api/export), so the browser never
+    // has to load the whole dataset
+    const fields = FULL_HEADERS.filter(({ key }) => checkedState[key]).map(
+      ({ key }) => key,
+    );
+    if (fields.length === 0) return;
 
-    const selectedHeaders = FULL_HEADERS.filter(({ key }) => checkedState[key]);
-
-    const content =
-      fileType === "text/csv;charset=utf-8"
-        ? getCsvContent(artifacts, selectedHeaders)
-        : getTxtContent(artifacts, selectedHeaders);
-
-    const blob = new Blob(["\uFEFF" + content], {
-      type: fileType,
+    const params = new URLSearchParams({
+      format: fileType === "text/csv;charset=utf-8" ? "csv" : "txt",
+      fields: fields.join(","),
+      filename: fileName,
     });
-    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
 
-    link.href = url;
+    link.href = `/api/export?${params}`;
     link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
@@ -191,7 +185,7 @@ export default function Download({
               {dict.download_formats || "Định dạng tải về"}
             </h3>
             <p className="text-[11px] text-stone-500 mt-0.5">
-              {dict.download_total_artifacts || "Tổng số hiện vật khả dụng"}: {artifacts ? artifacts.length : "..."}
+              {dict.download_total_artifacts || "Tổng số hiện vật khả dụng"}: {totalArtifacts}
             </p>
           </div>
 

@@ -1,19 +1,17 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { ToastContainer, toast, Bounce } from "react-toastify";
 
 import type { Locale } from "@/lib/lang";
-import similarityScore from "@/lib/fuzzySearching";
 import { getCategoryNames, getCategoryName } from "@/lib/consts/categories";
 import { getDriveId, getImgUrl } from "@/lib/imgProcessor";
 import SkeletonImage from "@/components/SkeletonImage";
 
-import type { Artifact } from "@/contexts/artifact";
-import { useArtifact } from "@/contexts/artifact";
+import type { Artifact, RelatedArtifacts } from "@/contexts/artifact";
 
 import ArtifactCard from "@/components/ArtifactCard";
 
@@ -27,114 +25,24 @@ export default function Artifact({
   dict,
   aid,
   initialArtifact,
+  related,
 }: {
   locale: Locale;
   dict: any;
   aid: string;
   initialArtifact?: Artifact;
+  /** "Same collection" / "similar" blocks, computed on the server */
+  related?: RelatedArtifacts;
 }) {
-  // Artifact info handler
+  // Artifact info handler (the page 404s on the server when it doesn't exist)
+  const artifact = initialArtifact;
+  const notFound = !artifact;
+  const driveId = artifact ? getDriveId(artifact.main_image) || undefined : undefined;
 
-  const [artifact, setArtifact] = useState<Artifact | undefined>(initialArtifact);
-  const [driveId, setDriveId] = useState<string | undefined>(
-    initialArtifact ? getDriveId(initialArtifact.main_image) || undefined : undefined,
-  );
-  const [notFound, setNotFound] = useState<boolean>(false);
-
-  const { artifacts, collections } = useArtifact();
-
-  useEffect(() => {
-    if (artifact) return;
-    if (!artifacts) return;
-    const foundedArtifact = artifacts.find((a) => a.id === aid);
-    if (foundedArtifact) setArtifact(foundedArtifact);
-    else setNotFound(true);
-  }, [artifacts, aid, artifact]);
-
-  useEffect(() => {
-    if (!artifact) return;
-    setDriveId(getDriveId(artifact.main_image) || undefined);
-  }, [artifact]);
-
-  // Artifacts in the same collection
-  const sameCollectionArtifacts = useMemo(() => {
-    if (!artifact?.collections?.length || !artifacts?.length) return [];
-    const myColSet = new Set(artifact.collections);
-    const list = artifacts.filter(
-      (a) =>
-        a.id !== artifact.id &&
-        a.collections?.some((cid) => myColSet.has(cid)),
-    );
-    // Rule: Sắp xếp các artifact trong collection theo bảng chữ cái
-    return list.sort((a, b) => a.name.localeCompare(b.name, "vi"));
-  }, [artifact, artifacts]);
-
-  const sameColIdSet = useMemo(() => {
-    return new Set(sameCollectionArtifacts.map((a) => a.id));
-  }, [sameCollectionArtifacts]);
-
-  // Find similar artifacts handler (optimized & non-blocking), excluding same collection items
-  const [similarArtifacts, setSimilarArtifacts] = useState<
-    Artifact[] | undefined
-  >();
-
-  useEffect(() => {
-    if (!artifact || !artifacts || artifacts.length === 0) return;
-
-    // Use setTimeout to defer calculation and keep page transition instant
-    const timer = setTimeout(() => {
-      const targetCats = new Set(artifact.categories || []);
-      const otherArtifacts = artifacts.filter(
-        (a) => a.id !== artifact.id && !sameColIdSet.has(a.id),
-      );
-
-      // Prioritize items that share categories, era, or location
-      const scoredCandidates = otherArtifacts.map((a) => {
-        let catOverlap = 0;
-        if (a.categories) {
-          for (const c of a.categories) {
-            if (targetCats.has(c)) catOverlap++;
-          }
-        }
-        const eraMatch =
-          artifact.artifact_date && a.artifact_date === artifact.artifact_date
-            ? 1
-            : 0;
-
-        return {
-          artifact: a,
-          catOverlap,
-          eraMatch,
-        };
-      });
-
-      // Sort by category overlap and era match to narrow down to top 30 candidates
-      scoredCandidates.sort(
-        (a, b) =>
-          b.catOverlap * 2 + b.eraMatch - (a.catOverlap * 2 + a.eraMatch),
-      );
-      const topCandidates = scoredCandidates.slice(0, 30).map((c) => c.artifact);
-
-      const targetText = `${artifact.name} ${artifact.short_description || ""}`;
-      const results = topCandidates
-        .map((a) => {
-          const nameScore = similarityScore(
-            targetText,
-            `${a.name} ${a.short_description || ""}`,
-          );
-          return {
-            ...a,
-            similarityScore: nameScore,
-          };
-        })
-        .sort((a, b) => b.similarityScore - a.similarityScore)
-        .slice(0, 12);
-
-      setSimilarArtifacts(results);
-    }, 50);
-
-    return () => clearTimeout(timer);
-  }, [artifact, artifacts, sameColIdSet]);
+  const sameCollectionArtifacts = related?.sameCollection || [];
+  const sameCollectionTotal = related?.sameCollectionTotal || 0;
+  const similarArtifacts = related?.similar;
+  const collectionNames = related?.collectionNames || {};
 
   // Render (None) if the value is falsy
 
@@ -369,9 +277,8 @@ export default function Artifact({
                     {artifact.collections && artifact.collections.length > 0 && (
                       <div className="flex flex-wrap gap-2">
                         {artifact.collections.map((colId) => {
-                          const col = collections?.find((c) => c.id === colId);
                           const colName =
-                            col?.name ||
+                            collectionNames[colId] ||
                             `${dict.nav_collection || "Bộ sưu tập"} #${colId}`;
                           return (
                             <Link
@@ -537,7 +444,7 @@ export default function Artifact({
                     {dict.artifact_same_collection || "Hiện vật cùng bộ sưu tập"}
                   </h3>
                   <span className="text-xs text-stone-500 dark:text-stone-400 font-bold bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded-full">
-                    {sameCollectionArtifacts.length}
+                    {sameCollectionTotal}
                   </span>
                 </div>
                 {artifact?.collections?.[0] && (
@@ -551,7 +458,7 @@ export default function Artifact({
                 )}
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 lg:gap-6 w-full">
-                {sameCollectionArtifacts.slice(0, 12).map((item) => (
+                {sameCollectionArtifacts.map((item) => (
                   <ArtifactCard key={item.id} item={item} locale={locale} />
                 ))}
               </div>

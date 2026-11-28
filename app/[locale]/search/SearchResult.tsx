@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 import type { Locale } from "@/lib/lang";
 
 import ArtifactCard from "@/components/ArtifactCard";
-import { Artifact } from "@/contexts/artifact";
-
-const ITEMS_PER_PAGE = 32;
+import type { SearchPage } from "@/contexts/artifact";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -33,33 +31,29 @@ const itemVariants: Variants = {
 export default function SearchResult({
   locale,
   dict,
-  filteredArtifacts,
+  result,
+  isPending = false,
   currentPage,
   onPageChange,
 }: {
   locale: Locale;
   dict: any;
-  filteredArtifacts: Artifact[] | undefined;
+  /** The current page only; the server already filtered and paged */
+  result: SearchPage;
+  /** True while the server renders the next page / filter */
+  isPending?: boolean;
   currentPage: number;
   onPageChange: (page: number) => void;
 }) {
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  const totalPages = filteredArtifacts
-    ? Math.ceil(filteredArtifacts.length / ITEMS_PER_PAGE)
-    : 0;
+  const { totalPages, items: paginatedArtifacts, total } = result;
 
+  // Highlight the requested page right away; the cards follow when it arrives
   const activePage =
     totalPages > 0
       ? Math.min(Math.max(1, currentPage), totalPages)
       : Math.max(1, currentPage);
-
-  const paginatedArtifacts = filteredArtifacts
-    ? filteredArtifacts.slice(
-        (activePage - 1) * ITEMS_PER_PAGE,
-        activePage * ITEMS_PER_PAGE,
-      )
-    : [];
 
   const getPageNumbers = () => {
     if (totalPages <= 3) {
@@ -95,24 +89,23 @@ export default function SearchResult({
     }
   };
 
-  if (!filteredArtifacts) return <></>;
-
   return (
     <div ref={resultsRef} className="flex-1 scroll-mt-20">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 border-b-2 border-stone-200 dark:border-stone-800 pb-4 gap-4">
         <span className="text-stone-500 font-medium italic text-sm">
-          {dict.found} {filteredArtifacts.length} {dict.artifacts}
+          {dict.found} {total} {dict.artifacts}
         </span>
       </div>
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={activePage}
+          key={`${result.page}-${paginatedArtifacts[0]?.id ?? "empty"}`}
           variants={containerVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-4"
+          aria-busy={isPending}
+          className={`grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-6 gap-4 transition-opacity duration-200 ${isPending ? "opacity-50 pointer-events-none" : ""}`}
         >
           {paginatedArtifacts.map((item) => (
             <motion.div key={item.id} variants={itemVariants} className="h-full">

@@ -1,24 +1,29 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { useArtifact } from "@/contexts/artifact";
 import { Locale } from "@/lib/lang";
 
 export default function RandomArtifactButton({ locale }: { locale: Locale }) {
   const router = useRouter();
-  const { artifacts } = useArtifact();
+  const [isPicking, setIsPicking] = useState(false);
 
-  const pickRandom = () => {
-    if (!artifacts) return;
-
-    const randomIndex = Math.floor(Math.random() * artifacts.length);
-    const selected = artifacts[randomIndex];
-    if (selected && selected.id)
-      router.push(`/${locale}/artifact/${selected.id}`);
+  // The server picks the id, so the browser never needs the artifact list
+  const pickRandom = async () => {
+    if (isPicking) return;
+    setIsPicking(true);
+    try {
+      const res = await fetch("/api/random", { cache: "no-store" });
+      if (!res.ok) return;
+      const { id } = (await res.json()) as { id?: string };
+      if (id) router.push(`/${locale}/artifact/${id}`);
+    } catch (err) {
+      console.error("Random artifact failed", err);
+    } finally {
+      setIsPicking(false);
+    }
   };
-
-  if (!artifacts) return <></>;
 
   return (
     <motion.div
@@ -32,6 +37,8 @@ export default function RandomArtifactButton({ locale }: { locale: Locale }) {
 
       <motion.button
         onClick={pickRandom}
+        disabled={isPicking}
+        aria-busy={isPicking}
         whileHover={{
           scale: 1.1,
           rotate: 15,

@@ -1,7 +1,6 @@
 import type { Artifact } from "@/contexts/artifact";
 import type { Locale } from "@/lib/lang";
-import { CATEGORY_GROUPS, getCategoryNames } from "@/lib/consts/categories";
-import similarityScore from "@/lib/fuzzySearching";
+import { searchArtifacts } from "@/lib/search";
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const clean = hex.replace("#", "").trim();
@@ -42,11 +41,11 @@ const COLOR_SIMILARITY_THRESHOLD = 100;
 
 export function getFilteredArtifacts(
   query: string,
-  cats: string[],
+  cats: number[],
   artifacts: Artifact[],
   locale: Locale,
   colors?: string[] | string,
-  excludeCats: string[] = [],
+  excludeCats: number[] = [],
   excludeColors: string[] = [],
 ) {
   if (!artifacts || !Array.isArray(artifacts)) return [];
@@ -132,28 +131,19 @@ export function getFilteredArtifacts(
   }
 
   // 5. Lọc và xếp hạng theo từ khóa tìm kiếm (query)
-  const cleanedQuery = query.trim().toLowerCase();
+  // (field-weighted, accent-insensitive, prefix + typo tolerant: lib/search.ts)
+  const cleanedQuery = query.trim();
 
   if (cleanedQuery) {
-    results = results
-      .map((artifact) => {
-        const text = [
-          artifact.name,
-          artifact.short_description,
-          getCategoryNames(artifact.categories, locale),
-          artifact.description,
-          artifact.location,
-          artifact.author,
-          artifact.artifact_date,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        const searchScore = similarityScore(cleanedQuery, text);
-        return { ...artifact, searchScore };
-      })
-      .filter((a) => (a.searchScore ?? 0) > 0);
+    // The index is keyed by the full artifact list (cached across calls);
+    // keep only the ones that survived the category / color filters.
+    const survivors = new Map(results.map((a) => [a.id, a]));
+    results = searchArtifacts(cleanedQuery, artifacts, locale).flatMap(
+      ({ artifact, score }) => {
+        const kept = survivors.get(artifact.id);
+        return kept ? [{ ...kept, searchScore: score }] : [];
+      },
+    );
   }
 
   // 6. Sắp xếp kết quả tối ưu

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-import type { CollectionWithArtifacts } from "@/contexts/artifact";
+import type { CollectionSummary } from "@/contexts/artifact";
 import { getImgUrl } from "@/lib/imgProcessor";
 import SkeletonImage from "@/components/SkeletonImage";
 
@@ -14,12 +14,12 @@ export default function CollectionCard({
   locale,
   dict,
 }: {
-  item: CollectionWithArtifacts;
+  item: CollectionSummary;
   locale: string;
   dict?: any;
 }) {
-  const cover = item.coverImage || item.artifacts?.[0]?.main_image || "";
-  const count = item.artifacts?.length || 0;
+  const cover = item.coverImage || "";
+  const count = item.count || 0;
   const artifactUnit = dict?.artifacts || "hiện vật";
 
   return (

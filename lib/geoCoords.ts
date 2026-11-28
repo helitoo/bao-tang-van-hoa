@@ -1,4 +1,4 @@
-// Coordinate helpers: coordinates come only from the spreadsheet's `coordinates` column
+// Coordinate helpers: coordinates come only from the artifacts.coordinates column (Supabase)
 
 export interface GeoLocation {
   lat: number;
@@ -6,7 +6,7 @@ export interface GeoLocation {
 }
 
 /**
- * Parse coordinates directly if available in the spreadsheet (e.g., "10.7598, 106.6823")
+ * Parse coordinates directly if available in the database (e.g., "10.7598, 106.6823")
  */
 export function parseExplicitCoords(
   coordinates?: string

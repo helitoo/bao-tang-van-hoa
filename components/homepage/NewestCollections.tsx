@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
 import { motion, type Variants } from "framer-motion";
 
-import { useArtifact, type CollectionWithArtifacts } from "@/contexts/artifact";
+import type { CollectionSummary } from "@/contexts/artifact";
 import CollectionCard from "@/components/CollectionCard";
 import type { Locale } from "@/lib/lang";
 
@@ -33,25 +32,13 @@ const itemVariants: Variants = {
 export default function NewestCollections({
   locale,
   dict,
-  initialCollections,
+  collections: newestCollections,
 }: {
   locale: Locale;
   dict: any;
-  initialCollections?: CollectionWithArtifacts[];
+  /** Newest collections, already sorted and sliced on the server */
+  collections: CollectionSummary[];
 }) {
-  const { collections: ctxCollections } = useArtifact();
-  const allCollections = initialCollections || ctxCollections;
-
-  const newestCollections = useMemo(() => {
-    if (!allCollections || allCollections.length === 0) return [];
-    return [...allCollections]
-      .sort((a, b) => {
-        const idA = parseInt(a.id, 10) || 0;
-        const idB = parseInt(b.id, 10) || 0;
-        return idB - idA;
-      })
-      .slice(0, 6);
-  }, [allCollections]);
 
   if (!newestCollections || newestCollections.length === 0) {
     return null;

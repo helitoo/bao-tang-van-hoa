@@ -2,23 +2,23 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { useArtifact, type Artifact } from "@/contexts/artifact";
-import { parseExplicitCoords } from "@/lib/geoCoords";
+import type { MapArtifact } from "@/contexts/artifact";
 import { getImgUrl } from "@/lib/imgProcessor";
 import SkeletonImage from "@/components/SkeletonImage";
 
 interface MapComponentProps {
   locale: string;
   dict: any;
+  /** Architecture items with coordinates, prepared on the server */
+  artifacts: MapArtifact[];
 }
 
 interface MappedArtifact {
-  item: Artifact;
+  item: MapArtifact;
   coords: [number, number];
 }
 
-export default function MapComponent({ locale, dict }: MapComponentProps) {
-  const { artifacts } = useArtifact();
+export default function MapComponent({ locale, dict, artifacts }: MapComponentProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersClusterRef = useRef<any>(null);
@@ -28,8 +28,8 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
   const [isMapReady, setIsMapReady] = useState(false);
 
   const [mappedList, setMappedList] = useState<MappedArtifact[]>([]);
-  // Still waiting for the artifact list from the spreadsheet
-  const isLoading = artifacts === undefined;
+  // Markers are added once Leaflet has loaded
+  const isLoading = !isMapReady;
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -176,7 +176,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
     markerByItemRef.current.clear();
 
     // Helper to build a marker for an artifact
-    function createMarker(item: Artifact, coords: [number, number]) {
+    function createMarker(item: MapArtifact, coords: [number, number]) {
       const singleIcon = L.divIcon({
         html: `<div class="custom-single-pin"><div class="custom-single-pin-inner"></div></div>`,
         className: "custom-single-marker",
@@ -215,14 +215,11 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
       return marker;
     }
 
-    // Filter architecture items (tag "kt") that already have explicit coordinates
-    const mapped: MappedArtifact[] = [];
-    for (const item of artifacts || []) {
-      if (!item.categories?.includes("kt")) continue;
-      const coords = parseExplicitCoords(item.coordinates);
-      if (!coords) continue;
-      mapped.push({ item, coords });
-    }
+    // Already filtered on the server (architecture + explicit coordinates)
+    const mapped: MappedArtifact[] = artifacts.map((item) => ({
+      item,
+      coords: item.coords,
+    }));
 
     setMappedList(mapped);
     if (mapped.length === 0) return;
@@ -234,7 +231,7 @@ export default function MapComponent({ locale, dict }: MapComponentProps) {
   }, [isMapReady, artifacts, locale, dict]);
 
   // Focus marker when clicked from sidebar list
-  function handleSelectArtifact(item: Artifact, coords: [number, number]) {
+  function handleSelectArtifact(item: MapArtifact, coords: [number, number]) {
     setSelectedId(item.id);
     const map = mapInstanceRef.current;
     const marker = markerByItemRef.current.get(item.id);

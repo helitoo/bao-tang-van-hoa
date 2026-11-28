@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 
-import type { CollectionWithArtifacts } from "@/contexts/artifact";
+import type { CollectionSummary } from "@/contexts/artifact";
 import CollectionCard from "@/components/CollectionCard";
 
 const containerVariants: Variants = {
@@ -30,7 +30,7 @@ export default function CollectionClient({
   locale,
   dict,
 }: {
-  initialCollections: CollectionWithArtifacts[];
+  initialCollections: CollectionSummary[];
   locale: string;
   dict: any;
 }) {

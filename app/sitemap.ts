@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { locales } from "@/lib/lang";
 import {
   fetchArtifactsServer,
-  getCollectionsWithArtifactsServer,
+  getCollectionSummariesServer,
 } from "@/lib/serverArtifacts";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Dynamic collections
   try {
-    const collections = await getCollectionsWithArtifactsServer();
+    const collections = await getCollectionSummariesServer();
     for (const col of collections) {
       const colAlternates: Record<string, string> = {
         "x-default": `${baseUrl}/vi/collection/${col.id}`,
@@ -74,12 +74,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const artifacts = await fetchArtifactsServer();
     for (const artifact of artifacts) {
       let lastMod = new Date();
-      if (artifact.public_date) {
-        const parts = artifact.public_date.split(/[-/]/);
-        if (parts.length === 3) {
-          const d = new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-          if (!isNaN(d.getTime())) lastMod = d;
-        }
+      if (artifact.created_at) {
+        const d = new Date(artifact.created_at);
+        if (!isNaN(d.getTime())) lastMod = d;
       }
 
       const artifactAlternates: Record<string, string> = {

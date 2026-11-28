@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getLangDict } from "@/lib/lang";
-import { getCollectionsWithArtifactsServer } from "@/lib/serverArtifacts";
+import { getCollectionSummariesServer } from "@/lib/serverArtifacts";
 import CollectionClient from "@/app/[locale]/collection/CollectionClient";
 
 export default async function Page({
@@ -11,7 +11,7 @@ export default async function Page({
   const { locale } = await params;
   const [dict, collections] = await Promise.all([
     getLangDict(locale),
-    getCollectionsWithArtifactsServer(),
+    getCollectionSummariesServer(),
   ]);
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";

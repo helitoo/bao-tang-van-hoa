@@ -1,16 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { useArtifact, type Artifact } from "@/contexts/artifact";
+import type { SearchPage } from "@/contexts/artifact";
 import { Locale } from "@/lib/lang";
 
 import SearchPanelHeader from "@/app/[locale]/search/SearchHeader";
 import SearchBody from "@/app/[locale]/search/SearchBody";
 import SearchResult from "@/app/[locale]/search/SearchResult";
-import { getFilteredArtifacts } from "@/app/[locale]/search/getFilteredArtifacts";
 
 export default function Search({
   locale,
@@ -22,22 +21,23 @@ export default function Search({
   initExcludeColors = [],
   initColor = "",
   initPage = 1,
-  initialArtifacts,
-  initialFilteredArtifacts,
+  result,
 }: {
   locale: Locale;
   dict: any;
   initQuery: string;
-  initCats: string[];
-  initExcludeCats?: string[];
+  initCats: number[];
+  initExcludeCats?: number[];
   initColors?: string[];
   initExcludeColors?: string[];
   initColor?: string;
   initPage?: number;
-  initialArtifacts?: Artifact[];
-  initialFilteredArtifacts?: Artifact[];
+  /** One page of results, filtered + ranked + paged on the server */
+  result: SearchPage;
 }) {
   const router = useRouter();
+  // URL changes re-render the server page with the new result page
+  const [isPending, startTransition] = useTransition();
 
   // Khởi tạo colors từ initColors hoặc fallback initColor
   const parsedInitColors =
@@ -52,8 +52,8 @@ export default function Search({
   // appliedQuery: từ khóa đã áp dụng, chỉ đổi khi nhấn Enter / nút tìm kiếm (giống trang /collection)
   const [query, setQuery] = useState<string>(initQuery);
   const [appliedQuery, setAppliedQuery] = useState<string>(initQuery);
-  const [cats, setCats] = useState<string[]>(initCats);
-  const [excludeCats, setExcludeCats] = useState<string[]>(initExcludeCats);
+  const [cats, setCats] = useState<number[]>(initCats);
+  const [excludeCats, setExcludeCats] = useState<number[]>(initExcludeCats);
   const [colors, setColors] = useState<string[]>(parsedInitColors);
   const [excludeColors, setExcludeColors] = useState<string[]>(initExcludeColors);
   const [currentPage, setCurrentPage] = useState<number>(initPage);
@@ -65,27 +65,20 @@ export default function Search({
   // Hide / Show search panel
   const [showFilters, setShowFilters] = useState(true);
 
-  const { artifacts: clientArtifacts } = useArtifact();
-  const artifacts = initialArtifacts && initialArtifacts.length > 0 ? initialArtifacts : clientArtifacts;
-
-  const [filteredArtifacts, setFilteredArtifacts] = useState<
-    Artifact[] | undefined
-  >(initialFilteredArtifacts || artifacts);
-
   // Helper để đồng bộ URL tìm kiếm
   const syncUrl = useCallback(
     (
       q: string,
-      c: string[],
-      exc: string[],
+      c: number[],
+      exc: number[],
       cols: string[],
       excCols: string[],
       p: number = 1,
     ) => {
       const search = new URLSearchParams();
       if (q.trim()) search.set("query", q.trim());
-      c.filter(Boolean).forEach((cat) => search.append("cats", cat));
-      exc.filter(Boolean).forEach((cat) => search.append("excludeCats", cat));
+      c.filter(Boolean).forEach((cat) => search.append("cats", String(cat)));
+      exc.filter(Boolean).forEach((cat) => search.append("excludeCats", String(cat)));
       cols.filter(Boolean).forEach((col) => search.append("colors", col));
       excCols.filter(Boolean).forEach((col) => search.append("excludeColors", col));
       if (p > 1) {
@@ -93,13 +86,15 @@ export default function Search({
       }
 
       const urlStr = search.toString() ? `?${search.toString()}` : `/${locale}/search`;
-      router.replace(urlStr, { scroll: false });
+      startTransition(() => {
+        router.replace(urlStr, { scroll: false });
+      });
     },
     [locale, router],
   );
 
   // Toggle category mode: none -> include -> exclude -> none -> include
-  function handleToggleCategory(id: string) {
+  function handleToggleCategory(id: number) {
     if (cats.includes(id)) {
       // include -> exclude
       setCats((prev) => prev.filter((c) => c !== id));
@@ -175,8 +170,6 @@ export default function Search({
     syncUrl("", [], [], [], [], 1);
   }
 
-  // Cờ nhận diện lần render đầu tiên
-  const isFirstRender = useRef(true);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevFilterKey = useRef(
     `${initQuery}|${initCats.join(",")}|${(initExcludeCats || []).join(",")}|${parsedInitColors.join(",")}|${(initExcludeColors || []).join(",")}`,
@@ -185,26 +178,6 @@ export default function Search({
   // Tự động lọc với debounce nhẹ (250ms) khi đổi danh mục / màu sắc.
   // Từ khóa văn bản KHÔNG tự lọc khi gõ, chỉ áp dụng khi nhấn Enter / nút tìm kiếm.
   useEffect(() => {
-    if (!artifacts) return;
-
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      if (!initialFilteredArtifacts) {
-        setFilteredArtifacts(
-          getFilteredArtifacts(
-            appliedQuery,
-            cats,
-            artifacts,
-            locale,
-            colors,
-            excludeCats,
-            excludeColors,
-          ),
-        );
-      }
-      return;
-    }
-
     const currentFilterKey = `${appliedQuery}|${cats.join(",")}|${excludeCats.join(",")}|${colors.join(",")}|${excludeColors.join(",")}`;
     // Nếu chỉ có page hoặc re-render mà tiêu chí filter không đổi thì không reset page về 1
     if (prevFilterKey.current === currentFilterKey) {
@@ -214,17 +187,6 @@ export default function Search({
 
     const timer = setTimeout(() => {
       debounceTimer.current = null;
-      setFilteredArtifacts(
-        getFilteredArtifacts(
-          appliedQuery,
-          cats,
-          artifacts,
-          locale,
-          colors,
-          excludeCats,
-          excludeColors,
-        ),
-      );
       setCurrentPage(1);
       syncUrl(appliedQuery, cats, excludeCats, colors, excludeColors, 1);
     }, 250);
@@ -237,15 +199,11 @@ export default function Search({
     excludeCats,
     colors,
     excludeColors,
-    artifacts,
-    locale,
-    initialFilteredArtifacts,
     syncUrl,
   ]);
 
   // Xử lý khi nhấn nút "Tìm kiếm ngay" hoặc nhấn Enter
   function handleSearchSubmit() {
-    if (!artifacts) return;
     // Hủy lượt lọc debounce đang chờ (nếu có) để tìm kiếm chạy ngay lập tức
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -257,17 +215,6 @@ export default function Search({
     prevFilterKey.current = `${q}|${cats.join(",")}|${excludeCats.join(",")}|${colors.join(",")}|${excludeColors.join(",")}`;
     setCurrentPage(1);
     syncUrl(q, cats, excludeCats, colors, excludeColors, 1);
-    setFilteredArtifacts(
-      getFilteredArtifacts(
-        q,
-        cats,
-        artifacts,
-        locale,
-        colors,
-        excludeCats,
-        excludeColors,
-      ),
-    );
   }
 
   // Xử lý khi thay đổi trang từ danh sách kết quả
@@ -322,7 +269,8 @@ export default function Search({
       <SearchResult
         locale={locale}
         dict={dict}
-        filteredArtifacts={filteredArtifacts}
+        result={result}
+        isPending={isPending}
         currentPage={currentPage}
         onPageChange={handlePageChange}
       />

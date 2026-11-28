@@ -1,7 +1,7 @@
 import { getLangDict, Locale } from "@/lib/lang";
 import Search from "@/app/[locale]/search/Search";
-import { fetchArtifactsServer } from "@/lib/serverArtifacts";
-import { getFilteredArtifacts } from "@/app/[locale]/search/getFilteredArtifacts";
+import { searchArtifactsServer } from "@/lib/serverArtifacts";
+import { parseCategoryParams } from "@/lib/consts/categories";
 
 export default async function Page({
   params,
@@ -37,17 +37,23 @@ export default async function Page({
     ? [sp.excludeCats]
     : [];
 
-  const cats: string[] = [];
-  const excludeCats: string[] = [...rawExcludeCats.filter(Boolean)];
+  // Categories are numeric ids (?cats=14); legacy codes (?cats=kt) still work
+  const includeCatParams: string[] = [];
+  const excludeCatParams: string[] = [...rawExcludeCats.filter(Boolean)];
 
   rawCats.forEach((c) => {
     if (!c) return;
     if (c.startsWith("-")) {
-      excludeCats.push(c.slice(1));
+      excludeCatParams.push(c.slice(1));
     } else {
-      cats.push(c);
+      includeCatParams.push(c);
     }
   });
+
+  const cats = parseCategoryParams(includeCatParams);
+  const excludeCats = parseCategoryParams(excludeCatParams).filter(
+    (id) => !cats.includes(id),
+  );
 
   const rawColors = [
     ...(Array.isArray(sp.colors) ? sp.colors : sp.colors ? [sp.colors] : []),
@@ -71,16 +77,12 @@ export default async function Page({
     }
   });
 
-  // Server-side prefetch artifacts for instant SSR and search engine / AI agent crawlers
-  const allArtifacts = await fetchArtifactsServer();
-  const initialFilteredArtifacts = getFilteredArtifacts(
-    query,
-    cats,
-    allArtifacts,
+  // Filter + rank + page on the server: the browser only receives one page.
+  // The full list comes from the Supabase Data Cache, not a per-request query.
+  const result = await searchArtifactsServer(
+    { query, cats, excludeCats, colors, excludeColors },
+    page,
     locale as Locale,
-    colors,
-    excludeCats,
-    excludeColors,
   );
 
   return (
@@ -93,9 +95,8 @@ export default async function Page({
         initExcludeCats={excludeCats}
         initColors={colors}
         initExcludeColors={excludeColors}
-        initPage={page}
-        initialArtifacts={allArtifacts}
-        initialFilteredArtifacts={initialFilteredArtifacts}
+        initPage={result.page}
+        result={result}
       />
       <style>{`.custom-scrollbar::-webkit-scrollbar { width: 3px; } .custom-scrollbar::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 2px; } .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #44403c; }`}</style>
     </div>

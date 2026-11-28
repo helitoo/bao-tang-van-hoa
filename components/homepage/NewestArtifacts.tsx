@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 
-import { useArtifact } from "@/contexts/artifact";
+import type { ArtifactSummary } from "@/contexts/artifact";
 import ArtifactCard from "@/components/ArtifactCard";
 import { Locale } from "@/lib/lang";
 
@@ -32,11 +32,13 @@ const itemVariants: Variants = {
 export default function NewestArtifacts({
   locale,
   dict,
+  artifacts,
 }: {
   locale: Locale;
   dict: any;
+  /** Newest artifacts, already sliced on the server */
+  artifacts: ArtifactSummary[];
 }) {
-  const { artifacts } = useArtifact();
 
   return (
     <section className="max-w-7xl mx-auto px-4">
@@ -67,7 +69,7 @@ export default function NewestArtifacts({
           whileInView="visible"
           viewport={{ once: true, amount: 0.1 }}
         >
-          {artifacts.slice(0, 12).map((item) => (
+          {artifacts.map((item) => (
             <motion.div key={item.id} variants={itemVariants} className="h-full">
               <ArtifactCard item={item} locale={locale} />
             </motion.div>

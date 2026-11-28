@@ -2,6 +2,13 @@ import Link from "next/link";
 
 import { getLangDict, Locale } from "@/lib/lang";
 import Download from "@/app/[locale]/download/Download";
+import {
+  getHomeStatsServer,
+  getLatestPublicDateServer,
+} from "@/lib/serverArtifacts";
+
+// Static per locale, regenerated with the data cache (see lib/serverArtifacts.ts)
+export const revalidate = 3600;
 
 export default async function Page({
   params,
@@ -9,7 +16,11 @@ export default async function Page({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const dict = await getLangDict(locale);
+  const [dict, latestPublicDate, stats] = await Promise.all([
+    getLangDict(locale),
+    getLatestPublicDateServer(),
+    getHomeStatsServer(),
+  ]);
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-16 min-h-[calc(100vh-5rem)]">
@@ -34,7 +45,12 @@ export default async function Page({
         </p>
       </div>
 
-      <Download dict={dict} locale={locale as Locale} />
+      <Download
+        dict={dict}
+        locale={locale as Locale}
+        latestPublicDate={latestPublicDate}
+        totalArtifacts={stats.total}
+      />
     </div>
   );
 }

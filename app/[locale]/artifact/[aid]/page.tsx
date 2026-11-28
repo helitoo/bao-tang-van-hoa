@@ -1,9 +1,20 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { type Locale, getLangDict, locales } from "@/lib/lang";
 import Artifact from "@/app/[locale]/artifact/[aid]/Artifact";
-import { getArtifactByIdServer } from "@/lib/serverArtifacts";
+import {
+  getArtifactByIdServer,
+  getRelatedArtifactsServer,
+} from "@/lib/serverArtifacts";
 import { getSourceImgUrl } from "@/lib/imgProcessor";
+import { getCategoryName, getCategoryNames } from "@/lib/consts/categories";
+
+// Rendered on first visit, then served from the ISR cache (revalidate is set
+// in app/[locale]/layout.tsx). Returning [] keeps the build fast.
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,
@@ -45,7 +56,9 @@ export async function generateMetadata({
       artifact.name,
       artifact.artifact_date,
       artifact.location,
-      ...(artifact.categories || []),
+      ...(artifact.categories || []).map((id) =>
+        getCategoryName(id, locale as Locale),
+      ),
       "di sản văn hóa Việt Nam",
       "Hàm Anh Các",
       "Ham Anh Cac",
@@ -90,6 +103,9 @@ export default async function Page({
     getLangDict(locale),
     getArtifactByIdServer(aid),
   ]);
+
+  if (!artifact) notFound();
+  const related = await getRelatedArtifactsServer(artifact);
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://btvh.vercel.app";
 
@@ -141,7 +157,7 @@ export default async function Page({
           "@type": "Place",
           name: artifact.location || "Việt Nam",
         },
-        genre: artifact.categories?.join(", "),
+        genre: getCategoryNames(artifact.categories || [], locale as Locale),
         inLanguage: locale,
         ...(primarySourceUrl ? { isBasedOn: primarySourceUrl } : {}),
         ...(sourceUrls.length > 0 ? { sameAs: sourceUrls } : {}),
@@ -184,6 +200,7 @@ export default async function Page({
           dict={dict}
           aid={aid}
           initialArtifact={artifact}
+          related={related}
         />
 
         {/* JSON-LD Schemas */}

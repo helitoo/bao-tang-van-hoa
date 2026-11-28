@@ -140,9 +140,9 @@ export default function SearchBody({
   dict: any;
   query: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
-  cats: string[];
-  excludeCats: string[];
-  onToggleCategory: (id: string) => void;
+  cats: number[];
+  excludeCats: number[];
+  onToggleCategory: (id: number) => void;
   colors: string[];
   excludeColors: string[];
   onToggleColor: (hex: string, forceMode?: ColorFilterMode) => void;

@@ -42,10 +42,10 @@ export const CATEGORY_STATE_LABELS: Record<
 };
 
 export interface CategorySelectorProps {
-  id: string;
+  id: number;
   label: string;
   mode: CategoryFilterMode;
-  onToggle: (id: string) => void;
+  onToggle: (id: number) => void;
   locale?: Locale;
   dict?: any;
   className?: string;

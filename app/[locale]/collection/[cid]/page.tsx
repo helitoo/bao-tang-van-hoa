@@ -3,12 +3,15 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { getLangDict, locales } from "@/lib/lang";
-import {
-  getCollectionByIdServer,
-  getCollectionsWithArtifactsServer,
-} from "@/lib/serverArtifacts";
+import { getCollectionByIdServer } from "@/lib/serverArtifacts";
 import ArtifactCard from "@/components/ArtifactCard";
 import { getSourceImgUrl } from "@/lib/imgProcessor";
+
+// Rendered on first visit, then served from the ISR cache (revalidate is set
+// in app/[locale]/layout.tsx). Returning [] keeps the build fast.
+export function generateStaticParams() {
+  return [];
+}
 
 export async function generateMetadata({
   params,

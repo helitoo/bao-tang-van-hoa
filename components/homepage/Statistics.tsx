@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 
-import { useArtifact } from "@/contexts/artifact";
+import type { HomeStats } from "@/contexts/artifact";
 import { CATEGORY_GROUPS } from "@/lib/consts/categories";
 
 import StatBarChart from "@/components/homepage/StatBarChart";
@@ -12,23 +12,16 @@ import { Locale } from "@/lib/lang";
 export default function Statistics({
   locale,
   dict,
+  stats: homeStats,
 }: {
   locale: Locale;
   dict: any;
+  /** Computed on the server over every public artifact (not just one page) */
+  stats: HomeStats;
 }) {
-  const { artifacts } = useArtifact();
-
   const stats = useMemo(() => {
-    if (!artifacts || artifacts.length <= 0) return null;
-
-    const counts: Record<string, number> = {};
-    artifacts.forEach((a) => {
-      if (a.categories) {
-        a.categories.forEach((catId) => {
-          counts[catId] = (counts[catId] || 0) + 1;
-        });
-      }
-    });
+    if (!homeStats || homeStats.total <= 0) return null;
+    const counts = homeStats.categoryCounts;
 
     const getGroupData = (groupId: string) => {
       const group = CATEGORY_GROUPS.find((g) => g.id === groupId);
@@ -43,13 +36,13 @@ export default function Statistics({
     };
 
     return {
-      total: artifacts.length,
+      total: homeStats.total,
       religion: getGroupData("religion"),
       genre: getGroupData("genre"),
       era: getGroupData("era"),
       region: getGroupData("region"),
     };
-  }, [artifacts, locale]);
+  }, [homeStats, locale]);
 
   return (
     <section className="max-w-7xl mx-auto px-2 md:px-4">

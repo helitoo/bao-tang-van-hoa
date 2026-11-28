@@ -14,7 +14,7 @@ const CACHE_OK = "public, max-age=86400, s-maxage=31536000, stale-while-revalida
 
 let allowedHostsCache: { hosts: Set<string>; timestamp: number } | null = null;
 
-/** Only proxy hosts that artifact images in the spreadsheet actually use. */
+/** Only proxy hosts that artifact images in the database actually use. */
 async function getAllowedHosts(): Promise<Set<string>> {
   if (allowedHostsCache && Date.now() - allowedHostsCache.timestamp < 3600 * 1000) {
     return allowedHostsCache.hosts;

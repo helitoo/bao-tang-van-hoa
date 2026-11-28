@@ -1,35 +1,48 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 import ArtifactCard from "@/components/ArtifactCard";
-import { useArtifact } from "@/contexts/artifact";
+import type { ArtifactSummary } from "@/contexts/artifact";
 import { Locale } from "@/lib/lang";
 
 export default function Saved({ locale, dict }: { locale: Locale; dict: any }) {
-  const { artifacts } = useArtifact();
-
-  // Load saved artifacts
-  const [savedIds, setSavedIds] = useState<string[]>([]);
+  // Saved ids live in localStorage; only those artifacts are fetched
+  const [savedArtifacts, setSavedArtifacts] = useState<ArtifactSummary[]>();
 
   useEffect(() => {
-    const saved = localStorage.getItem("saved_artifacts");
-    if (saved) {
-      try {
-        setSavedIds(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse saved artifacts", e);
-      }
+    let savedIds: string[] = [];
+    try {
+      const saved = localStorage.getItem("saved_artifacts");
+      const parsed = saved ? JSON.parse(saved) : [];
+      if (Array.isArray(parsed)) savedIds = parsed.map(String);
+    } catch (e) {
+      console.error("Failed to parse saved artifacts", e);
     }
-  }, []);
 
-  // Get saved artifacts info
-  const savedArtifacts = useMemo(() => {
-    if (!artifacts) return;
-    return artifacts.filter((a) => savedIds.includes(a.id));
-  }, [artifacts, savedIds]);
+    if (savedIds.length === 0) {
+      setSavedArtifacts([]);
+      return;
+    }
+
+    const controller = new AbortController();
+    const params = new URLSearchParams({
+      ids: savedIds.join(","),
+      limit: String(savedIds.length),
+      locale,
+    });
+    fetch(`/api/artifacts?${params}`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : Promise.reject(res.status)))
+      .then((json: { data?: ArtifactSummary[] }) => setSavedArtifacts(json.data || []))
+      .catch((err) => {
+        if (controller.signal.aborted) return;
+        console.error("Failed to load saved artifacts", err);
+        setSavedArtifacts([]);
+      });
+    return () => controller.abort();
+  }, [locale]);
 
   if (!savedArtifacts)
     return <div className="skeleton h-20 w-full rounded"></div>;

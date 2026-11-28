@@ -4,12 +4,17 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 import type { Locale } from "@/lib/lang";
-import type { Artifact } from "@/contexts/artifact";
-import { CATEGORY_GROUPS } from "@/lib/consts/categories";
+import type { ArtifactSummary } from "@/contexts/artifact";
+import { CATEGORY_ID, getCategory } from "@/lib/consts/categories";
 import { getImgUrl } from "@/lib/imgProcessor";
 import SkeletonImage from "@/components/SkeletonImage";
 
-const BADGE_IDS = ["bvqg", "dtqg", "dtqgdb", "dstg"];
+const BADGE_IDS = [
+  CATEGORY_ID.bvqg,
+  CATEGORY_ID.dtqg,
+  CATEGORY_ID.dtqgdb,
+  CATEGORY_ID.dstg,
+];
 
 const MotionLink = motion.create(Link);
 
@@ -17,24 +22,19 @@ export default function ArtifactCard({
   item,
   locale,
 }: {
-  item: Artifact;
+  item: ArtifactSummary;
   locale: string;
 }) {
   const badges = (item.categories || [])
     .filter((id) => BADGE_IDS.includes(id))
     .map((id) => {
-      for (const group of CATEGORY_GROUPS) {
-        const found = group.options.find((opt) => opt.id === id);
-        if (found)
-          return {
-            id,
-            name:
-              found.name[locale as Locale] ||
-              found.name.en ||
-              found.name.vi,
-          };
-      }
-      return null;
+      const found = getCategory(id);
+      if (!found) return null;
+      return {
+        id,
+        code: found.code,
+        name: found.name[locale as Locale] || found.name.en || found.name.vi,
+      };
     })
     .filter(Boolean)
     .sort();
@@ -60,7 +60,7 @@ export default function ArtifactCard({
             {badges.map((badge) => (
               <span
                 key={badge?.id}
-                className={`text-[8px] font-bold tracking-tighter px-1.5 py-0.5 rounded-xs shadow-sm backdrop-blur-md text-white ${badge?.id === "bvqg" ? "bg-amber-500/60" : badge?.id === "dstg" ? "bg-sky-400/60" : "bg-lime-400/60"}`}
+                className={`text-[8px] font-bold tracking-tighter px-1.5 py-0.5 rounded-xs shadow-sm backdrop-blur-md text-white ${badge?.code === "bvqg" ? "bg-amber-500/60" : badge?.code === "dstg" ? "bg-sky-400/60" : "bg-lime-400/60"}`}
               >
                 {badge?.name}
               </span>
@@ -76,7 +76,7 @@ export default function ArtifactCard({
           {item.name}
         </h4>
         <p
-          title={item.short_description || item.description || ""}
+          title={item.short_description || ""}
           className="text-stone-500 dark:text-stone-400 text-[9px] leading-relaxed italic opacity-80 font-medium mt-auto line-clamp-2"
         >
           {item.short_description}

@@ -7,7 +7,7 @@ export async function GET() {
   const categoriesList = CATEGORY_GROUPS.map((group) => {
     const groupName = group.title.vi;
     const items = group.options
-      .map((opt) => `- **${opt.name.vi}** (Filter ID: \`${opt.id}\`)`)
+      .map((opt) => `- **${opt.name.vi}** (Filter ID: \`${opt.id}\`, mã cũ: \`${opt.code}\`)`)
       .join("\n");
     return `### ${groupName}\n${items}`;
   }).join("\n\n");
@@ -29,11 +29,11 @@ Hàm Anh Các cung cấp đầy đủ các phương thức truy cập và khai p
    - Endpoint: \`GET ${baseUrl}/api/artifacts\`
    - Tham số hỗ trợ:
      - \`query\`: Từ khóa tìm kiếm (ví dụ: \`ao-dai\`, \`trong-dong\`)
-     - \`category\` / \`cats\`: Mã danh mục lọc phân cách bằng dấu phẩy (ví dụ: \`nha-nguyen\`, \`tp\` cho trang phục)
+     - \`category\` / \`cats\`: ID số của danh mục, phân cách bằng dấu phẩy (ví dụ: \`15\` cho Trang phục, \`36\` cho Nhà Nguyễn; mã cũ như \`tp\` vẫn được chấp nhận)
      - \`page\`: Trang kết quả (mặc định 1)
      - \`limit\`: Số lượng trả về mỗi trang (mặc định 20, tối đa 100)
      - \`locale\`: Ngôn ngữ hiển thị (mặc định \`vi\`, hỗ trợ \`en\`, \`fr\`, \`zh\`, \`ja\`, \`ko\`)
-   - Ví dụ: \`${baseUrl}/api/artifacts?category=tp,nha-nguyen&limit=50\`
+   - Ví dụ: \`${baseUrl}/api/artifacts?category=15,36&limit=50\`
 
 3. **Cấu trúc URL trang chi tiết hiện vật:**
    - Cú pháp: \`${baseUrl}/{locale}/artifact/{id}\`
